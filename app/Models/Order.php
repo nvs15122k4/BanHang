@@ -143,6 +143,7 @@ class Order extends Model
     {
         $labels = [
             'cod' => 'Thanh toán khi nhận hàng',
+            'vietqr' => 'Chuyển khoản VietQR',
             'bank_transfer' => 'Chuyển khoản ngân hàng',
             'vnpay' => 'VNPay',
         ];
@@ -168,5 +169,20 @@ class Order extends Model
         } while (self::where('ma_don_hang', $code)->exists());
 
         return $code;
+    }
+
+    /**
+     * Get VietQR image URL
+     */
+    public function getVietqrUrlAttribute()
+    {
+        $bankId = env('VIETQR_BANK_ID', 'vietcombank');
+        $accountNo = env('VIETQR_ACCOUNT_NO', '1014232408');
+        $template = env('VIETQR_TEMPLATE', 'print');
+        $accountName = env('VIETQR_ACCOUNT_NAME', 'nguyen van sang');
+        $amount = (int) $this->thanh_tien;
+        $description = $this->ma_don_hang;
+
+        return "https://img.vietqr.io/image/{$bankId}-{$accountNo}-{$template}.png?amount={$amount}&addInfo={$description}&accountName=" . urlencode($accountName);
     }
 }

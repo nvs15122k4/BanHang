@@ -255,11 +255,11 @@
                     <h2 class="section-title"><i class="fas fa-credit-card"></i> Phương thức thanh toán</h2>
                     
                     <label class="payment-option w-100 selected" onclick="selectPayment(this)">
-                        <input type="radio" name="phuong_thuc_thanh_toan" value="cod" class="address-radio" checked style="display:none;">
-                        <i class="fas fa-truck payment-icon"></i>
+                        <input type="radio" name="phuong_thuc_thanh_toan" value="vietqr" class="address-radio" checked style="display:none;">
+                        <i class="fas fa-qrcode payment-icon"></i>
                         <div>
-                            <div class="fw-bold">Thanh toán khi nhận hàng (COD)</div>
-                            <div class="text-muted" style="font-size: 13px;">Thanh toán bằng tiền mặt khi nhận hàng.</div>
+                            <div class="fw-bold">Chuyển khoản VietQR</div>
+                            <div class="text-muted" style="font-size: 13px;">Quét mã QR bằng ứng dụng ngân hàng. Nhanh chóng và tiện lợi.</div>
                         </div>
                         <i class="fas fa-check-circle ms-auto text-success" style="font-size: 20px;"></i>
                     </label>

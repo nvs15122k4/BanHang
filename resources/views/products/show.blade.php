@@ -490,7 +490,7 @@
                     <div class="delivery-options mt-4">
                         <div class="delivery-title">Tuỳ chọn giao hàng</div>
                         <div class="delivery-item"><i class="fas fa-check-circle"></i> 100% hàng chính hãng Sàn Tím Vi En</div>
-                        <div class="delivery-item"><i class="fas fa-check-circle"></i> Có thể thanh toán khi nhận hàng (COD)</div>
+                        <div class="delivery-item"><i class="fas fa-check-circle"></i> Thanh toán tiện lợi qua VietQR</div>
                         <div class="delivery-item"><i class="fas fa-check-circle"></i> Đổi trả dễ dàng trong 14 ngày</div>
                         <div class="delivery-item"><i class="fas fa-check-circle"></i> Giao hàng toàn quốc 2-3 ngày</div>
                     </div>

@@ -159,3 +159,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{order}/update-status', [App\Http\Controllers\OrderController::class, 'updateStatusByUser'])->name('orders.updateStatus');
 });
 
+// Payment Webhook (Simulation)
+Route::post('/payment/webhook', [App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');

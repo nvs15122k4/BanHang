@@ -1,0 +1,35 @@
+/* ============================================================
+   Products Page — ShopVN Modern Design
+   ============================================================ */
+.product-card {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--bg-card); overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.product-card:hover {
+  box-shadow: var(--shadow-lg); transform: translateY(-6px);
+  border-color: rgba(99,102,241,0.2);
+}
+.product-card .card-img-top {
+  height: 220px; object-fit: cover; width: 100%; background: var(--bg);
+  transition: transform 0.4s ease;
+}
+.product-card:hover .card-img-top { transform: scale(1.05); }
+.product-card .card-body { padding: 18px; }
+
+/* Per-page selector */
+.per-page-selector {
+  min-width: 130px !important; font-size: 14px !important;
+  border-radius: var(--radius) !important;
+}
+
+/* Modal headers */
+.modal-header {
+  background: var(--bg-card) !important; border-bottom: 1px solid var(--border);
+  padding: 20px 24px !important;
+}
+.modal-header .modal-title {
+  color: var(--text) !important; font-weight: 700 !important;
+  font-family: 'Outfit',sans-serif !important;
+}
+.modal-header .btn-close { filter: none !important; }

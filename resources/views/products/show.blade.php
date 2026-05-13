@@ -356,6 +356,76 @@
     .review-content {
         color: var(--text-light);
     }
+
+    /* Review Avatar */
+    .review-avatar {
+        width: 40px; height: 40px;
+        background: var(--primary);
+        color: #fff;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    /* Review Summary */
+    .avg-rating-big {
+        font-size: 52px;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--text-main);
+    }
+    .avg-stars { color: var(--primary); font-size: 18px; margin: 6px 0 4px; }
+    .avg-count { font-size: 13px; color: var(--text-light); }
+
+    /* Review Notice Boxes */
+    .review-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px 24px;
+        border-left: 4px solid;
+        background: #FAFAFA;
+    }
+    .review-notice i { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .review-notice strong { display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .review-notice .small { color: var(--text-light); }
+
+    .review-notice--done   { border-color: #28A745; }
+    .review-notice--done i { color: #28A745; }
+
+    .review-notice--pending   { border-color: #FFC107; }
+    .review-notice--pending i { color: #FFC107; }
+
+    .review-notice--locked   { border-color: #AAA; }
+    .review-notice--locked i { color: #AAA; }
+
+    /* Star Rating Interactive */
+    .star-rating-interactive { display: flex; gap: 6px; }
+    .star-btn {
+        background: none; border: none; padding: 0;
+        font-size: 28px; color: #DDD; cursor: pointer;
+        transition: color 0.15s, transform 0.15s;
+        line-height: 1;
+    }
+    .star-btn.active { color: var(--primary); }
+    .star-btn:hover  { transform: scale(1.15); }
+    .star-label { font-size: 13px; color: var(--text-light); min-height: 18px; }
+
+    /* Submit Review Button */
+    .btn-submit-review {
+        background: var(--text-main);
+        color: #fff;
+        border: none;
+        padding: 14px 40px;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: background 0.3s;
+        cursor: pointer;
+    }
+    .btn-submit-review:hover { background: var(--primary); }
 </style>
 @endpush
 
@@ -468,60 +538,148 @@
         <div class="tab-pane fade" id="review-pane" role="tabpanel">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
+
+                    {{-- Hiển thị rating tổng quan --}}
+                    @if(count($reviews) > 0)
+                    <div class="review-summary mb-5">
+                        <div class="row align-items-center">
+                            <div class="col-auto text-center">
+                                <div class="avg-rating-big">{{ number_format($product->average_rating, 1) }}</div>
+                                <div class="avg-stars">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= round($product->average_rating))
+                                            <i class="fas fa-star"></i>
+                                        @else
+                                            <i class="far fa-star"></i>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <div class="avg-count">{{ $product->total_reviews }} đánh giá</div>
+                            </div>
+                            <div class="col">
+                                @for($star = 5; $star >= 1; $star--)
+                                    @php $cnt = $reviews->where('rating', $star)->count(); $pct = $product->total_reviews > 0 ? ($cnt / $product->total_reviews) * 100 : 0; @endphp
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span class="small" style="min-width:40px;">{{ $star }} ★</span>
+                                        <div class="flex-grow-1" style="background:#eee;height:8px;border-radius:4px;">
+                                            <div style="width:{{ $pct }}%;background:var(--primary);height:8px;border-radius:4px;transition:width .5s;"></div>
+                                        </div>
+                                        <span class="small text-muted" style="min-width:20px;">{{ $cnt }}</span>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    {{-- Form đánh giá --}}
                     @auth
-                        @if(!$userReview)
-                            <div class="mb-5 pb-5 border-bottom">
-                                <h4 class="mb-4 text-uppercase font-weight-bold" style="font-size: 18px; letter-spacing: 1px;">Viết đánh giá của bạn</h4>
-                                <form action="{{ route('reviews.store') }}" method="POST">
+                        @if($userReview)
+                            {{-- Đã đánh giá rồi --}}
+                            <div class="review-notice review-notice--done mb-5">
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Bạn đã gửi đánh giá cho sản phẩm này.</strong>
+                                    <p class="mb-0 small">
+                                        @if($userReview->trang_thai === 'approved')
+                                            Đánh giá của bạn đã được hiển thị công khai.
+                                        @elseif($userReview->trang_thai === 'rejected')
+                                            Đánh giá của bạn đã bị từ chối.
+                                        @else
+                                            Đánh giá đang chờ duyệt, sẽ hiển thị sau khi được phê duyệt.
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                        @elseif($canReview)
+                            {{-- Đã mua + đã thanh toán -> hiển thị form --}}
+                            <div class="review-form-wrap mb-5 pb-5 border-bottom">
+                                <h4 class="mb-4 text-uppercase font-weight-bold" style="font-size:16px;letter-spacing:1px;">
+                                    <i class="fas fa-pen me-2" style="color:var(--primary);"></i>Viết đánh giá của bạn
+                                </h4>
+                                <form action="{{ route('reviews.store') }}" method="POST" id="reviewForm">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <div class="mb-3">
-                                        <label class="form-label text-uppercase small font-weight-bold">Xếp hạng</label>
-                                        <select name="rating" class="form-select" style="border-radius:0;">
-                                            <option value="5">5 Sao - Rất tốt</option>
-                                            <option value="4">4 Sao - Tốt</option>
-                                            <option value="3">3 Sao - Trung bình</option>
-                                            <option value="2">2 Sao - Kém</option>
-                                            <option value="1">1 Sao - Rất kém</option>
-                                        </select>
+                                    <input type="hidden" name="rating" id="ratingInput" value="5">
+
+                                    {{-- Star Rating Interactive --}}
+                                    <div class="mb-4">
+                                        <label class="form-label text-uppercase small fw-bold d-block mb-2">Xếp hạng</label>
+                                        <div class="star-rating-interactive" id="starRating">
+                                            @for($s = 1; $s <= 5; $s++)
+                                                <button type="button" class="star-btn {{ $s <= 5 ? 'active' : '' }}" data-value="{{ $s }}">
+                                                    <i class="fas fa-star"></i>
+                                                </button>
+                                            @endfor
+                                        </div>
+                                        <div class="star-label mt-1" id="starLabel">Rất tốt</div>
                                     </div>
+
                                     <div class="mb-3">
-                                        <label class="form-label text-uppercase small font-weight-bold">Bình luận</label>
-                                        <textarea name="comment" class="form-control" rows="4" style="border-radius:0;" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."></textarea>
+                                        <label class="form-label text-uppercase small fw-bold">Nhận xét</label>
+                                        <textarea name="comment" class="form-control" rows="4" style="border-radius:0;"
+                                            placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."></textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-dark" style="border-radius:0; padding:12px 30px; font-weight:700;">GỬI ĐÁNH GIÁ</button>
+                                    <button type="submit" class="btn-submit-review">
+                                        <i class="fas fa-paper-plane me-2"></i>GỬI ĐÁNH GIÁ
+                                    </button>
                                 </form>
                             </div>
+                        @elseif($hasPurchased && !$paymentPaid)
+                            {{-- Đã mua nhưng đơn hàng chưa hoàn thành --}}
+                            <div class="review-notice review-notice--pending mb-5">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <strong>Đơn hàng chưa hoàn thành</strong>
+                                    <p class="mb-0 small">Bạn đã đặt mua sản phẩm này. Sau khi đơn hàng được chuyển sang trạng thái <strong>Hoàn thành</strong>, bạn sẽ nhận được thông báo và có thể đánh giá sản phẩm.</p>
+                                </div>
+                            </div>
                         @else
-                            <div class="alert alert-info" style="border-radius:0;">
-                                Bạn đã đánh giá sản phẩm này. Cảm ơn bạn!
+                            {{-- Chưa mua sản phẩm --}}
+                            <div class="review-notice review-notice--locked mb-5">
+                                <i class="fas fa-lock"></i>
+                                <div>
+                                    <strong>Chỉ khách hàng đã mua mới được đánh giá</strong>
+                                    <p class="mb-0 small">Bạn cần mua và thanh toán thành công sản phẩm này để có thể gửi đánh giá.</p>
+                                </div>
                             </div>
                         @endif
                     @else
-                        <div class="alert alert-light border text-center py-4" style="border-radius:0;">
-                            Vui lòng <a href="{{ route('login') }}" class="font-weight-bold text-dark">đăng nhập</a> để viết đánh giá.
+                        <div class="review-notice review-notice--locked mb-5">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>Vui lòng đăng nhập để đánh giá</strong>
+                                <p class="mb-0 small">
+                                    <a href="{{ route('login') }}" class="text-dark fw-bold">Đăng nhập</a> để viết đánh giá cho sản phẩm này.
+                                </p>
+                            </div>
                         </div>
                     @endauth
 
+                    {{-- Danh sách đánh giá --}}
                     <div class="reviews-list">
                         @forelse($reviews as $review)
                             <div class="review-item">
                                 <div class="review-header">
-                                    <span class="review-user">{{ $review->user->name }}</span>
-                                    <span class="review-date">{{ $review->created_at->format('d/m/Y') }}</span>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="review-avatar">{{ mb_strtoupper(mb_substr($review->user->name, 0, 1)) }}</div>
+                                        <div>
+                                            <div class="review-user">{{ $review->user->name }}</div>
+                                            <div class="review-date">{{ $review->created_at->format('d/m/Y') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                                        @endfor
+                                    </div>
                                 </div>
-                                <div class="review-rating">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
-                                    @endfor
-                                </div>
-                                <div class="review-content">
-                                    {{ $review->comment }}
-                                </div>
+                                <div class="review-content">{{ $review->comment ?: '(Không có nhận xét)' }}</div>
                             </div>
                         @empty
-                            <div class="text-center py-4 text-muted">
-                                Chưa có đánh giá nào cho sản phẩm này.
+                            <div class="text-center py-5 text-muted">
+                                <i class="far fa-star fa-3x mb-3 d-block" style="color:#ddd;"></i>
+                                Chưa có đánh giá nào được duyệt cho sản phẩm này.
                             </div>
                         @endforelse
                     </div>
@@ -591,5 +749,43 @@
         var val = parseInt(input.value);
         if (val > 1) input.value = val - 1;
     }
+
+    // Star Rating Interactive
+    document.addEventListener('DOMContentLoaded', function () {
+        const starLabels = ['', 'Tệ', 'Không tốt', 'Bình thường', 'Tốt', 'Rất tốt'];
+        const starBtns = document.querySelectorAll('.star-btn');
+        const ratingInput = document.getElementById('ratingInput');
+        const starLabel = document.getElementById('starLabel');
+
+        if (!starBtns.length) return;
+
+        let currentRating = parseInt(ratingInput ? ratingInput.value : 5);
+
+        function setStars(val) {
+            starBtns.forEach(function (btn) {
+                btn.classList.toggle('active', parseInt(btn.dataset.value) <= val);
+            });
+            if (starLabel) starLabel.textContent = starLabels[val] || '';
+            if (ratingInput) ratingInput.value = val;
+            currentRating = val;
+        }
+
+        // Init
+        setStars(currentRating);
+
+        starBtns.forEach(function (btn) {
+            btn.addEventListener('mouseenter', function () {
+                setStars(parseInt(this.dataset.value));
+            });
+            btn.addEventListener('click', function () {
+                currentRating = parseInt(this.dataset.value);
+                setStars(currentRating);
+            });
+        });
+
+        document.getElementById('starRating') && document.getElementById('starRating').addEventListener('mouseleave', function () {
+            setStars(currentRating);
+        });
+    });
 </script>
 @endsection

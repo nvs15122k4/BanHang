@@ -6,6 +6,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\InventoryLog;
+use App\Notifications\OrderStatusUpdated;
+use App\Notifications\PaymentStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,12 +45,13 @@ class OrderController extends Controller
 
         // Statistics
         $stats = [
-            'total' => Order::count(),
-            'pending' => Order::where('trang_thai', 'pending')->count(),
-            'confirmed' => Order::where('trang_thai', 'confirmed')->count(),
-            'shipping' => Order::where('trang_thai', 'shipping')->count(),
-            'completed' => Order::where('trang_thai', 'completed')->count(),
-            'cancelled' => Order::where('trang_thai', 'cancelled')->count(),
+            'total'         => Order::count(),
+            'pending'       => Order::where('trang_thai', 'pending')->count(),
+            'confirmed'     => Order::where('trang_thai', 'confirmed')->count(),
+            'shipping'      => Order::where('trang_thai', 'shipping')->count(),
+            'disputing'     => Order::where('trang_thai', 'disputing')->count(),
+            'completed'     => Order::where('trang_thai', 'completed')->count(),
+            'cancelled'     => Order::where('trang_thai', 'cancelled')->count(),
             'total_revenue' => Order::where('trang_thai', 'completed')->sum('thanh_tien'),
         ];
 
@@ -66,28 +69,39 @@ class OrderController extends Controller
     }
 
     /**
-     * Update order status
+     * Update order status (Admin)
      */
     public function updateStatus(Request $request, Order $order)
     {
+        $allowedStatuses = array_keys(Order::adminStatusLabels());
+
         $request->validate([
-            'trang_thai' => 'required|in:pending,confirmed,shipping,completed,cancelled',
+            'trang_thai' => ['required', 'in:' . implode(',', $allowedStatuses)],
         ]);
 
         $oldStatus = $order->trang_thai;
         $newStatus = $request->trang_thai;
 
-        // Nếu chuyển từ pending sang cancelled, hoàn lại tồn kho
+        // Kiểm tra chuyển trạng thái hợp lệ (đã được nới lỏng theo yêu cầu hiển thị tất cả trạng thái)
+        // $adminNext = Order::adminNextStatuses($oldStatus);
+        // if (!empty($adminNext) && !in_array($newStatus, $adminNext)) {
+        //     return back()->with('error', 'Không thể chuyển từ "' . $order->status_label . '" sang trạng thái này!');
+        // }
+
+        // Hoàn kho khi hủy
         if ($oldStatus !== 'cancelled' && $newStatus === 'cancelled') {
             $this->restoreInventory($order);
         }
 
-        // Nếu chuyển từ pending sang confirmed, trừ tồn kho
-        if ($oldStatus === 'pending' && $newStatus === 'confirmed') {
-            $this->deductInventory($order);
-        }
-
         $order->update(['trang_thai' => $newStatus]);
+
+        if ($oldStatus !== $newStatus) {
+            try {
+                $order->user->notify(new OrderStatusUpdated($order, $oldStatus, $newStatus));
+            } catch (\Exception $e) {
+                \Log::warning('Could not send order status notification: ' . $e->getMessage());
+            }
+        }
 
         return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
     }
@@ -101,7 +115,18 @@ class OrderController extends Controller
             'trang_thai_thanh_toan' => 'required|in:unpaid,paid',
         ]);
 
+        $oldStatus = $order->trang_thai_thanh_toan;
+
         $order->update(['trang_thai_thanh_toan' => $request->trang_thai_thanh_toan]);
+
+        // Gửi thông báo khi trạng thái thanh toán thay đổi
+        if ($oldStatus !== $request->trang_thai_thanh_toan) {
+            try {
+                $order->user->notify(new PaymentStatusUpdated($order, $request->trang_thai_thanh_toan));
+            } catch (\Exception $e) {
+                \Log::warning('Could not send payment status notification: ' . $e->getMessage());
+            }
+        }
 
         return back()->with('success', 'Cập nhật trạng thái thanh toán thành công!');
     }
@@ -243,6 +268,41 @@ class OrderController extends Controller
     }
 
     /**
+     * User tự cập nhật trạng thái (xác nhận đã nhận / khiếu nại)
+     */
+    public function updateStatusByUser(Request $request, Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate(['trang_thai' => 'required|string']);
+
+        $newStatus = $request->trang_thai;
+        $oldStatus = $order->trang_thai;
+        $userNext  = Order::userNextStatuses($oldStatus);
+
+        if (!in_array($newStatus, $userNext)) {
+            return back()->with('error', 'Hành động không hợp lệ ở trạng thái hiện tại!');
+        }
+
+        $order->update(['trang_thai' => $newStatus]);
+
+        try {
+            $order->user->notify(new OrderStatusUpdated($order, $oldStatus, $newStatus));
+        } catch (\Exception $e) {
+            \Log::warning('Could not send order status notification: ' . $e->getMessage());
+        }
+
+        $messages = [
+            'completed' => 'Cảm ơn bạn đã xác nhận nhận hàng!',
+            'disputing' => 'Khiếu nại của bạn đã được gửi. Chúng tôi sẽ xử lý sớm nhất.',
+        ];
+
+        return back()->with('success', $messages[$newStatus] ?? 'Cập nhật thành công!');
+    }
+
+    /**
      * Create new order (for testing)
      */
     public function create()
@@ -281,7 +341,7 @@ class OrderController extends Controller
                 
                 $items[] = [
                     'product_id' => $product->id,
-                    'ten_san_pham' => $product->ten_san_pham,
+                    'ten_san_pham' => $product->ten_sp,
                     'gia' => $product->gia,
                     'so_luong' => $item['so_luong'],
                     'thanh_tien' => $thanhTien,

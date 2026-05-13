@@ -209,29 +209,66 @@
                         </div>
                     @else
                         @php
-                            $steps = ['pending','confirmed','shipping','completed'];
-                            $currentIdx = array_search($order->trang_thai, $steps);
-                            if ($currentIdx === false) $currentIdx = 0;
+                            $steps = [
+                                ['key' => 'pending',   'icon' => 'clipboard-list', 'label' => 'Chờ xác nhận'],
+                                ['key' => 'confirmed', 'icon' => 'box',            'label' => 'Đang chuẩn bị hàng'],
+                                ['key' => 'shipping',  'icon' => 'shipping-fast',  'label' => 'Đang giao hàng'],
+                                ['key' => 'delivered', 'icon' => 'user-check',     'label' => 'Chờ xác nhận'],
+                                ['key' => 'completed', 'icon' => 'box-open',       'label' => 'Hoàn thành'],
+                            ];
+
+                            // disputing vẫn nằm ở bước delivered trên track
+                            $trackKey   = $order->trang_thai === 'disputing' ? 'delivered' : $order->trang_thai;
+                            $stepKeys   = array_column($steps, 'key');
+                            $currentIdx = array_search($trackKey, $stepKeys) ?? 0;
                         @endphp
-                        
+
                         <div class="status-track">
-                            <div class="status-step {{ $currentIdx >= 0 ? 'active' : '' }}">
-                                <div class="status-icon"><i class="fas fa-clipboard-list"></i></div>
-                                <div class="status-label">Chờ xử lý</div>
-                            </div>
-                            <div class="status-step {{ $currentIdx >= 1 ? 'active' : '' }}">
-                                <div class="status-icon"><i class="fas fa-check"></i></div>
-                                <div class="status-label">Xác nhận</div>
-                            </div>
-                            <div class="status-step {{ $currentIdx >= 2 ? 'active' : '' }}">
-                                <div class="status-icon"><i class="fas fa-shipping-fast"></i></div>
-                                <div class="status-label">Đang giao</div>
-                            </div>
-                            <div class="status-step {{ $currentIdx >= 3 ? 'active' : '' }}">
-                                <div class="status-icon"><i class="fas fa-box-open"></i></div>
-                                <div class="status-label">Hoàn thành</div>
-                            </div>
+                            @foreach($steps as $i => $step)
+                                <div class="status-step {{ $i <= $currentIdx ? 'active' : '' }}">
+                                    <div class="status-icon"><i class="fas fa-{{ $step['icon'] }}"></i></div>
+                                    <div class="status-label">{{ $step['label'] }}</div>
+                                </div>
+                            @endforeach
                         </div>
+
+                        {{-- Banner trạng thái đặc biệt --}}
+                        @if($order->trang_thai === 'disputing')
+                            <div class="text-center mt-3 py-3" style="background:#FFF5F5; border:1px solid #FFCCCC;">
+                                <i class="fas fa-exclamation-circle fa-2x mb-2" style="color:#EB5757;"></i>
+                                <p class="mb-0 fw-bold" style="color:#EB5757;">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
+                            </div>
+                        @endif
+
+                        {{-- Nút hành động của user khi đơn đang giao --}}
+                        @php $userNext = \App\Models\Order::userNextStatuses($order->trang_thai); @endphp
+                        @if(count($userNext) > 0)
+                            <div class="mt-4 p-3" style="background:#F9F9F9; border:1px solid #EEE;">
+                                <p class="fw-bold mb-3" style="font-size:14px;">Bạn đã nhận được hàng chưa?</p>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    {{-- Đã nhận --}}
+                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;">
+                                        @csrf
+                                        <input type="hidden" name="trang_thai" value="completed">
+                                        <button type="submit" class="btn btn-success"
+                                            style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
+                                            onclick="return confirm('Xác nhận bạn đã nhận được hàng?')">
+                                            <i class="fas fa-check-circle me-2"></i>Đã nhận được hàng
+                                        </button>
+                                    </form>
+                                    {{-- Chưa nhận / Khiếu nại --}}
+                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;">
+                                        @csrf
+                                        <input type="hidden" name="trang_thai" value="disputing">
+                                        <button type="submit" class="btn btn-outline-danger"
+                                            style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
+                                            onclick="return confirm('Xác nhận bạn chưa nhận được hàng và muốn khiếu nại?')">
+                                            <i class="fas fa-exclamation-circle me-2"></i>Chưa nhận được hàng
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -253,8 +290,39 @@
                             @endif
                             
                             <div style="flex:1;">
-                                <div class="item-title">{{ $detail->product ? $detail->product->ten_sp : 'Sản phẩm đã xóa' }}</div>
+                                <div class="item-title">
+                                    @if($detail->product)
+                                        <a href="{{ route('products.show', $detail->product->id) }}" style="color:inherit; text-decoration:none;">
+                                            {{ $detail->product->ten_sp }}
+                                        </a>
+                                    @else
+                                        Sản phẩm đã xóa
+                                    @endif
+                                </div>
                                 <div class="item-meta">{{ number_format($detail->gia) }}đ × {{ $detail->so_luong }}</div>
+
+                                {{-- Nút đánh giá — chỉ hiện khi đơn hoàn thành và còn sản phẩm --}}
+                                @if($order->trang_thai === 'completed' && $detail->product)
+                                    @php
+                                        $reviewed = \App\Models\Review::where('user_id', auth()->id())
+                                            ->where('product_id', $detail->product->id)
+                                            ->first();
+                                    @endphp
+                                    @if($reviewed)
+                                        <span class="mt-2 d-inline-flex align-items-center gap-1" style="font-size:12px; color:#27AE60; font-weight:600;">
+                                            <i class="fas fa-check-circle"></i> Đã đánh giá
+                                            @if($reviewed->trang_thai === 'pending')
+                                                <span style="color:#F5A623;">(Đang chờ duyệt)</span>
+                                            @endif
+                                        </span>
+                                    @else
+                                        <a href="{{ route('products.show', $detail->product->id) }}#review-pane"
+                                           class="btn mt-2"
+                                           style="background:var(--primary); color:#fff; border:none; padding:6px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:0; text-decoration:none; display:inline-block;">
+                                            <i class="fas fa-star me-1"></i>Đánh giá
+                                        </a>
+                                    @endif
+                                @endif
                             </div>
                             
                             <div class="fw-bold" style="font-size: 16px;">

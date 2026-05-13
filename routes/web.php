@@ -143,10 +143,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 });
 
+// Notification routes (auth required)
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/fetch', [App\Http\Controllers\NotificationController::class, 'fetch'])->name('notifications.fetch');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.readAll');
+});
+
 // My Orders routes (auth required)
 Route::middleware('auth')->group(function () {
     Route::get('/orders', [App\Http\Controllers\OrderController::class, 'myOrders'])->name('orders.index');
     Route::get('/orders/{order}', [App\Http\Controllers\OrderController::class, 'myOrderShow'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('/orders/{order}/update-status', [App\Http\Controllers\OrderController::class, 'updateStatusByUser'])->name('orders.updateStatus');
 });
 

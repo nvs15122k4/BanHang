@@ -206,10 +206,15 @@
                             <p class="mb-3 fw-bold">Chọn từ địa chỉ của bạn:</p>
                             @foreach($addresses as $index => $address)
                                 <label class="address-card w-100 d-flex gap-3 {{ $index === 0 ? 'selected' : '' }}" onclick="selectAddress(this)">
-                                    <input type="radio" name="address_id" value="{{ $address->id }}" class="address-radio" {{ $index === 0 ? 'checked' : '' }} onchange="populateForm({{ json_encode($address) }})">
+                                    <input type="radio" name="address_id" value="{{ $address->id }}" class="address-radio"
+                                        {{ $index === 0 ? 'checked' : '' }}
+                                        data-name="{{ $address->recipient_name }}"
+                                        data-phone="{{ $address->phone }}"
+                                        data-address="{{ $address->full_address }}"
+                                        onchange="populateFromRadio(this)">
                                     <div style="flex: 1;">
-                                        <div class="fw-bold mb-1">{{ $address->ten_nguoi_nhan }} <span class="text-muted fw-normal">| {{ $address->sdt_nguoi_nhan }}</span></div>
-                                        <div class="text-muted" style="font-size: 14px;">{{ $address->dia_chi_chi_tiet }}</div>
+                                        <div class="fw-bold mb-1">{{ $address->recipient_name }} <span class="text-muted fw-normal">| {{ $address->phone }}</span></div>
+                                        <div class="text-muted" style="font-size: 14px;">{{ $address->full_address }}</div>
                                     </div>
                                     @if($address->is_default)
                                         <span class="badge bg-dark" style="height: fit-content;">Mặc định</span>
@@ -327,10 +332,10 @@
         element.classList.add('selected');
     }
     
-    function populateForm(address) {
-        document.getElementById('ten_nguoi_nhan').value = address.ten_nguoi_nhan;
-        document.getElementById('sdt_nguoi_nhan').value = address.sdt_nguoi_nhan;
-        document.getElementById('dia_chi_giao_hang').value = address.dia_chi_chi_tiet;
+    function populateFromRadio(radio) {
+        document.getElementById('ten_nguoi_nhan').value = radio.dataset.name || '';
+        document.getElementById('sdt_nguoi_nhan').value = radio.dataset.phone || '';
+        document.getElementById('dia_chi_giao_hang').value = radio.dataset.address || '';
     }
     
     function clearForm() {
@@ -350,6 +355,14 @@
         if(check) check.style.display = 'block';
         element.querySelector('input').checked = true;
     }
+
+    // Auto-populate form with first (default) address on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstChecked = document.querySelector('input[name="address_id"]:checked');
+        if (firstChecked && firstChecked.value !== 'new') {
+            populateFromRadio(firstChecked);
+        }
+    });
 </script>
 @endpush
 @endsection

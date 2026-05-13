@@ -3,14 +3,14 @@
 @section('title', 'Quản lý Đơn hàng')
 
 @section('content')
-<div class="page-header">
+<!-- <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-shopping-cart me-3"></i>QUẢN LÝ ĐƠN HÀNG</h1>
         <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>TẠO ĐƠN HÀNG MỚI
         </a>
     </div>
-</div>
+</div> -->
 
 <!-- Statistics -->
 <div class="row mb-4">
@@ -23,31 +23,31 @@
     <div class="col-md-2">
         <div class="stat-card">
             <div class="stat-value text-warning">{{ $stats['pending'] }}</div>
-            <div class="stat-label">Chờ xác nhận</div>
+            <div class="stat-label">Chờ duyệt đơn</div>
         </div>
     </div>
     <div class="col-md-2">
         <div class="stat-card">
             <div class="stat-value text-info">{{ $stats['confirmed'] }}</div>
-            <div class="stat-label">Đã xác nhận</div>
+            <div class="stat-label">Đã duyệt đơn</div>
         </div>
     </div>
     <div class="col-md-2">
         <div class="stat-card">
             <div class="stat-value text-primary">{{ $stats['shipping'] }}</div>
-            <div class="stat-label">Đang giao</div>
+            <div class="stat-label">Đang giao hàng</div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card">
+            <div class="stat-value text-danger">{{ $stats['disputing'] }}</div>
+            <div class="stat-label">Đang khiếu nại</div>
         </div>
     </div>
     <div class="col-md-2">
         <div class="stat-card">
             <div class="stat-value text-success">{{ $stats['completed'] }}</div>
             <div class="stat-label">Hoàn thành</div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="stat-card">
-            <div class="stat-value text-danger">{{ $stats['cancelled'] }}</div>
-            <div class="stat-label">Đã hủy</div>
         </div>
     </div>
 </div>
@@ -71,11 +71,9 @@
         <div class="col-md-3">
             <select name="status" class="form-select">
                 <option value="">-- Trạng thái đơn --</option>
-                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
-                <option value="confirmed" {{ request('status') === 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
-                <option value="shipping" {{ request('status') === 'shipping' ? 'selected' : '' }}>Đang giao</option>
-                <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                @foreach(\App\Models\Order::adminStatusLabels() as $val => $label)
+                    <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
             </select>
         </div>
         <div class="col-md-3">
@@ -122,9 +120,11 @@
                         <td>
                             @php
                                 $statusColors = [
-                                    'pending' => 'warning',
+                                    'pending'   => 'warning',
                                     'confirmed' => 'info',
-                                    'shipping' => 'primary',
+                                    'shipping'  => 'primary',
+                                    'delivered' => 'warning',
+                                    'disputing' => 'danger',
                                     'completed' => 'success',
                                     'cancelled' => 'danger',
                                 ];

@@ -283,6 +283,37 @@
 
             <div class="action-icons">
                 @auth
+                    {{-- Notification Bell --}}
+                    <div class="dropdown" id="notifDropdownWrap">
+                        <a href="#" class="position-relative" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="color:var(--text-main);" id="notifToggle">
+                            <i class="fas fa-bell" style="font-size:18px;"></i>
+                            <span class="cart-badge d-none" id="notif-badge">0</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end shadow border-0 p-0" id="notifDropdown" style="border-radius:0; min-width:340px;">
+                            <div style="max-height:460px; display:flex; flex-direction:column;">
+                                {{-- Header --}}
+                                <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom flex-shrink-0">
+                                    <span style="font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:1px;">Thông báo</span>
+                                    <a href="#" id="markAllRead" style="font-size:12px; color:#888; display:none;">Đánh dấu đã đọc</a>
+                                </div>
+                                {{-- List --}}
+                                <div id="notifList" style="overflow-y:auto; flex:1;">
+                                    <div class="text-center py-4 text-muted" id="notifEmpty" style="font-size:13px;">
+                                        <i class="far fa-bell fa-2x mb-2 d-block" style="color:#ddd;"></i>
+                                        Không có thông báo
+                                    </div>
+                                </div>
+                                {{-- Footer --}}
+                                <a href="{{ route('notifications.index') }}"
+                                   class="d-block text-center py-2 border-top flex-shrink-0"
+                                   style="font-size:12px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:1px; text-decoration:none; background:#FAFAFA;">
+                                    Xem tất cả thông báo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- User Menu --}}
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="color:var(--text-main); text-decoration:none;">
                             <i class="far fa-user"></i>
@@ -441,7 +472,7 @@
 <!-- ── TOAST NOTIFICATIONS ── -->
 <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index:1060;">
     @if(session('success'))
-        <div class="toast align-items-center text-bg-success border-0 show" role="alert">
+        <div class="toast align-items-center text-bg-success border-0" role="alert">
             <div class="d-flex">
                 <div class="toast-body">{{ session('success') }}</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -449,7 +480,7 @@
         </div>
     @endif
     @if(session('error'))
-        <div class="toast align-items-center text-bg-danger border-0 show" role="alert">
+        <div class="toast align-items-center text-bg-danger border-0" role="alert">
             <div class="d-flex">
                 <div class="toast-body">{{ session('error') }}</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -462,44 +493,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-hide toasts
-    setTimeout(function() {
-        document.querySelectorAll('.toast.show').forEach(function(t) {
-            new bootstrap.Toast(t).hide();
-        });
-    }, 4000);
+    const CSRF = document.querySelector('meta[name="csrf-token"]').content;
 
-    // AJAX Add to Cart
-    document.addEventListener('submit', function(e) {
-        const form = e.target;
-        if (form.action && form.action.includes('cart/add')) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const btn = form.querySelector('button[type="submit"]');
-            const orig = btn ? btn.innerHTML : '';
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(r => r.json())
-            .then(data => {
-                showToast(data.message || (data.success ? 'Đã thêm vào giỏ!' : 'Có lỗi xảy ra!'), data.success ? 'success' : 'danger');
-                if (data.success) {
-                    const badge = document.getElementById('cart-badge-count');
-                    if (badge) { badge.innerText = data.cart_count; badge.classList.remove('d-none'); }
-                }
-            })
-            .catch(() => showToast('Không thể kết nối máy chủ!', 'danger'))
-            .finally(() => { if (btn) { btn.disabled = false; btn.innerHTML = orig; } });
-        }
-    });
-
+    /* ── TOAST ── */
     window.showToast = function(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const el = document.createElement('div');
@@ -511,6 +507,180 @@ document.addEventListener('DOMContentLoaded', function() {
         t.show();
         el.addEventListener('hidden.bs.toast', () => el.remove());
     };
+
+    // Auto-hide session toasts
+    document.querySelectorAll('.toast.show').forEach(function(el) {
+        const t = new bootstrap.Toast(el, { delay: 4000, autohide: true });
+        t.show();
+        el.addEventListener('hidden.bs.toast', () => el.remove());
+    });
+
+    /* ── AJAX ADD TO CART ── */
+    document.addEventListener('submit', function(e) {
+        const form = e.target;
+        if (form.action && form.action.includes('cart/add')) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const btn = form.querySelector('button[type="submit"]');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+            fetch(form.action, {
+                method: 'POST', body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': CSRF }
+            })
+            .then(r => r.json())
+            .then(data => {
+                showToast(data.message || (data.success ? 'Đã thêm vào giỏ!' : 'Có lỗi!'), data.success ? 'success' : 'danger');
+                if (data.success) {
+                    const badge = document.getElementById('cart-badge-count');
+                    if (badge) { badge.innerText = data.cart_count; badge.classList.remove('d-none'); }
+                }
+            })
+            .catch(() => showToast('Không thể kết nối máy chủ!', 'danger'))
+            .finally(() => { if (btn) { btn.disabled = false; btn.innerHTML = orig; } });
+        }
+    });
+
+    @auth
+    /* ── NOTIFICATION SYSTEM ── */
+    const NOTIF_ICONS = {
+        'confirmed':  'check-circle',
+        'shipping':   'shipping-fast',
+        'completed':  'box-open',
+        'cancelled':  'times-circle',
+        'pending':    'clock',
+        'paid':       'check-circle',
+        'unpaid':     'times-circle',
+    };
+    const NOTIF_COLORS = {
+        'confirmed': '#27AE60',
+        'shipping':  '#7C3AED',
+        'completed': '#7C3AED',
+        'cancelled': '#E53E3E',
+        'pending':   '#F5A623',
+        'paid':      '#27AE60',
+        'unpaid':    '#888',
+    };
+
+    let lastNotifCount = -1;
+
+    function buildNotifItem(n) {
+        const data    = n.data || {};
+        const isRead  = !!n.read_at;
+        const status  = data.status || data.type || '';
+        const icon    = NOTIF_ICONS[status] || 'bell';
+        const color   = NOTIF_COLORS[status] || '#7C3AED';
+        const bg      = isRead ? '#fff' : '#FFF9F0';
+        const border  = isRead ? '' : 'border-left:3px solid #7C3AED;';
+
+        return `<a href="${data.url || '#'}"
+                   class="d-flex align-items-start gap-2 px-3 py-2 border-bottom notif-item text-decoration-none"
+                   style="background:${bg}; ${border}"
+                   data-id="${n.id}">
+            <div class="flex-shrink-0 mt-1">
+                <i class="fas fa-${icon}" style="color:${color}; font-size:16px;"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div style="font-weight:${isRead ? '500' : '700'}; font-size:13px; color:#1A1A1A;">${data.title || 'Thông báo'}</div>
+                <div style="font-size:12px; color:${isRead ? '#999' : '#555'}; line-height:1.4;">${data.message || ''}</div>
+                <div style="font-size:11px; color:#BBB; margin-top:3px;">${n.time || ''}</div>
+            </div>
+            ${!isRead ? '<div style="width:8px;height:8px;background:#7C3AED;border-radius:50%;flex-shrink:0;margin-top:6px;"></div>' : ''}
+        </a>`;
+    }
+
+    function renderNotifications(notifications, unreadCount) {
+        const list  = document.getElementById('notifList');
+        const badge = document.getElementById('notif-badge');
+        const markAllBtn = document.getElementById('markAllRead');
+        const empty = document.getElementById('notifEmpty');
+
+        // Badge
+        if (badge) {
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                badge.classList.remove('d-none');
+            } else {
+                badge.classList.add('d-none');
+            }
+        }
+
+        // Mark all button
+        if (markAllBtn) {
+            markAllBtn.style.display = unreadCount > 0 ? 'inline' : 'none';
+        }
+
+        if (!notifications || notifications.length === 0) {
+            list.innerHTML = `<div class="text-center py-4 text-muted" style="font-size:13px;">
+                <i class="far fa-bell fa-2x mb-2 d-block" style="color:#ddd;"></i>Không có thông báo
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = notifications.map(buildNotifItem).join('');
+
+        // Bind click → mark as read
+        list.querySelectorAll('.notif-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const id = this.dataset.id;
+                if (!id) return;
+                fetch(`/notifications/${id}/read`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                // Visually mark as read immediately
+                this.style.background = '#fff';
+                this.style.borderLeft = '';
+                const dot = this.querySelector('[style*="border-radius:50%"]');
+                if (dot) dot.remove();
+                const title = this.querySelector('[style*="font-weight"]');
+                if (title) title.style.fontWeight = '500';
+            });
+        });
+    }
+
+    async function fetchNotifications() {
+        try {
+            const res  = await fetch('/notifications/fetch', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            });
+            if (!res.ok) return;
+            const json = await res.json();
+
+            // Show toast for new notifications
+            if (lastNotifCount >= 0 && json.unread_count > lastNotifCount) {
+                const newest = json.notifications.find(n => !n.read_at);
+                if (newest) {
+                    showToast((newest.data.title || 'Thông báo mới') + ': ' + (newest.data.message || ''), 'success');
+                }
+            }
+            lastNotifCount = json.unread_count;
+
+            renderNotifications(json.notifications, json.unread_count);
+        } catch {}
+    }
+
+    // Initial fetch + poll every 30s
+    fetchNotifications();
+    setInterval(fetchNotifications, 30000);
+
+    // Mark all read
+    document.getElementById('markAllRead')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch('/notifications/read-all', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(() => {
+            lastNotifCount = 0;
+            fetchNotifications();
+        });
+    });
+
+    // Refresh on dropdown open
+    document.getElementById('notifToggle')?.addEventListener('click', function() {
+        fetchNotifications();
+    });
+    @endauth
 });
 </script>
 @stack('scripts')

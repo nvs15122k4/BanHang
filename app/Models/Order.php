@@ -57,19 +57,83 @@ class Order extends Model
     }
 
     /**
-     * Get status label
+     * Nhãn trạng thái hiển thị cho ADMIN
      */
-    public function getStatusLabelAttribute()
+    public static function adminStatusLabels(): array
     {
-        $labels = [
-            'pending' => 'Chờ xác nhận',
-            'confirmed' => 'Đã xác nhận',
-            'shipping' => 'Đang giao hàng',
+        return [
+            'pending'   => 'Chờ duyệt đơn',
+            'confirmed' => 'Đã duyệt đơn',
+            'shipping'  => 'Đang giao hàng',
+            'delivered' => 'Chờ KH xác nhận',
+            'disputing' => 'Đang khiếu nại',
             'completed' => 'Hoàn thành',
             'cancelled' => 'Đã hủy',
         ];
+    }
 
-        return $labels[$this->trang_thai] ?? $this->trang_thai;
+    /**
+     * Nhãn trạng thái hiển thị cho USER
+     * (mapping từ internal status → text user thấy)
+     */
+    public static function userStatusLabels(): array
+    {
+        return [
+            'pending'   => 'Chờ duyệt đơn',
+            'confirmed' => 'Đang chuẩn bị hàng',
+            'shipping'  => 'Đang giao hàng',
+            'delivered' => 'Chờ xác nhận',
+            'disputing' => 'Đang xử lý khiếu nại',
+            'completed' => 'Hoàn thành',
+            'cancelled' => 'Đã hủy',
+        ];
+    }
+
+    /**
+     * Các bước admin được phép chuyển tiếp (theo thứ tự flow)
+     */
+    public static function adminNextStatuses(string $current): array
+    {
+        $map = [
+            'pending'   => ['confirmed', 'cancelled'],
+            'confirmed' => ['shipping', 'cancelled'],
+            'shipping'  => ['delivered'],
+            'delivered' => ['completed'],
+            'disputing' => ['completed', 'shipping'],
+            'completed' => [],
+            'cancelled' => [],
+        ];
+
+        return $map[$current] ?? [];
+    }
+
+    /**
+     * Các hành động user được phép thực hiện khi đơn đang giao
+     * shipping → completed (đã nhận) hoặc disputing (chưa nhận / khiếu nại)
+     */
+    public static function userNextStatuses(string $current): array
+    {
+        $map = [
+            'delivered' => ['completed', 'disputing'],
+        ];
+
+        return $map[$current] ?? [];
+    }
+
+    /**
+     * Get status label (dùng nhãn admin làm mặc định)
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return self::adminStatusLabels()[$this->trang_thai] ?? $this->trang_thai;
+    }
+
+    /**
+     * Get status label hiển thị cho user
+     */
+    public function getUserStatusLabelAttribute(): string
+    {
+        return self::userStatusLabels()[$this->trang_thai] ?? $this->trang_thai;
     }
 
     /**

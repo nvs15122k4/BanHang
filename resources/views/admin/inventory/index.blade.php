@@ -184,7 +184,7 @@
 <!-- Import Modal -->
 <div class="modal fade" id="importModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
+        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
             <div class="modal-header" style="border-bottom: 1px solid rgba(40, 167, 69, 0.2);">
                 <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #28a745;"><i class="fas fa-arrow-down me-2"></i>NHẬP KHO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -216,7 +216,7 @@
 <!-- Export Modal -->
 <div class="modal fade" id="exportModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
+        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
             <div class="modal-header" style="border-bottom: 1px solid rgba(255, 193, 7, 0.2);">
                 <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #d39e00;"><i class="fas fa-arrow-up me-2"></i>XUẤT KHO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -248,7 +248,7 @@
 <!-- Adjust Modal -->
 <div class="modal fade" id="adjustModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
+        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
             <div class="modal-header" style="border-bottom: 1px solid rgba(23, 162, 184, 0.2);">
                 <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #17a2b8;"><i class="fas fa-edit me-2"></i>ĐIỀU CHỈNH TỒN KHO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

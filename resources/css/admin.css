@@ -1,0 +1,176 @@
+/* Admin Panel — Airbnb Design System */
+
+body { background-color: #f7f7f7; }
+
+/* ---- Navbar ---- */
+.admin-navbar {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #dddddd;
+    padding: 12px 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+}
+.admin-navbar .navbar-brand {
+    color: #ff385c !important;
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+}
+.admin-navbar .btn-outline-light {
+    color: #222222 !important;
+    border: 1px solid #dddddd !important;
+    background: transparent !important;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+.admin-navbar .btn-outline-light:hover { background: #f7f7f7 !important; }
+.admin-navbar .btn-light {
+    background-color: #ffffff !important;
+    color: #222222 !important;
+    border: 1px solid #dddddd !important;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+.admin-navbar .btn-light:hover { background-color: #f7f7f7 !important; }
+
+/* ---- Sidebar ---- */
+.admin-sidebar {
+    background-color: #ffffff;
+    min-height: calc(100vh - 64px);
+    padding: 0;
+    border-right: 1px solid #dddddd;
+}
+.admin-sidebar .nav-link {
+    color: #222222 !important;
+    padding: 12px 20px;
+    border-radius: 0;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background 150ms ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+}
+.admin-sidebar .nav-link:hover { background-color: #f7f7f7; }
+.admin-sidebar .nav-link.active {
+    background-color: #fff5f7;
+    color: #ff385c !important;
+    font-weight: 600;
+    border-left-color: #ff385c;
+}
+.admin-sidebar .nav-link i { width: 18px; text-align: center; color: inherit; }
+
+/* ---- Content ---- */
+.admin-content { padding: 28px; }
+
+.page-header {
+    background: #ffffff;
+    padding: 22px 28px;
+    margin: -28px -28px 28px -28px;
+    border-bottom: 1px solid #dddddd;
+}
+.page-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    text-transform: none;
+    color: #222222;
+}
+
+/* ---- Stat Cards ---- */
+.stat-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #ebebeb;
+    padding: 22px;
+    margin-bottom: 20px;
+    transition: box-shadow 200ms ease;
+}
+.stat-card:hover {
+    box-shadow: rgba(0,0,0,0.02) 0 0 0 1px,
+                rgba(0,0,0,0.04) 0 2px 6px 0,
+                rgba(0,0,0,0.10) 0 4px 8px 0;
+}
+.stat-card .stat-icon {
+    width: 48px; height: 48px;
+    background-color: #fff5f7;
+    color: #ff385c;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+}
+.stat-card .stat-value {
+    font-size: 28px; font-weight: 700;
+    color: #222222; margin: 6px 0 3px 0; line-height: 1;
+}
+.stat-card .stat-label {
+    color: #6a6a6a; font-size: 12px;
+    text-transform: uppercase; font-weight: 500; letter-spacing: 0.05em;
+}
+
+/* ---- Tables ---- */
+.admin-table { background: #ffffff; border-radius: 14px; border: 1px solid #ebebeb; overflow: hidden; }
+.admin-table th {
+    background-color: #f7f7f7;
+    color: #6a6a6a;
+    font-weight: 600;
+    border: none;
+    border-bottom: 1px solid #ebebeb;
+    padding: 12px 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.admin-table td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-color: #f7f7f7;
+    font-size: 14px;
+    color: #222222;
+}
+.admin-table tbody tr:hover { background-color: #fafafa; }
+
+/* ---- Badges ---- */
+.badge-role-admin {
+    background-color: #fff5f7; color: #ff385c;
+    padding: 4px 10px; border-radius: 9999px;
+    font-weight: 600; font-size: 12px; display: inline-block;
+    border: 1px solid #ffd1da;
+}
+.badge-role-user {
+    background-color: #f7f7f7; color: #222222;
+    padding: 4px 10px; border-radius: 9999px;
+    font-weight: 600; font-size: 12px; display: inline-block;
+    border: 1px solid #dddddd;
+}
+.badge-status-active {
+    background-color: #f0fff4; color: #008a05;
+    padding: 4px 10px; border-radius: 9999px;
+    font-weight: 600; font-size: 12px;
+    display: inline-block; cursor: pointer; border: 1px solid #b7f5c0;
+}
+.badge-status-inactive {
+    background-color: #f7f7f7; color: #6a6a6a;
+    padding: 4px 10px; border-radius: 9999px;
+    font-weight: 600; font-size: 12px;
+    display: inline-block; cursor: pointer; border: 1px solid #dddddd;
+}
+
+/* ---- Filter section ---- */
+.filter-section {
+    background: #ffffff;
+    padding: 18px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    border: 1px solid #ebebeb;
+}
+
+/* ---- Reset Bootstrap gutter ---- */
+.container-fluid,
+.container-fluid > .row { --bs-gutter-x: 0; }
+.admin-sidebar { padding-left: 0 !important; padding-right: 0 !important; }

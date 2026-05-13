@@ -383,8 +383,8 @@
                 <div class="section-body">
                     <div class="info-label">Phương thức</div>
                     <div class="info-value">
-                        @if($order->phuong_thuc_thanh_toan === 'cod')
-                            Thanh toán khi nhận hàng (COD)
+                        @if($order->phuong_thuc_thanh_toan === 'vietqr')
+                            Chuyển khoản VietQR
                         @else
                             Chuyển khoản ngân hàng
                         @endif
@@ -398,6 +398,14 @@
                             <span class="badge-unpaid">CHƯA THANH TOÁN</span>
                         @endif
                     </div>
+
+                    @if($order->phuong_thuc_thanh_toan === 'vietqr' && $order->trang_thai_thanh_toan === 'unpaid')
+                        <div class="mt-4 pt-4 border-top text-center">
+                            <div class="info-label mb-3 text-center">Quét mã QR để thanh toán</div>
+                            <img src="{{ $order->vietqr_url }}" alt="VietQR Code" class="img-fluid border p-2 bg-white mb-2" style="max-width: 250px; border-radius: 8px;">
+                            <p class="text-muted small mt-2">Sử dụng App ngân hàng của bạn để quét mã này.<br>Nội dung chuyển khoản: <strong>{{ $order->ma_don_hang }}</strong></p>
+                        </div>
+                    @endif
                 </div>
             </div>
             

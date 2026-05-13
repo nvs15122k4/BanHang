@@ -58,7 +58,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Phương thức thanh toán <span class="text-danger">*</span></label>
                             <select name="phuong_thuc_thanh_toan" class="form-select" required>
-                                <option value="cod" {{ old('phuong_thuc_thanh_toan') === 'cod' ? 'selected' : '' }}>COD - Thanh toán khi nhận</option>
+                                <option value="vietqr" {{ old('phuong_thuc_thanh_toan') === 'vietqr' ? 'selected' : '' }}>Chuyển khoản VietQR</option>
                                 <option value="bank_transfer" {{ old('phuong_thuc_thanh_toan') === 'bank_transfer' ? 'selected' : '' }}>Chuyển khoản ngân hàng</option>
                                 <option value="vnpay" {{ old('phuong_thuc_thanh_toan') === 'vnpay' ? 'selected' : '' }}>VNPay</option>
                             </select>

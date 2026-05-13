@@ -246,7 +246,7 @@
             <i class="fas fa-shopping-bag fa-4x text-muted mb-4"></i>
             <h3 style="font-weight: 700;">GIỎ HÀNG CỦA BẠN ĐANG TRỐNG</h3>
             <p class="text-muted mb-4">Trước khi tiến hành thanh toán, bạn phải thêm sản phẩm vào giỏ hàng. Bạn sẽ tìm thấy nhiều sản phẩm thú vị trên trang "Cửa hàng" của chúng tôi.</p>
-            <a href="{{ route('products.index') }}" class="btn btn-ava-dark px-5 py-3">BẮT ĐẦU MUA SẮM</a>
+            <a href="{{ route('products.index') }}" class="btn btn-ava-dark px-5 py-3 bg-black text-white">BẮT ĐẦU MUA SẮM</a>
         </div>
     @endif
 </div>

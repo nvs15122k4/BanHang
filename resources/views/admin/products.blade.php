@@ -168,28 +168,12 @@
     </div>
 </div>
 
-<!-- Toast thông báo -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
-    <div id="adminToast" class="toast align-items-center text-white border-0" role="alert">
-        <div class="d-flex">
-            <div class="toast-body" id="adminToastMsg"></div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    </div>
-</div>
 
 @push('scripts')
 <script>
 const CSRF = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
 
-/* ── Hiển thị toast ── */
-function showToast(msg, ok = true) {
-    const el  = document.getElementById('adminToast');
-    const txt = document.getElementById('adminToastMsg');
-    el.className = `toast align-items-center text-white border-0 bg-${ok ? 'success' : 'danger'}`;
-    txt.textContent = msg;
-    bootstrap.Toast.getOrCreateInstance(el, { delay: 2500 }).show();
-}
+
 
 /* ── Toggle trạng thái (AJAX) ── */
 function toggleStatus(productId, current) {
@@ -215,10 +199,10 @@ function toggleStatus(productId, current) {
             btn.onclick = () => toggleStatus(productId, data.trang_thai);
             showToast(data.message);
         } else {
-            showToast(data.message || 'Lỗi cập nhật!', false);
+            showToast(data.message || 'Lỗi cập nhật!', 'error');
         }
     })
-    .catch(() => showToast('Lỗi kết nối!', false))
+    .catch(() => showToast('Lỗi kết nối!', 'error'))
     .finally(() => { btn.disabled = false; });
 }
 
@@ -254,13 +238,13 @@ document.getElementById('btnSaveStock').addEventListener('click', function () {
             const span = document.getElementById(`stock-val-${_stockProductId}`);
             span.textContent = data.so_luong;
             span.className   = data.so_luong < 10 ? 'text-danger fw-bold' : '';
-            bootstrap.Modal.getInstance(document.getElementById('updateStockModal')).hide();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('updateStockModal')).hide();
             showToast(data.message);
         } else {
-            showToast(data.message || 'Lỗi cập nhật!', false);
+            showToast(data.message || 'Lỗi cập nhật!', 'error');
         }
     })
-    .catch(() => showToast('Lỗi kết nối!', false))
+    .catch(() => showToast('Lỗi kết nối!', 'error'))
     .finally(() => {
         this.disabled = false;
         this.textContent = 'CẬP NHẬT';
@@ -287,10 +271,10 @@ function deleteProduct(productId, productName) {
                     if (row) row.remove();
                     showToast(data.message);
                 } else {
-                    showToast(data.message || 'Không thể xóa!', false);
+                    showToast(data.message || 'Không thể xóa!', 'error');
                 }
             })
-            .catch(() => showToast('Lỗi kết nối!', false));
+            .catch(() => showToast('Lỗi kết nối!', 'error'));
         },
         'Xóa sản phẩm'
     );

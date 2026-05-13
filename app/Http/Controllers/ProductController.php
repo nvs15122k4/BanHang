@@ -121,14 +121,45 @@ class ProductController extends Controller
             ->get();
 
         // Kiểm tra user hiện tại đã review chưa
-        $userReview = null;
+        $userReview    = null;
+        $hasPurchased  = false;  // Đã mua sản phẩm
+        $paymentPaid   = false;  // Đã được xác nhận thanh toán
+        $canReview     = false;  // Được phép đánh giá
+
         if (auth()->check()) {
             $userReview = \App\Models\Review::where('user_id', auth()->id())
                 ->where('product_id', $product->id)
                 ->first();
+
+            // Kiểm tra có đơn hàng hoàn thành chứa sản phẩm này không
+            $completedOrder = auth()->user()->orders()
+                ->whereHas('orderItems', fn($q) => $q->where('product_id', $product->id))
+                ->where('trang_thai', 'completed')
+                ->latest()
+                ->first();
+
+            if ($completedOrder) {
+                $hasPurchased = true;
+                $paymentPaid  = true;
+                $canReview    = !$userReview; // Chưa đánh giá thì mới được gửi
+            } else {
+                // Đã đặt mua nhưng chưa hoàn thành
+                $pendingOrder = auth()->user()->orders()
+                    ->whereHas('orderItems', fn($q) => $q->where('product_id', $product->id))
+                    ->whereIn('trang_thai', ['pending', 'confirmed', 'shipping'])
+                    ->latest()
+                    ->first();
+
+                if ($pendingOrder) {
+                    $hasPurchased = true;
+                }
+            }
         }
 
-        return view('products.show', compact('product', 'relatedProducts', 'reviews', 'userReview'));
+        return view('products.show', compact(
+            'product', 'relatedProducts', 'reviews', 'userReview',
+            'hasPurchased', 'paymentPaid', 'canReview'
+        ));
     }
 
     public function edit(Product $product)

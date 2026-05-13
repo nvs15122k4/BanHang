@@ -73,7 +73,7 @@
                     <tbody>
                         @foreach($order->orderItems as $item)
                             <tr>
-                                <td style="font-weight: 500;">{{ $item->ten_sp }}</td>
+                                <td style="font-weight: 500;">{{ $item->ten_san_pham }}</td>
                                 <td>{{ number_format($item->gia) }}đ</td>
                                 <td>{{ $item->so_luong }}</td>
                                 <td style="font-weight: 500;">{{ number_format($item->thanh_tien) }}đ</td>
@@ -115,9 +115,11 @@
                     <strong>Trạng thái đơn hàng:</strong><br>
                     @php
                         $statusColors = [
-                            'pending' => 'warning',
+                            'pending'   => 'warning',
                             'confirmed' => 'info',
-                            'shipping' => 'primary',
+                            'shipping'  => 'primary',
+                            'delivered' => 'warning',
+                            'disputing' => 'danger',
                             'completed' => 'success',
                             'cancelled' => 'danger',
                         ];
@@ -126,16 +128,18 @@
                     <span class="badge bg-{{ $color }} fs-6 mt-2">{{ $order->status_label }}</span>
                 </div>
 
+                @php
+                    $statusLabels  = \App\Models\Order::adminStatusLabels();
+                @endphp
+
                 <form method="POST" action="{{ route('admin.orders.status', $order) }}" class="mb-3">
                     @csrf
                     @method('PUT')
-                    <label class="form-label"><strong>Cập nhật trạng thái:</strong></label>
+                    <label class="form-label"><strong>Chuyển trạng thái:</strong></label>
                     <select name="trang_thai" class="form-select mb-2" required>
-                        <option value="pending" {{ $order->trang_thai === 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
-                        <option value="confirmed" {{ $order->trang_thai === 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
-                        <option value="shipping" {{ $order->trang_thai === 'shipping' ? 'selected' : '' }}>Đang giao hàng</option>
-                        <option value="completed" {{ $order->trang_thai === 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                        <option value="cancelled" {{ $order->trang_thai === 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                        @foreach($statusLabels as $val => $label)
+                            <option value="{{ $val }}" {{ $order->trang_thai === $val ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
                     </select>
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-save me-2"></i>Cập nhật

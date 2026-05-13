@@ -161,7 +161,7 @@
 <!-- Create User Modal -->
 <div class="modal fade" id="createUserModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
+        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
             <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
                 <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif;">TẠO USER MỚI</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -206,7 +206,7 @@
 <!-- Change Role Modal -->
 <div class="modal fade" id="changeRoleModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
+        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
             <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
                 <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif;">THAY ĐỔI VAI TRÒ</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

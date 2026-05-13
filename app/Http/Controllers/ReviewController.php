@@ -93,14 +93,25 @@ class ReviewController extends Controller
     {
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000',
+            'rating'     => 'required|integer|min:1|max:5',
+            'comment'    => 'nullable|string|max:1000',
         ], [
             'product_id.required' => 'Vui lòng chọn sản phẩm',
-            'rating.required' => 'Vui lòng chọn số sao',
-            'rating.min' => 'Đánh giá tối thiểu 1 sao',
-            'rating.max' => 'Đánh giá tối đa 5 sao',
+            'rating.required'     => 'Vui lòng chọn số sao',
+            'rating.min'          => 'Đánh giá tối thiểu 1 sao',
+            'rating.max'          => 'Đánh giá tối đa 5 sao',
         ]);
+
+        // Kiểm tra đã mua sản phẩm và đơn hàng đã hoàn thành chưa
+        $completedOrder = Auth::user()->orders()
+            ->whereHas('orderItems', fn($q) => $q->where('product_id', $validated['product_id']))
+            ->where('trang_thai', 'completed')
+            ->latest()
+            ->first();
+
+        if (!$completedOrder) {
+            return back()->with('error', 'Bạn chỉ có thể đánh giá sản phẩm sau khi đơn hàng đã hoàn thành!');
+        }
 
         // Check if user already reviewed this product
         $existingReview = Review::where('user_id', Auth::id())
@@ -112,13 +123,14 @@ class ReviewController extends Controller
         }
 
         Review::create([
-            'user_id' => Auth::id(),
+            'user_id'    => Auth::id(),
             'product_id' => $validated['product_id'],
-            'rating' => $validated['rating'],
-            'comment' => $validated['comment'] ?? null,
+            'order_id'   => $completedOrder->id,
+            'rating'     => $validated['rating'],
+            'comment'    => $validated['comment'] ?? null,
             'trang_thai' => 'pending',
         ]);
 
-        return back()->with('success', 'Cảm ơn bạn đã đánh giá! Đánh giá của bạn đang chờ duyệt.');
+        return back()->with('success', 'Cảm ơn bạn đã đánh giá! Đánh giá của bạn đang chờ duyệt và sẽ hiển thị sau khi được phê duyệt.');
     }
 }

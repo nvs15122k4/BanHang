@@ -97,6 +97,7 @@
         letter-spacing: 2px;
         transition: all 0.3s;
         width: 100%;
+        border-radius: 15px;
     }
 
     .btn-ava-dark:hover {

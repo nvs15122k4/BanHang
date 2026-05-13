@@ -162,16 +162,17 @@
         @php
             $statuses = [
                 ''          => 'Tất cả đơn',
-                'pending'   => 'Chờ xử lý',
-                'confirmed' => 'Đã xác nhận',
-                'shipping'  => 'Đang giao',
-                'completed' => 'Đã hoàn thành',
+                'pending'   => 'Chờ duyệt đơn',
+                'confirmed' => 'Đã duyệt đơn',
+                'shipping'  => 'Đang giao hàng',
+                'disputing' => 'Đang xử lý KN',
+                'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã hủy',
             ];
             $currentStatus = request('status', '');
         @endphp
         @foreach($statuses as $val => $label)
-            <a href="{{ route('orders.index', ['status' => $val]) }}" 
+            <a href="{{ route('orders.index', ['status' => $val]) }}"
                class="filter-tab {{ $currentStatus === $val ? 'active' : '' }}">
                 {{ $label }}
             </a>
@@ -189,16 +190,20 @@
                     </div>
                     <div>
                         @php
-                            $statusClass = 'pending';
-                            $statusText = 'Chờ xử lý';
-                            switch($order->trang_thai) {
-                                case 'confirmed': $statusClass = 'confirmed'; $statusText = 'Đã xác nhận'; break;
-                                case 'shipping':  $statusClass = 'shipping'; $statusText = 'Đang giao'; break;
-                                case 'completed': $statusClass = 'completed'; $statusText = 'Đã hoàn thành'; break;
-                                case 'cancelled': $statusClass = 'cancelled'; $statusText = 'Đã hủy'; break;
-                            }
+                            // User thấy nhãn theo userStatusLabels
+                            $userLabels = \App\Models\Order::userStatusLabels();
+                            $statusStyleMap = [
+                                'pending'   => 'pending',
+                                'confirmed' => 'confirmed',
+                                'shipping'  => 'shipping',
+                                'disputing' => 'cancelled',
+                                'completed' => 'completed',
+                                'cancelled' => 'cancelled',
+                            ];
+                            $styleClass = $statusStyleMap[$order->trang_thai] ?? 'pending';
+                            $displayText = $userLabels[$order->trang_thai] ?? $order->trang_thai;
                         @endphp
-                        <span class="status-badge status-{{ $statusClass }}">{{ $statusText }}</span>
+                        <span class="status-badge status-{{ $styleClass }}">{{ $displayText }}</span>
                     </div>
                 </div>
 

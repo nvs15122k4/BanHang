@@ -1,12 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Tài khoản của tôi - AVA')
+@section('title', 'Tài khoản của tôi - Sàn Tím Vi En')
 
 @push('styles')
 <style>
-    /* =========================================
-       PROFILE PAGE - AVA STYLE
-       ========================================= */
     .page-title {
         font-weight: 700;
         font-size: 32px;
@@ -15,361 +12,259 @@
         margin: 40px 0;
         text-transform: uppercase;
     }
-
     .profile-sidebar {
         background: #F6F6F6;
         padding: 30px;
         position: sticky;
-        top: 40px;
+        top: 80px;
     }
-
     .sidebar-title {
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #DDD;
+        padding-bottom: 10px;
+    }
+    .sidebar-nav .nav-link {
+        color: #888;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 10px 15px;
+        border-radius: 0;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+    }
+    .sidebar-nav .nav-link:hover { color: var(--text-main); background: rgba(0,0,0,0.04); }
+    .sidebar-nav .nav-link.active { color: var(--text-main); font-weight: 700; border-left-color: var(--primary); background: rgba(124,58,237,0.05); }
+
+    .profile-card {
+        border: 1px solid #EEE;
+        padding: 36px 40px;
+        background: #fff;
+    }
+    .card-section-title {
         font-weight: 700;
         font-size: 18px;
         text-transform: uppercase;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #DDDDDD;
-        padding-bottom: 10px;
+        letter-spacing: 1px;
+        margin-bottom: 28px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #EEE;
     }
-
-    .list-group-item {
-        background: transparent;
-        border: none;
-        color: var(--text-light);
-        padding: 12px 15px;
-        border-radius: 0 !important;
-        margin-bottom: 5px;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-    
-    .list-group-item:hover {
-        background: rgba(0,0,0,0.05);
-        color: var(--text-main);
-    }
-    
-    .list-group-item.active {
-        background: var(--text-main);
-        color: #FFFFFF;
-        font-weight: 600;
-    }
-
-    .profile-card {
-        border: 1px solid #EEEEEE;
-        padding: 40px;
-    }
-
-    .card-title {
-        font-weight: 700;
-        font-size: 24px;
-        text-transform: uppercase;
-        margin-bottom: 30px;
-        border-bottom: 1px solid #EEEEEE;
-        padding-bottom: 15px;
-    }
-
     .form-control, .form-select {
         border-radius: 0;
-        border: 1px solid #DDDDDD;
-        padding: 12px 15px;
+        border: 1px solid #DDD;
+        padding: 11px 14px;
+        font-size: 14px;
     }
-    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
     .form-label {
         font-weight: 600;
-        color: var(--text-main);
-        font-size: 14px;
+        font-size: 12px;
         text-transform: uppercase;
-    }
-
-    .address-card {
-        border: 1px solid #EEEEEE;
-        padding: 20px;
-        margin-bottom: 20px;
-        transition: all 0.3s;
-    }
-    
-    .address-card:hover {
-        border-color: #CCCCCC;
-    }
-    
-    .address-card.border-primary {
-        border-color: var(--text-main) !important;
-        background: #F9F9F9;
-    }
-
-    .btn-action {
+        letter-spacing: 0.5px;
         color: var(--text-main);
-        font-weight: 600;
-        text-decoration: underline;
-        font-size: 14px;
+    }
+    .btn-save {
+        background: var(--text-main);
+        color: #fff;
+        border: none;
+        padding: 12px 40px;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 0;
+        transition: background 0.2s;
+    }
+    .btn-save:hover { background: var(--primary); color: #fff; }
+    .btn-save:disabled { background: #AAA; cursor: not-allowed; }
+
+    /* Address cards */
+    .address-card {
+        border: 1px solid #EEE;
+        padding: 20px;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+        position: relative;
+    }
+    .address-card:hover { border-color: #CCC; }
+    .address-card.is-default { border-color: var(--primary); background: rgba(124,58,237,0.03); }
+    .btn-link-action {
         background: none;
         border: none;
         padding: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-main);
+        text-decoration: underline;
+        cursor: pointer;
     }
-    
-    .btn-action:hover {
-        color: var(--primary);
+    .btn-link-action:hover { color: var(--primary); }
+    .btn-link-action.danger { color: #E53E3E; }
+    .btn-link-action.danger:hover { color: #C53030; }
+
+    /* Inline feedback */
+    .form-feedback {
+        font-size: 13px;
+        padding: 10px 14px;
+        border-left: 3px solid;
+        margin-top: 16px;
+        display: none;
     }
+    .form-feedback.success { border-color: #27AE60; background: #F0FFF4; color: #276749; }
+    .form-feedback.error   { border-color: #E53E3E; background: #FFF5F5; color: #C53030; }
 
     /* Modal */
-    .modal-content {
-        border-radius: 0;
-        border: none;
-    }
-    
-    .modal-header {
-        background: #F6F6F6;
-        border-radius: 0;
-        border-bottom: 1px solid #EEEEEE;
-    }
-    
-    .modal-title {
-        font-weight: 700;
-        text-transform: uppercase;
-    }
+    .modal-content { border-radius: 0; border: none; }
+    .modal-header  { background: #F6F6F6; border-bottom: 1px solid #EEE; }
+    .modal-title   { font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 </style>
 @endpush
 
 @section('content')
 <div class="container py-4">
-    <h1 class="page-title">My Account</h1>
-    
-    @if(session('success'))
-        <div class="alert alert-success rounded-0 border-0" style="background-color: #E8F5E9; color: #2E7D32;">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger rounded-0 border-0" style="background-color: #FFEBEE; color: #C62828;">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-        </div>
-    @endif
+    <h1 class="page-title">Tài khoản của tôi</h1>
 
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 mb-4">
             <div class="profile-sidebar">
-                <div class="sidebar-title">QUẢN LÝ TÀI KHOẢN</div>
-                <div class="list-group list-group-flush">
-                    <a href="#profile" class="list-group-item list-group-item-action active" data-bs-toggle="pill">
-                        Thông tin cá nhân
-                    </a>
-                    <a href="#password" class="list-group-item list-group-item-action" data-bs-toggle="pill">
-                        Đổi mật khẩu
-                    </a>
-                    <a href="#addresses" class="list-group-item list-group-item-action" data-bs-toggle="pill">
-                        Sổ địa chỉ
-                    </a>
-                    <a href="{{ route('orders.index') }}" class="list-group-item list-group-item-action">
-                        Đơn hàng của tôi
-                    </a>
-                </div>
+                <div class="sidebar-title">Quản lý tài khoản</div>
+                <nav class="sidebar-nav nav flex-column">
+                    <a class="nav-link active" href="#profile"  data-bs-toggle="pill">Thông tin cá nhân</a>
+                    <a class="nav-link"        href="#password" data-bs-toggle="pill">Đổi mật khẩu</a>
+                    <a class="nav-link"        href="#addresses" data-bs-toggle="pill">Sổ địa chỉ</a>
+                    <a class="nav-link"        href="{{ route('orders.index') }}">Đơn hàng của tôi</a>
+                </nav>
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Content -->
         <div class="col-md-9">
             <div class="tab-content">
-                <!-- Profile Tab -->
+
+                {{-- ── TAB: THÔNG TIN CÁ NHÂN ── --}}
                 <div class="tab-pane fade show active" id="profile">
                     <div class="profile-card">
-                        <h4 class="card-title">Thông tin cá nhân</h4>
-                        
-                        <form method="POST" action="{{ route('profile.update') }}">
-                            @csrf
-                            @method('PUT')
+                        <h4 class="card-section-title">Thông tin cá nhân</h4>
 
+                        <form id="profileForm">
+                            @csrf
                             <div class="row mb-3">
                                 <label class="col-md-3 col-form-label form-label">Họ và tên <span class="text-danger">*</span></label>
                                 <div class="col-md-9">
-                                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                                           value="{{ old('name', $user->name) }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <label class="col-md-3 col-form-label form-label">Email <span class="text-danger">*</span></label>
                                 <div class="col-md-9">
-                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                                           value="{{ old('email', $user->email) }}" required>
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
-                                <label class="col-md-3 col-form-label form-label">Số điện thoại</label>
+                                <label class="col-md-3 col-form-label form-label">Số điện thoại tài khoản</label>
                                 <div class="col-md-9">
-                                    <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" 
-                                           value="{{ old('phone', $user->phone) }}">
-                                    @error('phone')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="text" name="phone" class="form-control" value="{{ $user->phone }}" placeholder="Số điện thoại liên hệ của bạn">
+                                    <div class="form-text text-muted" style="font-size:12px;">Số điện thoại cá nhân, khác với số điện thoại nhận hàng.</div>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
-
                             <div class="row mb-4">
                                 <label class="col-md-3 col-form-label form-label">Giới tính</label>
                                 <div class="col-md-9">
-                                    <select name="gender" class="form-select @error('gender') is-invalid @enderror">
+                                    <select name="gender" class="form-select">
                                         <option value="">Chọn giới tính</option>
-                                        <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Nam</option>
-                                        <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Nữ</option>
-                                        <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>Khác</option>
+                                        <option value="male"   {{ $user->gender == 'male'   ? 'selected' : '' }}>Nam</option>
+                                        <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Nữ</option>
+                                        <option value="other"  {{ $user->gender == 'other'  ? 'selected' : '' }}>Khác</option>
                                     </select>
-                                    @error('gender')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-9 offset-md-3">
-                                    <button type="submit" class="btn btn-ava-dark px-5">LƯU THAY ĐỔI</button>
+                                    <button type="submit" class="btn-save" id="profileBtn">LƯU THAY ĐỔI</button>
+                                    <div class="form-feedback" id="profileFeedback"></div>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Password Tab -->
+                {{-- ── TAB: ĐỔI MẬT KHẨU ── --}}
                 <div class="tab-pane fade" id="password">
                     <div class="profile-card">
-                        <h4 class="card-title">Đổi mật khẩu</h4>
-                        
-                        <form method="POST" action="{{ route('profile.password') }}">
-                            @csrf
-                            @method('PUT')
+                        <h4 class="card-section-title">Đổi mật khẩu</h4>
 
+                        <form id="passwordForm">
+                            @csrf
                             <div class="row mb-3">
                                 <label class="col-md-4 col-form-label form-label">Mật khẩu hiện tại <span class="text-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <input type="password" name="current_password" class="form-control @error('current_password') is-invalid @enderror" required>
-                                    @error('current_password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="password" name="current_password" class="form-control" required>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <label class="col-md-4 col-form-label form-label">Mật khẩu mới <span class="text-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="password" name="password" class="form-control" required>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
-
                             <div class="row mb-4">
                                 <label class="col-md-4 col-form-label form-label">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
                                 <div class="col-md-8">
                                     <input type="password" name="password_confirmation" class="form-control" required>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-ava-dark px-5">CẬP NHẬT MẬT KHẨU</button>
+                                    <button type="submit" class="btn-save" id="passwordBtn">CẬP NHẬT MẬT KHẨU</button>
+                                    <div class="form-feedback" id="passwordFeedback"></div>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Addresses Tab -->
+                {{-- ── TAB: SỔ ĐỊA CHỈ ── --}}
                 <div class="tab-pane fade" id="addresses">
                     <div class="profile-card">
-                        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-                            <h4 class="card-title mb-0 border-0 pb-0">Sổ địa chỉ</h4>
-                            <button class="btn btn-ava btn-sm" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                                + THÊM ĐỊA CHỈ MỚI
+                        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                            <h4 class="card-section-title mb-0 border-0 pb-0">Sổ địa chỉ</h4>
+                            <button class="btn-save" style="padding:10px 20px;" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                + THÊM ĐỊA CHỈ
                             </button>
                         </div>
 
-                        <div class="row">
+                        <div id="addressList">
                             @forelse($addresses as $address)
-                                <div class="col-md-6">
-                                    <div class="address-card {{ $address->is_default ? 'border-primary' : '' }}">
-                                        @if($address->is_default)
-                                            <span class="badge bg-dark mb-2 rounded-0">Mặc định</span>
-                                        @endif
-                                        <h5 class="fw-bold mb-1">{{ $address->ten_nguoi_nhan }}</h5>
-                                        <p class="text-muted mb-2"><i class="fas fa-phone-alt me-2"></i>{{ $address->sdt_nguoi_nhan }}</p>
-                                        <p class="mb-3">{{ $address->dia_chi_chi_tiet }}</p>
-                                        
-                                        <div class="d-flex gap-3 pt-3 border-top">
-                                            <button class="btn-action" data-bs-toggle="modal" data-bs-target="#editAddressModal{{ $address->id }}">SỬA</button>
-                                            
-                                            <form action="{{ route('profile.addresses.destroy', $address->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button" class="btn-action text-danger" onclick="if(confirm('Bạn có chắc chắn muốn xóa địa chỉ này?')) this.form.submit()">XÓA</button>
-                                            </form>
-                                            @if(!$address->is_default)
-                                                <form action="{{ route('profile.addresses.default', $address->id) }}" method="POST" class="ms-auto">
-                                                    @csrf @method('PUT')
-                                                    <button type="submit" class="btn-action" style="color: var(--text-main);">ĐẶT LÀM MẶC ĐỊNH</button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Edit Address Modal -->
-                                <div class="modal fade" id="editAddressModal{{ $address->id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Sửa địa chỉ</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <form action="{{ route('profile.addresses.update', $address->id) }}" method="POST">
-                                                @csrf @method('PUT')
-                                                <div class="modal-body p-4">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Họ và tên</label>
-                                                        <input type="text" name="ten_nguoi_nhan" class="form-control" value="{{ $address->ten_nguoi_nhan }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Số điện thoại</label>
-                                                        <input type="text" name="sdt_nguoi_nhan" class="form-control" value="{{ $address->sdt_nguoi_nhan }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Địa chỉ chi tiết</label>
-                                                        <input type="text" name="dia_chi_chi_tiet" class="form-control" value="{{ $address->dia_chi_chi_tiet }}" required>
-                                                    </div>
-                                                    <div class="form-check mt-3">
-                                                        <input class="form-check-input" type="checkbox" name="is_default" id="is_default_{{ $address->id }}" {{ $address->is_default ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="is_default_{{ $address->id }}">Đặt làm địa chỉ mặc định</label>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer border-0 pb-4 pe-4">
-                                                    <button type="button" class="btn btn-outline-dark rounded-0" data-bs-dismiss="modal">HỦY BỎ</button>
-                                                    <button type="submit" class="btn btn-ava-dark">LƯU THAY ĐỔI</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('profile.partials.address-card', ['address' => $address])
                             @empty
-                                <div class="col-12 text-center py-5">
-                                    <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
-                                    <h5 class="text-muted">Bạn chưa lưu địa chỉ nào.</h5>
+                                <div class="text-center py-5 text-muted" id="emptyAddresses">
+                                    <i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#DDD;"></i>
+                                    <p>Bạn chưa lưu địa chỉ nào.</p>
                                 </div>
                             @endforelse
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add Address Modal -->
+{{-- ── MODAL: THÊM ĐỊA CHỈ ── --}}
 <div class="modal fade" id="addAddressModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -377,32 +272,317 @@
                 <h5 class="modal-title">Thêm địa chỉ mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="{{ route('profile.addresses.store') }}" method="POST">
+            <form id="addAddressForm">
                 @csrf
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                        <input type="text" name="ten_nguoi_nhan" class="form-control" required>
+                        <label class="form-label">Họ và tên người nhận <span class="text-danger">*</span></label>
+                        <input type="text" name="recipient_name" class="form-control" required>
+                        <div class="invalid-feedback-field text-danger small mt-1"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                        <input type="text" name="sdt_nguoi_nhan" class="form-control" required>
+                        <label class="form-label">Số điện thoại nhận hàng <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" class="form-control" required placeholder="Số điện thoại để liên hệ khi giao hàng">
+                        <div class="invalid-feedback-field text-danger small mt-1"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Tỉnh/Thành phố <span class="text-danger">*</span></label>
+                            <input type="text" name="province" class="form-control" required>
+                            <div class="invalid-feedback-field text-danger small mt-1"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Quận/Huyện <span class="text-danger">*</span></label>
+                            <input type="text" name="district" class="form-control" required>
+                            <div class="invalid-feedback-field text-danger small mt-1"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phường/Xã <span class="text-danger">*</span></label>
+                            <input type="text" name="ward" class="form-control" required>
+                            <div class="invalid-feedback-field text-danger small mt-1"></div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Địa chỉ chi tiết <span class="text-danger">*</span></label>
-                        <input type="text" name="dia_chi_chi_tiet" class="form-control" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố" required>
+                        <input type="text" name="detail" class="form-control" placeholder="Số nhà, tên đường..." required>
+                        <div class="invalid-feedback-field text-danger small mt-1"></div>
                     </div>
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" name="is_default" id="is_default_new">
-                        <label class="form-check-label" for="is_default_new">Đặt làm địa chỉ mặc định</label>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="is_default" id="add_is_default" value="1">
+                        <label class="form-check-label" for="add_is_default" style="font-size:14px;">Đặt làm địa chỉ mặc định</label>
                     </div>
+                    <div class="form-feedback mt-3" id="addAddressFeedback"></div>
                 </div>
                 <div class="modal-footer border-0 pb-4 pe-4">
-                    <button type="button" class="btn btn-outline-dark rounded-0" data-bs-dismiss="modal">HỦY BỎ</button>
-                    <button type="submit" class="btn btn-ava-dark">LƯU ĐỊA CHỈ</button>
+                    <button type="button" class="btn btn-outline-dark rounded-0" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn-save">LƯU ĐỊA CHỈ</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+
+/* ── HELPER: show inline feedback ── */
+function showFeedback(el, type, msg) {
+    el.className = 'form-feedback ' + type;
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+/* ── HELPER: clear field errors ── */
+function clearErrors(form) {
+    form.querySelectorAll('.invalid-feedback-field').forEach(el => el.textContent = '');
+    form.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+}
+
+/* ── HELPER: show field errors ── */
+function showErrors(form, errors) {
+    Object.entries(errors).forEach(([field, msgs]) => {
+        const input = form.querySelector(`[name="${field}"]`);
+        if (input) {
+            input.classList.add('is-invalid');
+            const fb = input.closest('.col-md-8, .col-md-9, .mb-3, .col-md-4')?.querySelector('.invalid-feedback-field');
+            if (fb) fb.textContent = msgs[0];
+        }
+    });
+}
+
+/* ── HELPER: AJAX submit ── */
+async function ajaxSubmit(form, url, method, btnEl, feedbackEl) {
+    clearErrors(form);
+    const orig = btnEl.textContent;
+    btnEl.disabled = true;
+    btnEl.textContent = 'Đang lưu...';
+
+    const data = new FormData(form);
+    // FormData doesn't send unchecked checkboxes — handle is_default
+    if (form.querySelector('[name="is_default"]') && !form.querySelector('[name="is_default"]').checked) {
+        data.set('is_default', '0');
+    }
+
+    try {
+        const res = await fetch(url, {
+            method: method,
+            body: data,
+            headers: {
+                'X-CSRF-TOKEN': CSRF,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            }
+        });
+        const json = await res.json();
+
+        if (res.ok && json.success) {
+            showFeedback(feedbackEl, 'success', json.message || 'Lưu thành công!');
+            return json;
+        } else {
+            if (json.errors) showErrors(form, json.errors);
+            showFeedback(feedbackEl, 'error', json.message || 'Có lỗi xảy ra!');
+            return null;
+        }
+    } catch (e) {
+        showFeedback(feedbackEl, 'error', 'Không thể kết nối máy chủ!');
+        return null;
+    } finally {
+        btnEl.disabled = false;
+        btnEl.textContent = orig;
+    }
+}
+
+/* ── PROFILE FORM ── */
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    clearErrors(this);
+    const btn = document.getElementById('profileBtn');
+    const fb  = document.getElementById('profileFeedback');
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Đang lưu...';
+
+    const data = new FormData(this);
+    data.append('_method', 'PUT');
+
+    try {
+        const res  = await fetch('{{ route("profile.update") }}', {
+            method: 'POST',
+            body: data,
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+            showFeedback(fb, 'success', json.message);
+        } else {
+            if (json.errors) showErrors(this, json.errors);
+            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+        }
+    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
+    finally { btn.disabled = false; btn.textContent = orig; }
+});
+
+/* ── PASSWORD FORM ── */
+document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    clearErrors(this);
+    const btn = document.getElementById('passwordBtn');
+    const fb  = document.getElementById('passwordFeedback');
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Đang lưu...';
+
+    const data = new FormData(this);
+    data.append('_method', 'PUT');
+
+    try {
+        const res  = await fetch('{{ route("profile.password") }}', {
+            method: 'POST',
+            body: data,
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+            showFeedback(fb, 'success', json.message);
+            this.reset();
+        } else {
+            if (json.errors) showErrors(this, json.errors);
+            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+        }
+    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
+    finally { btn.disabled = false; btn.textContent = orig; }
+});
+
+/* ── ADD ADDRESS FORM ── */
+document.getElementById('addAddressForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    clearErrors(this);
+    const btn = this.querySelector('[type="submit"]');
+    const fb  = document.getElementById('addAddressFeedback');
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Đang lưu...';
+
+    const data = new FormData(this);
+    if (!this.querySelector('[name="is_default"]').checked) data.set('is_default', '0');
+
+    try {
+        const res  = await fetch('{{ route("profile.addresses.store") }}', {
+            method: 'POST',
+            body: data,
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+            bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
+            this.reset();
+            // Reload address list
+            window.location.hash = '#addresses';
+            window.location.reload();
+        } else {
+            if (json.errors) showErrors(this, json.errors);
+            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+        }
+    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
+    finally { btn.disabled = false; btn.textContent = orig; }
+});
+
+/* ── EDIT ADDRESS ── */
+document.addEventListener('submit', async function(e) {
+    const form = e.target;
+    if (!form.dataset.editAddress) return;
+    e.preventDefault();
+    clearErrors(form);
+    const btn  = form.querySelector('[type="submit"]');
+    const fb   = form.querySelector('.edit-addr-feedback');
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Đang lưu...';
+
+    const data = new FormData(form);
+    data.append('_method', 'PUT');
+    if (!form.querySelector('[name="is_default"]').checked) data.set('is_default', '0');
+
+    try {
+        const res  = await fetch(form.dataset.action, {
+            method: 'POST',
+            body: data,
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+            const modalEl = form.closest('.modal');
+            bootstrap.Modal.getInstance(modalEl).hide();
+            window.location.reload();
+        } else {
+            if (json.errors) showErrors(form, json.errors);
+            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+        }
+    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
+    finally { btn.disabled = false; btn.textContent = orig; }
+});
+
+/* ── DELETE ADDRESS ── */
+document.addEventListener('click', async function(e) {
+    const btn = e.target.closest('[data-delete-address]');
+    if (!btn) return;
+    if (!confirm('Bạn có chắc muốn xóa địa chỉ này?')) return;
+
+    const url = btn.dataset.deleteAddress;
+    try {
+        const res  = await fetch(url, {
+            method: 'POST',
+            body: new URLSearchParams({ _method: 'DELETE' }),
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        const json = await res.json();
+        if (json.success) {
+            btn.closest('.address-card-wrap').remove();
+            if (!document.querySelector('.address-card-wrap')) {
+                document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#DDD;"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
+            }
+            window.showToast && window.showToast(json.message, 'success');
+        }
+    } catch { window.showToast && window.showToast('Không thể xóa địa chỉ!', 'danger'); }
+});
+
+/* ── SET DEFAULT ADDRESS ── */
+document.addEventListener('click', async function(e) {
+    const btn = e.target.closest('[data-set-default]');
+    if (!btn) return;
+
+    const url = btn.dataset.setDefault;
+    try {
+        const res  = await fetch(url, {
+            method: 'POST',
+            body: new URLSearchParams({ _method: 'PUT' }),
+            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        const json = await res.json();
+        if (json.success) {
+            window.location.reload();
+        }
+    } catch {}
+});
+
+/* ── KEEP TAB ACTIVE after reload ── */
+document.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash;
+    if (hash) {
+        const tab = document.querySelector(`.sidebar-nav .nav-link[href="${hash}"]`);
+        if (tab) {
+            document.querySelectorAll('.sidebar-nav .nav-link').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => { p.classList.remove('show','active'); });
+            tab.classList.add('active');
+            const pane = document.querySelector(hash);
+            if (pane) { pane.classList.add('show','active'); }
+        }
+    }
+    // Save tab on click
+    document.querySelectorAll('.sidebar-nav .nav-link[data-bs-toggle="pill"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            window.location.hash = this.getAttribute('href');
+        });
+    });
+});
+</script>
+@endpush
 @endsection

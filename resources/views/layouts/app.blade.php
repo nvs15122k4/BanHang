@@ -226,6 +226,19 @@
             transition: background 0.2s;
         }
         .newsletter-inline button:hover { background: #6D28D9; }
+
+        /* Star Rating Interactive */
+        .star-rating-interactive { display: flex; gap: 6px; }
+        .star-btn {
+            background: none; border: none; padding: 0;
+            font-size: 28px; color: #DDD; cursor: pointer;
+            transition: color 0.15s, transform 0.15s;
+            line-height: 1;
+        }
+        .star-btn.active { color: var(--primary); }
+        .star-btn:hover  { transform: scale(1.15); }
+        .star-label { font-size: 13px; color: var(--text-light); min-height: 18px; }
+
     </style>
     @stack('styles')
 </head>
@@ -683,6 +696,235 @@ document.addEventListener('DOMContentLoaded', function() {
     @endauth
 });
 </script>
-@stack('scripts')
+    @auth
+    <!-- Global Review Modal (Dual Mode: Add & View) -->
+    <div class="modal fade" id="globalReviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius:20px; border:none; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <!-- Left: Product Info -->
+                        <div class="col-md-5 d-none d-md-block" style="background:#F9F9F9; border-radius:20px; solid #EEE;">
+                            <div class="p-4 text-center h-100 d-flex flex-column justify-content-center">
+                                <img id="reviewModalProductImg" src="" class="img-fluid mb-3 mx-auto" style="max-height:200px; object-fit:contain;" alt="Product">
+                                <h5 id="reviewModalProductName" style="font-weight:700; margin-bottom:10px; color:#111;"></h5>
+                                <div id="reviewModalProductPrice" style="color:#666; font-size:16px;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Review Form / View -->
+                        <div class="col-md-7">
+                            <div class="p-4 p-md-5">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 id="reviewModalTitle" style="font-weight:900; letter-spacing:1px; margin:0;">Đánh giá sản phẩm</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <!-- Form for Adding Review -->
+                                <form id="addReviewForm" action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="product_id" id="reviewModalProductId">
+                                    
+                                    <div class="mb-4 text-center">
+                                        <label class="d-block mb-2 text-muted small fw-bold">Đánh giá chất lượng</label>
+                                        <div class="star-rating-input d-flex justify-content-center gap-2">
+                                            @for($i=5; $i>=1; $i--)
+                                                <input type="radio" name="rating" id="star{{ $i }}" value="{{ $i }}" {{ $i==5?'checked':'' }}>
+                                                <label for="star{{ $i }}"><i class="fas fa-star"></i></label>
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <textarea name="comment" class="form-control" rows="4" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." style="border-radius:20px; border:1px solid #DDD; padding:15px; font-size:14px;"></textarea>
+                                    </div>
+
+                                    <div class="mb-4" style="border-radius:20px;">
+                                        <label class="d-block mb-2 text-muted small fw-bold text-uppercase" " >Hình ảnh & Video</label>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <div class="upload-btn-wrapper w-100">
+                                                    <button class="btn btn-outline-secondary w-100 py-2" type="button" style="font-size:12px; border-style:dashed;">
+                                                        <i class="fas fa-camera me-2"></i>Thêm ảnh (Max 10)
+                                                    </button>
+                                                    <input type="file" name="images[]" multiple accept="image/*" id="reviewImagesInput">
+                                                </div>
+                                            </div>
+                                            <div class="col-6" style="border-radius:20px;">
+                                                <div class="upload-btn-wrapper w-100">
+                                                    <button class="btn btn-outline-secondary w-100 py-2" type="button" style="font-size:12px; border-style:dashed;">
+                                                        <i class="fas fa-video me-2"></i>Thêm Video
+                                                    </button>
+                                                    <input type="file" name="video" accept="video/*" id="reviewVideoInput">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="mediaPreviews" class="mt-3 d-flex flex-wrap gap-2"></div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-dark w-100 py-3" style="border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Gửi đánh giá</button>
+                                </form>
+
+                                <!-- View Review Details -->
+                                <div id="viewReviewContent" class="d-none">
+                                    <div class="mb-4 text-center">
+                                        <div id="viewRatingStars" class="star-rating fs-4" style="color: #7C3AED;"></div>
+                                        <div id="viewReviewDate" class="text-muted small mt-1"></div>
+                                    </div>
+                                    
+                                    <div id="viewReviewComment" class="mb-4 p-3 border-start border-4 border-dark italic" style="background:#F9F9F9; font-style:italic; color:#444;"></div>
+
+                                    <div id="viewReviewMedia" class="mb-4">
+                                        <div id="viewReviewImages" class="d-flex flex-wrap gap-2 mb-3"></div>
+                                        <div id="viewReviewVideo"></div>
+                                    </div>
+
+                                    <div id="reviewActionsView" class="d-none">
+                                        <form id="deleteReviewForm" action="" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger w-100 py-3" style="border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; font-size:13px;">
+                                                <i class="fas fa-trash-alt me-2"></i>XÓA ĐÁNH GIÁ
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .star-rating-input { display: flex; flex-direction: row-reverse; }
+        .star-rating-input input { display: none; }
+        .star-rating-input label { font-size: 30px; color: #DDD; cursor: pointer; transition: color 0.2s; }
+        .star-rating-input input:checked ~ label,
+        .star-rating-input label:hover,
+        .star-rating-input label:hover ~ label { color: #7C3AED; }
+        
+        .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+        
+        .preview-item { width: 60px; height: 60px; object-fit: cover; border: 1px solid #EEE; position: relative; }
+        .preview-remove { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 15px; height: 15px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('globalReviewModal');
+        if (!modal) return;
+
+        const addForm = document.getElementById('addReviewForm');
+        const viewContent = document.getElementById('viewReviewContent');
+        const reviewActionsView = document.getElementById('reviewActionsView');
+        const deleteForm = document.getElementById('deleteReviewForm');
+
+        modal.addEventListener('show.bs.modal', function(event) {
+            const btn = event.relatedTarget;
+            const productId = btn.getAttribute('data-product-id');
+            const productName = btn.getAttribute('data-product-name');
+            const productImg = btn.getAttribute('data-product-image');
+            const productPrice = btn.getAttribute('data-product-price');
+            const reviewData = btn.getAttribute('data-review');
+
+            // Set static data
+            document.getElementById('reviewModalProductId').value = productId;
+            document.getElementById('reviewModalProductName').textContent = productName;
+            document.getElementById('reviewModalProductImg').src = productImg;
+            document.getElementById('reviewModalProductPrice').textContent = productPrice;
+
+            if (reviewData) {
+                // VIEW MODE
+                const review = JSON.parse(reviewData);
+                document.getElementById('reviewModalTitle').textContent = 'ĐÁNH GIÁ CỦA BẠN';
+                addForm.classList.add('d-none');
+                viewContent.classList.remove('d-none');
+                
+                // Set rating
+                let stars = '';
+                for(let i=1; i<=5; i++) stars += `<i class="${i <= review.rating ? 'fas' : 'far'} fa-star"></i> `;
+                document.getElementById('viewRatingStars').innerHTML = stars;
+                document.getElementById('viewReviewDate').textContent = 'Đã đánh giá vào ' + new Date(review.created_at).toLocaleDateString('vi-VN');
+                document.getElementById('viewReviewComment').textContent = review.comment || 'Không có nhận xét';
+
+                // Media
+                const imgContainer = document.getElementById('viewReviewImages');
+                imgContainer.innerHTML = '';
+                if (review.images && review.images.length > 0) {
+                    review.images.forEach(img => {
+                        imgContainer.innerHTML += `<img src="/storage/${img}" class="img-thumbnail" style="width:100px; height:100px; object-fit:cover; cursor:pointer;" onclick="window.open(this.src)">`;
+                    });
+                }
+
+                const videoContainer = document.getElementById('viewReviewVideo');
+                videoContainer.innerHTML = '';
+                if (review.video) {
+                    videoContainer.innerHTML = `
+                        <video controls class="w-100" style="max-height:300px; background:#000;">
+                            <source src="/storage/${review.video}" type="video/mp4">
+                        </video>`;
+                }
+
+                // Delete Button
+                reviewActionsView.classList.remove('d-none');
+                deleteForm.action = `/reviews/${review.id}`;
+
+            } else {
+                // ADD MODE
+                document.getElementById('reviewModalTitle').textContent = 'ĐÁNH GIÁ SẢN PHẨM';
+                addForm.classList.remove('d-none');
+                viewContent.classList.add('d-none');
+                reviewActionsView.classList.add('d-none');
+                addForm.reset();
+                document.getElementById('mediaPreviews').innerHTML = '';
+            }
+        });
+
+        // Media Preview Logic
+        document.getElementById('reviewImagesInput').addEventListener('change', function(e) {
+            const container = document.getElementById('mediaPreviews');
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(ex) {
+                    const div = document.createElement('div');
+                    div.className = 'position-relative';
+                    div.innerHTML = `<img src="${ex.target.result}" class="preview-item">`;
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+        
+        document.getElementById('reviewVideoInput').addEventListener('change', function(e) {
+            if(e.target.files[0]) {
+                const container = document.getElementById('mediaPreviews');
+                const div = document.createElement('div');
+                div.className = 'position-relative d-flex align-items-center justify-content-center border';
+                div.style = 'width:60px; height:60px; background:#EEE;';
+                div.innerHTML = `<i class="fas fa-video text-muted"></i>`;
+                container.appendChild(div);
+                
+                // Simple validation for video length (optional but good)
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = function() {
+                    window.URL.revokeObjectURL(video.src);
+                    if (video.duration > 30) {
+                        alert("Video không được dài quá 30 giây!");
+                        e.target.value = '';
+                        div.remove();
+                    }
+                }
+                video.src = URL.createObjectURL(e.target.files[0]);
+            }
+        });
+    });
+    </script>
+    @endauth
+
+    @stack('scripts')
 </body>
 </html>

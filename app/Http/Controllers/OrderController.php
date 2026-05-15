@@ -238,7 +238,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Hủy đơn hàng (Customer)
+     * Hủy đơn hàng (Customer) - Gửi yêu cầu hủy
      */
     public function cancel(Order $order)
     {
@@ -246,36 +246,17 @@ class OrderController extends Controller
             abort(403);
         }
 
-        if (!in_array($order->trang_thai, ['pending', 'confirmed'])) {
-            return back()->with('error', 'Không thể hủy đơn hàng ở trạng thái này!');
+        // Chỉ cho phép hủy khi đang ở trạng thái pending (Chờ duyệt)
+        if ($order->trang_thai !== 'pending') {
+            return back()->with('error', 'Chỉ có thể hủy đơn hàng khi đang ở trạng thái "Chờ duyệt"!');
         }
 
-        DB::transaction(function () use ($order) {
-            // Hoàn tồn kho
-            foreach ($order->orderItems as $item) {
-                $product = $item->product;
-                if ($product) {
-                    $oldQty = $product->so_luong;
-                    $newQty = $oldQty + $item->so_luong;
-                    $product->update(['so_luong' => $newQty]);
+        $order->update([
+            'previous_trang_thai' => $order->trang_thai,
+            'trang_thai' => 'cancelling',
+        ]);
 
-                    InventoryLog::create([
-                        'product_id'        => $product->id,
-                        'loai'              => 'in',
-                        'so_luong_truoc'    => $oldQty,
-                        'so_luong_thay_doi' => $item->so_luong,
-                        'so_luong_sau'      => $newQty,
-                        'ly_do'             => "Hoàn kho do hủy đơn #{$order->ma_don_hang}",
-                        'order_id'          => $order->id,
-                        'user_id'           => Auth::id(),
-                    ]);
-                }
-            }
-
-            $order->update(['trang_thai' => 'cancelled']);
-        });
-
-        return back()->with('success', 'Đã hủy đơn hàng thành công!');
+        return back()->with('success', 'Yêu cầu hủy đơn hàng đã được gửi và đang chờ Admin duyệt!');
     }
 
     /**
@@ -388,5 +369,122 @@ class OrderController extends Controller
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage())->withInput();
         }
+    }
+
+    /**
+     * Hiển thị trang nhập thông tin hoàn tiền (Customer)
+     */
+    public function refundInfo(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->refund_status === 'none') {
+            return redirect()->route('orders.show', $order)->with('error', 'Đơn hàng này không yêu cầu thông tin hoàn tiền.');
+        }
+
+        return view('orders.refund', compact('order'));
+    }
+
+    /**
+     * Xử lý gửi thông tin hoàn tiền (Customer)
+     */
+    public function submitRefundInfo(Request $request, Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'refund_bank_name' => 'required|string|max:255',
+            'refund_account_number' => 'required|string|max:255',
+            'refund_account_name' => 'required|string|max:255',
+            'refund_user_note' => 'nullable|string',
+        ]);
+
+        $order->update(array_merge($validated, ['refund_status' => 'pending']));
+
+        return redirect()->route('orders.show', $order)->with('success', 'Thông tin hoàn tiền đã được gửi. Admin sẽ xử lý sớm nhất!');
+    }
+
+    /**
+     * Admin đồng ý hủy đơn hàng
+     */
+    public function approveCancel(Order $order)
+    {
+        DB::beginTransaction();
+        try {
+            $oldStatus = $order->trang_thai;
+            
+            // Hoàn tồn kho
+            $this->restoreInventory($order);
+
+            $updateData = ['trang_thai' => 'cancelled'];
+
+            // Nếu đã thanh toán, yêu cầu hoàn tiền
+            if ($order->trang_thai_thanh_toan === 'paid') {
+                $updateData['refund_status'] = 'pending';
+                $message = 'Đơn hàng đã được chấp nhận hủy và cần cung cấp thông tin nhận hoàn tiền.';
+            } else {
+                $message = 'Đơn hàng đã được hủy thành công.';
+            }
+
+            $order->update($updateData);
+
+            try {
+                $order->user->notify(new OrderStatusUpdated($order, $oldStatus, 'cancelled'));
+                if ($order->trang_thai_thanh_toan === 'paid') {
+                    // Bạn có thể tạo thêm notification riêng cho việc hoàn tiền ở đây
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Could not send notification: ' . $e->getMessage());
+            }
+
+            DB::commit();
+            return back()->with('success', 'Đã chấp nhận hủy đơn hàng!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Admin từ chối hủy đơn hàng
+     */
+    public function rejectCancel(Order $order)
+    {
+        $oldStatus = $order->trang_thai;
+        $revertStatus = $order->previous_trang_thai ?? 'pending';
+
+        $order->update([
+            'trang_thai' => $revertStatus,
+            'previous_trang_thai' => null,
+        ]);
+
+        try {
+            // Thông báo cho user
+            // $order->user->notify(new OrderStatusUpdated($order, $oldStatus, $revertStatus));
+        } catch (\Exception $e) {}
+
+        return back()->with('success', 'Đã từ chối yêu cầu hủy. Đơn hàng quay lại trạng thái ' . $revertStatus);
+    }
+
+    /**
+     * Admin cập nhật trạng thái hoàn tiền
+     */
+    public function updateRefund(Request $request, Order $order)
+    {
+        $request->validate([
+            'refund_status' => 'required|in:pending,completed',
+            'refund_admin_note' => 'nullable|string',
+        ]);
+
+        $order->update([
+            'refund_status' => $request->refund_status,
+            'refund_admin_note' => $request->refund_admin_note,
+        ]);
+
+        return back()->with('success', 'Cập nhật thông tin hoàn tiền thành công!');
     }
 }

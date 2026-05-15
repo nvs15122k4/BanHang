@@ -273,6 +273,49 @@
                                 <p class="mb-0 fw-bold" style="color:#EB5757;">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
                             </div>
                         @endif
+                        
+                        {{-- Nút Hủy đơn hàng (User) --}}
+                        @if($order->trang_thai === 'pending')
+                            <div class="mt-4 p-3 text-center" style="background:#FFF5F5; border:1px dashed #EB5757;">
+                                <p class="mb-3" style="font-size:14px; color:#EB5757; font-weight:600;">Bạn muốn hủy đơn hàng này?</p>
+                                <form method="POST" action="{{ route('orders.cancel', $order) }}" id="cancelOrderForm">
+                                    @csrf
+                                    <button type="button" class="btn btn-danger" 
+                                        style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
+                                        onclick="confirmCancel()">
+                                        <i class="fas fa-times-circle me-2"></i>Hủy đơn hàng
+                                    </button>
+                                </form>
+                            </div>
+
+                            <script>
+                                function confirmCancel() {
+                                    if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
+                                        document.getElementById('cancelOrderForm').submit();
+                                    }
+                                }
+                            </script>
+                        @endif
+
+                        {{-- Banner thông tin hoàn tiền --}}
+                        @if($order->refund_status !== 'none')
+                            <div class="mt-4 p-3" style="background:#E3F2FD; border:1px solid #2196F3;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <i class="fas fa-info-circle fa-2x" style="color:#1976D2;"></i>
+                                    <div style="flex:1;">
+                                        <h6 class="mb-1 fw-bold" style="color:#1976D2;">Yêu cầu hoàn tiền</h6>
+                                        <p class="mb-0 small">Đơn hàng đã được chấp nhận hủy. Vui lòng cung cấp thông tin ngân hàng để nhận hoàn tiền.</p>
+                                    </div>
+                                    @if($order->refund_status === 'pending' && !$order->refund_bank_name)
+                                        <a href="{{ route('orders.refund', $order) }}" class="btn btn-primary btn-sm" style="border-radius:0;">NHẬP THÔNG TIN</a>
+                                    @elseif($order->refund_status === 'pending')
+                                        <span class="badge bg-warning">ĐANG XỬ LÝ HOÀN TIỀN</span>
+                                    @else
+                                        <span class="badge bg-success">ĐÃ HOÀN TIỀN</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
 
                         {{-- Nút hành động của user khi đơn đang giao --}}
                         @php $userNext = \App\Models\Order::userNextStatuses($order->trang_thai); @endphp

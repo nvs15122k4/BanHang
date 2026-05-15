@@ -252,7 +252,7 @@ class OrderController extends Controller
     /**
      * Hủy đơn hàng (Customer) - Gửi yêu cầu hủy
      */
-    public function cancel(Order $order)
+    public function cancel(Request $request, Order $order)
     {
         if ($order->user_id !== Auth::id()) {
             abort(403, 'Bạn không có quyền thực hiện hành động này!');
@@ -434,7 +434,8 @@ class OrderController extends Controller
             $oldStatus = $order->trang_thai;
             
             // Hoàn tồn kho (Chỉ hoàn nếu đã từng trừ kho)
-            $statusesWithDeductedInventory = ['confirmed', 'shipping', 'delivered', 'disputing'];
+            // Vì inventory được trừ ngay khi checkout (trạng thái pending), nên cần hoàn kho cho tất cả các trạng thái này
+            $statusesWithDeductedInventory = ['pending', 'confirmed', 'shipping', 'delivered', 'disputing', 'cancelling'];
             if (in_array($oldStatus, $statusesWithDeductedInventory)) {
                 $this->restoreInventory($order);
             }

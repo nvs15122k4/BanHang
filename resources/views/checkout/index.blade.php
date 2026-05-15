@@ -266,10 +266,10 @@
                     
                     <label class="payment-option w-100" onclick="selectPayment(this)">
                         <input type="radio" name="phuong_thuc_thanh_toan" value="bank_transfer" class="address-radio" style="display:none;">
-                        <i class="fas fa-university payment-icon"></i>
+                        <i class="fas fa-money-bill-wave payment-icon"></i>
                         <div>
-                            <div class="fw-bold">Chuyển khoản ngân hàng</div>
-                            <div class="text-muted" style="font-size: 13px;">Thực hiện thanh toán trực tiếp vào tài khoản ngân hàng của chúng tôi.</div>
+                            <div class="fw-bold">Tiền mặt (COD)</div>
+                            <div class="text-muted" style="font-size: 13px;">Thanh toán bằng tiền mặt sau khi nhận hàng</div>
                         </div>
                         <i class="fas fa-check-circle ms-auto text-success check-icon" style="font-size: 20px; display: none;"></i>
                     </label>

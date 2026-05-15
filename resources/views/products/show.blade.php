@@ -668,10 +668,25 @@
                                             <div class="review-date">{{ $review->created_at->format('d/m/Y') }}</div>
                                         </div>
                                     </div>
-                                    <div class="review-rating">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
-                                        @endfor
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="review-rating">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                                            @endfor
+                                        </div>
+                                        
+                                        {{-- Nút xóa cho Admin hoặc Chính chủ --}}
+                                        @auth
+                                            @if(auth()->user()->role === 'admin' || auth()->id() === $review->user_id)
+                                                <form action="{{ route('reviews.destroy', $review) }}" method="POST" data-item-name="Đánh giá của bạn" onsubmit="return confirmForm(this, 'Đánh giá này sẽ bị xóa vĩnh viễn và không thể khôi phục.', 'XÓA ĐÁNH GIÁ')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-link text-danger p-0" title="Xóa đánh giá" style="text-decoration:none; font-size:12px;">
+                                                        <i class="fas fa-trash-alt me-1"></i>Xóa
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
                                     </div>
                                 </div>
                                 <div class="review-content">{{ $review->comment ?: '(Không có nhận xét)' }}</div>

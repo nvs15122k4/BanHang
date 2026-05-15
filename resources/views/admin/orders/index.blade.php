@@ -46,6 +46,12 @@
     </div>
     <div class="col-md-2">
         <div class="stat-card">
+            <div class="stat-value text-warning" style="color: #f39c12 !important;">{{ $stats['cancelling'] }}</div>
+            <div class="stat-label">Chờ duyệt hủy</div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card">
             <div class="stat-value text-success">{{ $stats['completed'] }}</div>
             <div class="stat-label">Hoàn thành</div>
         </div>
@@ -118,19 +124,7 @@
                         </td>
                         <td style="font-weight: 500;">{{ number_format($order->thanh_tien) }}đ</td>
                         <td>
-                            @php
-                                $statusColors = [
-                                    'pending'   => 'warning',
-                                    'confirmed' => 'info',
-                                    'shipping'  => 'primary',
-                                    'delivered' => 'warning',
-                                    'disputing' => 'danger',
-                                    'completed' => 'success',
-                                    'cancelled' => 'danger',
-                                ];
-                                $color = $statusColors[$order->trang_thai] ?? 'secondary';
-                            @endphp
-                            <span class="badge bg-{{ $color }}">{{ $order->status_label }}</span>
+                            <span class="badge bg-{{ $order->status_color }}">{{ $order->status_label }}</span>
                         </td>
                         <td>
                             <span class="badge bg-{{ $order->trang_thai_thanh_toan === 'paid' ? 'success' : 'secondary' }}">

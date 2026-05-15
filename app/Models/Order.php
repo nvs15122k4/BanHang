@@ -32,6 +32,11 @@ class Order extends Model
         'refund_admin_note',
     ];
 
+    const REFUND_STATUS_NONE = 'none';
+    const REFUND_STATUS_PENDING = 'pending';
+    const REFUND_STATUS_COMPLETED = 'completed';
+    
+
     protected $casts = [
         'tong_tien' => 'decimal:2',
         'phi_van_chuyen' => 'decimal:2',
@@ -115,6 +120,25 @@ class Order extends Model
         ];
 
         return $map[$current] ?? [];
+    }
+
+    /**
+     * Nhãn màu trạng thái (Bootstrap class)
+     */
+    public function getStatusColorAttribute(): string
+    {
+        $map = [
+            'pending'   => 'warning',
+            'confirmed' => 'info',
+            'shipping'  => 'primary',
+            'delivered' => 'warning',
+            'disputing' => 'danger',
+            'completed' => 'success',
+            'cancelling' => 'warning',
+            'cancelled' => 'danger',
+        ];
+
+        return $map[$this->trang_thai] ?? 'secondary';
     }
 
     /**

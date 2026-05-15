@@ -113,19 +113,7 @@
             <div class="card-body">
                 <div class="mb-3">
                     <strong>Trạng thái đơn hàng:</strong><br>
-                    @php
-                        $statusColors = [
-                            'pending'   => 'warning',
-                            'confirmed' => 'info',
-                            'shipping'  => 'primary',
-                            'delivered' => 'warning',
-                            'disputing' => 'danger',
-                            'completed' => 'success',
-                            'cancelled' => 'danger',
-                        ];
-                        $color = $statusColors[$order->trang_thai] ?? 'secondary';
-                    @endphp
-                    <span class="badge bg-{{ $color }} fs-6 mt-2">{{ $order->status_label }}</span>
+                    <span class="badge bg-{{ $order->status_color }} fs-6 mt-2">{{ $order->status_label }}</span>
                 </div>
 
                 @php
@@ -146,7 +134,67 @@
                     </button>
                 </form>
 
+                {{-- Nút duyệt hủy đơn --}}
+                @if($order->trang_thai === 'cancelling')
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label text-danger"><strong>YÊU CẦU HỦY ĐƠN HÀNG:</strong></label>
+                        <div class="d-grid gap-2">
+                            <form action="{{ route('admin.orders.approveCancel', $order) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Xác nhận đồng ý hủy đơn hàng này?')">
+                                    <i class="fas fa-check me-2"></i>Đồng ý hủy
+                                </button>
+                            </form>
+                            <form action="{{ route('admin.orders.rejectCancel', $order) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-secondary w-100" onclick="return confirm('Xác nhận từ chối yêu cầu hủy?')">
+                                    <i class="fas fa-times me-2"></i>Từ chối hủy
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+
                 <hr>
+
+                {{-- Quản lý hoàn tiền --}}
+                @if($order->refund_status !== 'none')
+                    <div class="mb-3">
+                        <label class="form-label"><strong>QUẢN LÝ HOÀN TIỀN:</strong></label>
+                        
+                        @if($order->refund_bank_name)
+                            <div class="p-3 bg-light border mb-3 small">
+                                <strong>Ngân hàng:</strong> {{ $order->refund_bank_name }}<br>
+                                <strong>STK:</strong> {{ $order->refund_account_number }}<br>
+                                <strong>Chủ TK:</strong> {{ $order->refund_account_name }}<br>
+                                @if($order->refund_user_note)
+                                    <strong>Ghi chú KH:</strong> {{ $order->refund_user_note }}
+                                @endif
+                            </div>
+                        @else
+                            <div class="alert alert-info py-2 small">Chờ khách hàng cung cấp thông tin ngân hàng.</div>
+                        @endif
+
+                        <form action="{{ route('admin.orders.updateRefund', $order) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-2">
+                                <label class="small fw-bold">Trạng thái hoàn tiền:</label>
+                                <select name="refund_status" class="form-select form-select-sm">
+                                    <option value="pending" {{ $order->refund_status === 'pending' ? 'selected' : '' }}>Chưa hoàn tiền</option>
+                                    <option value="completed" {{ $order->refund_status === 'completed' ? 'selected' : '' }}>Đã hoàn tiền</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="small fw-bold">Nội dung hoàn tiền:</label>
+                                <textarea name="refund_admin_note" class="form-control form-control-sm" rows="2" placeholder="Nhập ghi chú hoàn tiền...">{{ $order->refund_admin_note }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-sm w-100">Cập nhật hoàn tiền</button>
+                        </form>
+                    </div>
+                    <hr>
+                @endif
 
                 <div class="mb-3">
                     <strong>Trạng thái thanh toán:</strong><br>

@@ -23,6 +23,13 @@ class Order extends Model
         'phuong_thuc_thanh_toan',
         'trang_thai_thanh_toan',
         'ghi_chu',
+        'previous_trang_thai',
+        'refund_bank_name',
+        'refund_account_number',
+        'refund_account_name',
+        'refund_user_note',
+        'refund_status',
+        'refund_admin_note',
     ];
 
     protected $casts = [
@@ -68,6 +75,7 @@ class Order extends Model
             'delivered' => 'Chờ KH xác nhận',
             'disputing' => 'Đang khiếu nại',
             'completed' => 'Hoàn thành',
+            'cancelling' => 'Chờ duyệt hủy',
             'cancelled' => 'Đã hủy',
         ];
     }
@@ -85,6 +93,7 @@ class Order extends Model
             'delivered' => 'Chờ xác nhận',
             'disputing' => 'Đang xử lý khiếu nại',
             'completed' => 'Hoàn thành',
+            'cancelling' => 'Đang xử lý đơn hàng hủy',
             'cancelled' => 'Đã hủy',
         ];
     }
@@ -95,11 +104,12 @@ class Order extends Model
     public static function adminNextStatuses(string $current): array
     {
         $map = [
-            'pending'   => ['confirmed', 'cancelled'],
-            'confirmed' => ['shipping', 'cancelled'],
+            'pending'   => ['confirmed', 'cancelled', 'cancelling'],
+            'confirmed' => ['shipping', 'cancelled', 'cancelling'],
             'shipping'  => ['delivered'],
             'delivered' => ['completed'],
             'disputing' => ['completed', 'shipping'],
+            'cancelling'=> ['cancelled', 'pending'], // pending để trả lại trạng thái cũ nếu từ chối
             'completed' => [],
             'cancelled' => [],
         ];

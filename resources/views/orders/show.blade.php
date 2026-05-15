@@ -75,26 +75,38 @@
         margin: 0 auto 10px;
         font-size: 16px;
         transition: all 0.3s;
+        border: 2px solid #fff;
     }
     
     .status-label {
         font-weight: 600;
-        font-size: 13px;
+        font-size: 12px;
         color: #999999;
         text-transform: uppercase;
+        transition: all 0.3s;
+        letter-spacing: -0.5px;
     }
     
+    /* Active & Completed Steps */
     .status-step.active .status-icon {
-        background: var(--text-main);
+        background: #111111;
         color: #FFFFFF;
+        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
     }
     
     .status-step.active .status-label {
-        color: var(--text-main);
+        color: #111111;
     }
-    
-    .status-step.active ~ .status-step .status-icon {
-        background: #EEEEEE;
+
+    /* Progress Line Fill */
+    .status-track-fill {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        height: 2px;
+        background: #111111;
+        z-index: 0;
+        transition: width 0.8s ease;
     }
 
     /* Cancelled State */
@@ -195,6 +207,25 @@
         <!-- Main Info -->
         <div class="col-lg-8">
             
+        <!-- Delivery Details -->
+            <div class="order-section">
+                <div class="section-header">
+                    <i class="fas fa-map-marker-alt"></i> THÔNG TIN GIAO HÀNG
+                </div>
+                <div class="section-body">
+                    <div class="info-label">Người nhận</div>
+                    <div class="info-value">{{ $order->ten_nguoi_nhan }}</div>
+                    <div class="info-label">Số điện thoại</div>
+                    <div class="info-value">{{ $order->sdt_nguoi_nhan }}</div>
+                    <div class="info-label">Địa chỉ</div>
+                    <div class="info-value">{{ $order->dia_chi_giao_hang }}</div>
+                    @if($order->ghi_chu)
+                        <div class="info-label">Ghi chú</div>
+                        <div class="info-value">{{ $order->ghi_chu }}</div>
+                    @endif
+                </div>
+            </div>
+            
             <!-- Order Status -->
             <div class="order-section">
                 <div class="section-header">
@@ -224,6 +255,9 @@
                         @endphp
 
                         <div class="status-track">
+                            {{-- Line fill --}}
+                            <div class="status-track-fill" style="width: {{ ($currentIdx / (count($steps) - 1)) * 100 }}%;"></div>
+                            
                             @foreach($steps as $i => $step)
                                 <div class="status-step {{ $i <= $currentIdx ? 'active' : '' }}">
                                     <div class="status-icon"><i class="fas fa-{{ $step['icon'] }}"></i></div>
@@ -309,18 +343,30 @@
                                             ->first();
                                     @endphp
                                     @if($reviewed)
-                                        <span class="mt-2 d-inline-flex align-items-center gap-1" style="font-size:12px; color:#27AE60; font-weight:600;">
-                                            <i class="fas fa-check-circle"></i> Đã đánh giá
-                                            @if($reviewed->trang_thai === 'pending')
-                                                <span style="color:#F5A623;">(Đang chờ duyệt)</span>
-                                            @endif
-                                        </span>
-                                    @else
-                                        <a href="{{ route('products.show', $detail->product->id) }}#review-pane"
+                                        <button type="button"
                                            class="btn mt-2"
-                                           style="background:var(--primary); color:#fff; border:none; padding:6px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:0; text-decoration:none; display:inline-block;">
+                                           style="background:#27AE60; color:#fff; border:none; padding:6px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:0;"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#globalReviewModal"
+                                           data-product-id="{{ $detail->product->id }}"
+                                           data-product-name="{{ $detail->product->ten_sp }}"
+                                           data-product-image="{{ $detail->product->image_path }}"
+                                           data-product-price="{{ number_format($detail->gia) }}đ"
+                                           data-review="{{ $reviewed->toJson() }}">
+                                            <i class="fas fa-check-circle me-1"></i>Xem đánh giá
+                                        </button>
+                                    @else
+                                        <button type="button"
+                                           class="btn mt-2"
+                                           style="background:var(--primary); color:#fff; border:none; padding:6px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:0;"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#globalReviewModal"
+                                           data-product-id="{{ $detail->product->id }}"
+                                           data-product-name="{{ $detail->product->ten_sp }}"
+                                           data-product-image="{{ $detail->product->image_path }}"
+                                           data-product-price="{{ number_format($detail->gia) }}đ">
                                             <i class="fas fa-star me-1"></i>Đánh giá
-                                        </a>
+                                        </button>
                                     @endif
                                 @endif
                             </div>
@@ -352,29 +398,6 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4">
-            
-            <!-- Delivery Details -->
-            <div class="order-section">
-                <div class="section-header">
-                    <i class="fas fa-map-marker-alt"></i> THÔNG TIN GIAO HÀNG
-                </div>
-                <div class="section-body">
-                    <div class="info-label">Người nhận</div>
-                    <div class="info-value">{{ $order->ten_nguoi_nhan }}</div>
-                    
-                    <div class="info-label">Số điện thoại</div>
-                    <div class="info-value">{{ $order->sdt_nguoi_nhan }}</div>
-                    
-                    <div class="info-label">Địa chỉ</div>
-                    <div class="info-value">{{ $order->dia_chi_giao_hang }}</div>
-                    
-                    @if($order->ghi_chu)
-                        <div class="info-label">Ghi chú</div>
-                        <div class="info-value">{{ $order->ghi_chu }}</div>
-                    @endif
-                </div>
-            </div>
-
             <!-- Payment Details -->
             <div class="order-section">
                 <div class="section-header">
@@ -408,8 +431,43 @@
                     @endif
                 </div>
             </div>
-            
+            <!-- Payment Copy -->
+            <div class="order-section">
+                <div class="section-header">
+                    <i class="fas fa-copy"></i> SAO CHÉP THÔNG TIN THANH TOÁN
+                </div>
+                <div class="section-body">
+                    <div class="info-label">Số tài khoản</div>
+                    <div class="info-value" id="stk" onclick="copyToClipboard(document.getElementById('stk').innerText)">1014232408</div>
+                    <div class="info-label">Chủ tài khoản</div>
+                    <div class="info-value" id="owner" onclick="copyToClipboard(document.getElementById('owner').innerText)">Nguyễn Văn Sang</div>
+                    <div class="info-label">Ngân hàng</div>
+                    <div class="info-value" id="bank" onclick="copyToClipboard(document.getElementById('bank').innerText)" >Vietcombank</div>
+                    <div class="info-label">Số tiền</div>
+                    <div class="info-value" id="amount" onclick="copyToClipboard(document.getElementById('amount').innerText)">{{ number_format($order->tong_tien) }}đ</div>
+                    <div class="info-label">Nội dung</div>
+                    <div class="info-value" style="text-transform:uppercase;" id="content" onclick="copyToClipboard(document.getElementById('content').innerText)">{{ $order->ma_don_hang }}</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    function copyToClipboard(text) {
+        // Remove Vietnamese accents (optional)
+        text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        text = text.toLowerCase().trim();
+        
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        // Show notification (replace with a toast system if you have one)
+        alert('Đã sao chép: ' + text);
+    }
+</script>
 @endsection

@@ -30,6 +30,7 @@ class Order extends Model
         'refund_user_note',
         'refund_status',
         'refund_admin_note',
+        'reason_cancel',
     ];
 
     const REFUND_STATUS_NONE = 'none';

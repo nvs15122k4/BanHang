@@ -198,7 +198,7 @@
                                     <span class="cart-item-subtotal">{{ number_format($item['subtotal']) }}đ</span>
                                 </td>
                                 <td class="text-end" data-label="Hành động">
-                                    <form action="{{ route('cart.remove', $product->id) }}" method="POST">
+                                    <form action="{{ route('cart.remove', $product->id) }}" method="POST" data-item-name="{{ $product->ten_sp }}" onsubmit="return confirmForm(this, 'Sản phẩm sẽ bị xóa vĩnh viễn khỏi giỏ hàng và không thể khôi phục.', 'XÓA SẢN PHẨM')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn-remove" title="Xóa sản phẩm"><i class="fas fa-times"></i></button>
@@ -214,7 +214,7 @@
                     <form action="{{ route('cart.clear') }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-link text-muted p-0" style="font-size: 14px; text-decoration: none;" onclick="return confirm('Xóa tất cả sản phẩm khỏi giỏ hàng?')">XÓA GIỎ HÀNG</button>
+                        <button type="submit" class="btn btn-link text-muted p-0" style="font-size: 14px; text-decoration: none;" onclick="return confirmForm(this.form, 'Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?', 'XÓA GIỎ HÀNG')">XÓA GIỎ HÀNG</button>
                     </form>
                 </div>
             </div>

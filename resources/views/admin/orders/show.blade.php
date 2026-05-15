@@ -140,15 +140,15 @@
                     <div class="mb-3">
                         <label class="form-label text-danger"><strong>YÊU CẦU HỦY ĐƠN HÀNG:</strong></label>
                         <div class="d-grid gap-2">
-                            <form action="{{ route('admin.orders.approveCancel', $order) }}" method="POST">
+                            <form action="{{ route('admin.orders.approveCancel', $order) }}" method="POST" onsubmit="return confirmForm(this, 'Bạn có chắc chắn muốn CHẤP NHẬN yêu cầu hủy đơn hàng này?', 'DUYỆT HỦY ĐƠN', 'danger')">
                                 @csrf
-                                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Xác nhận đồng ý hủy đơn hàng này?')">
+                                <button type="submit" class="btn btn-danger w-100">
                                     <i class="fas fa-check me-2"></i>Đồng ý hủy
                                 </button>
                             </form>
-                            <form action="{{ route('admin.orders.rejectCancel', $order) }}" method="POST">
+                            <form action="{{ route('admin.orders.rejectCancel', $order) }}" method="POST" onsubmit="return confirmForm(this, 'Bạn có chắc chắn muốn TỪ CHỐI yêu cầu hủy đơn hàng này?', 'TỪ CHỐI HỦY', 'danger')">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-secondary w-100" onclick="return confirm('Xác nhận từ chối yêu cầu hủy?')">
+                                <button type="submit" class="btn btn-outline-secondary w-100">
                                     <i class="fas fa-times me-2"></i>Từ chối hủy
                                 </button>
                             </form>

@@ -524,24 +524,32 @@ document.addEventListener('submit', async function(e) {
 document.addEventListener('click', async function(e) {
     const btn = e.target.closest('[data-delete-address]');
     if (!btn) return;
-    if (!confirm('Bạn có chắc muốn xóa địa chỉ này?')) return;
-
-    const url = btn.dataset.deleteAddress;
-    try {
-        const res  = await fetch(url, {
-            method: 'POST',
-            body: new URLSearchParams({ _method: 'DELETE' }),
-            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        const json = await res.json();
-        if (json.success) {
-            btn.closest('.address-card-wrap').remove();
-            if (!document.querySelector('.address-card-wrap')) {
-                document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#DDD;"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
-            }
-            window.showToast && window.showToast(json.message, 'success');
+    const addrCard = btn.closest('.address-card-wrap');
+    const addrName = addrCard.querySelector('.fw-bold')?.innerText || 'Địa chỉ này';
+    
+    stConfirmDelete({
+        title: 'XÓA ĐỊA CHỈ',
+        pill: addrName,
+        message: 'Địa chỉ này sẽ bị xóa khỏi sổ địa chỉ của bạn.',
+        onConfirm: async () => {
+            const url = btn.dataset.deleteAddress;
+            try {
+                const res  = await fetch(url, {
+                    method: 'POST',
+                    body: new URLSearchParams({ _method: 'DELETE' }),
+                    headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }
+                });
+                const json = await res.json();
+                if (json.success) {
+                    addrCard.remove();
+                    if (!document.querySelector('.address-card-wrap')) {
+                        document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#DDD;"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
+                    }
+                    window.showToast && window.showToast(json.message, 'success');
+                }
+            } catch { window.showToast && window.showToast('Không thể xóa địa chỉ!', 'danger'); }
         }
-    } catch { window.showToast && window.showToast('Không thể xóa địa chỉ!', 'danger'); }
+    });
 });
 
 /* ── SET DEFAULT ADDRESS ── */

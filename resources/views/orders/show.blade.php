@@ -313,23 +313,23 @@
                                 <p class="fw-bold mb-3" style="font-size:14px;">Bạn đã nhận được hàng chưa?</p>
                                 <div class="d-flex gap-2 flex-wrap">
                                     {{-- Đã nhận --}}
-                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;">
+                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;" data-item-name="#{{ $order->ma_don_hang }}">
                                         @csrf
                                         <input type="hidden" name="trang_thai" value="completed">
                                         <button type="submit" class="btn btn-success"
                                             style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
-                                            onclick="return confirm('Xác nhận bạn đã nhận được hàng?')">
-                                            <i class="fas fa-check-circle me-2"></i>Đã nhận được hàng
+                                            onclick="return confirmForm(this.form, 'Xác nhận bạn đã nhận được hàng? Trạng thái đơn hàng sẽ chuyển thành Hoàn thành.', 'Xác nhận đã nhận được hàng', 'success', 'Xác nhận đã nhận')">
+                                            <i class="fas fa-check-circle me-2"></i>ĐÃ NHẬN ĐƯỢC HÀNG
                                         </button>
                                     </form>
                                     {{-- Chưa nhận / Khiếu nại --}}
-                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;">
+                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;" data-item-name="#{{ $order->ma_don_hang }}">
                                         @csrf
                                         <input type="hidden" name="trang_thai" value="disputing">
                                         <button type="submit" class="btn btn-outline-danger"
                                             style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
-                                            onclick="return confirm('Xác nhận bạn chưa nhận được hàng và muốn khiếu nại?')">
-                                            <i class="fas fa-exclamation-circle me-2"></i>Chưa nhận được hàng
+                                            onclick="return confirmForm(this.form, 'Xác nhận bạn chưa nhận được hàng và muốn khiếu nại? Chúng tôi sẽ tiếp nhận và xử lý sớm nhất.', 'Xác nhận gửi khiếu nại', 'danger', 'Gửi khiếu nại')">
+                                            <i class="fas fa-exclamation-circle me-2"></i>CHƯA NHẬN ĐƯỢC HÀNG
                                         </button>
                                     </form>
                                 </div>
@@ -508,7 +508,7 @@
             @if($order->trang_thai === 'pending')
             <div class="mt-4 p-3 text-center" style="background:#FFF5F5; border:1px dashed #EB5757;">
                 <p class="mb-3" style="font-size:14px; color:#EB5757; font-weight:600;">Bạn muốn hủy đơn hàng này?</p>
-                <form method="POST" action="{{ route('orders.cancel', $order) }}" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">
+                <form method="POST" action="{{ route('orders.cancel', $order) }}" data-order-code="{{ $order->ma_don_hang }}" data-confirm-text="Xác nhận hủy" onsubmit="return confirmForm(this, 'Xác nhận hủy đơn hàng này?', 'HỦY ĐƠN HÀNG')">
                 @csrf
                 <button type="submit" class="btn btn-danger" 
                 style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;">

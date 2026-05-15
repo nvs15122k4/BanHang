@@ -239,6 +239,212 @@
         .star-btn:hover  { transform: scale(1.15); }
         .star-label { font-size: 13px; color: var(--text-light); min-height: 18px; }
 
+        /* ── CUSTOM CONFIRM MODAL ── */
+        .st-modal-content {
+            border-radius: 0;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .st-modal-header {
+            border-bottom: 1px solid #F0F0F0;
+            padding: 20px 25px;
+        }
+        .st-modal-title {
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+        .st-modal-body {
+            padding: 25px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .st-modal-footer {
+            padding: 15px 25px 25px;
+            border-top: none;
+            display: flex;
+            gap: 12px;
+        }
+        .btn-modal-cancel {
+            background: #F5F5F5;
+            color: #666;
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            font-size: 13px;
+            flex: 1;
+            transition: all 0.2s;
+        }
+        .btn-modal-cancel:hover { background: #EEEEEE; color: #333; }
+        .btn-modal-confirm {
+            background: #1A1A1A;
+            color: #FFF;
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            font-size: 13px;
+            flex: 1;
+            transition: all 0.2s;
+        }
+        .btn-modal-confirm:hover { background: #000; }
+        .btn-modal-confirm.btn-danger-confirm { background: #E53E3E; }
+        .btn-modal-confirm.btn-danger-confirm:hover { background: #C53030; }
+ 
+        /* ── PREMIUM POPUP STYLES ── */
+        .premium-modal .modal-content {
+            border-radius: 32px;
+            border: none;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .premium-modal .modal-body {
+            padding: 40px;
+            text-align: center;
+        }
+        .premium-icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+        }
+        .premium-icon-delete {
+            background: #FFF5F5;
+            color: #E53E3E;
+        }
+        .premium-icon-cancel {
+            background: #FFF9F0;
+            color: #F5A623;
+        }
+        .premium-title {
+            font-weight: 800;
+            font-size: 24px;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .premium-subtitle-pill {
+            display: inline-block;
+            background: #F8F9FA;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4A5568;
+            margin-bottom: 24px;
+        }
+        .premium-description {
+            font-size: 15px;
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+        .premium-footer-note {
+            font-size: 13px;
+            color: #A0AEC0;
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .premium-btn-group {
+            display: flex;
+            gap: 12px;
+        }
+        .premium-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.2s;
+            border: none;
+        }
+        .premium-btn-secondary {
+            background: #FFFFFF;
+            color: #4A5568;
+            border: 1px solid #E2E8F0;
+        }
+        .premium-btn-secondary:hover { background: #F7FAFC; }
+        .premium-btn-danger {
+            background: #FF0000;
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(255, 0, 0, 0.25);
+        }
+        .premium-btn-danger:hover { background: #CC0000; transform: translateY(-1px); }
+        .premium-btn-orange {
+            background: #F6AD55;
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(246, 173, 85, 0.25);
+        }
+        .premium-btn-orange:hover { background: #ED8936; transform: translateY(-1px); }
+        
+        .premium-icon-success {
+            background: #F0FFF4;
+            color: #38A169;
+        }
+        .premium-btn-success {
+            background: #38A169;
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(56, 161, 105, 0.25);
+        }
+        .premium-btn-success:hover { background: #2F855A; transform: translateY(-1px); }
+
+        /* Reason Options for Cancel Modal */
+        .reason-options {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        .reason-item {
+            display: block;
+            position: relative;
+            padding: 14px 16px 14px 48px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2D3748;
+            transition: all 0.2s;
+        }
+        .reason-item:hover { background: #F7FAFC; border-color: #CBD5E0; }
+        .reason-item input { position: absolute; opacity: 0; cursor: pointer; }
+        .reason-checkmark {
+            position: absolute;
+            top: 14px; left: 16px;
+            height: 20px; width: 20px;
+            background-color: #fff;
+            border: 2px solid #E2E8F0;
+            border-radius: 50%;
+        }
+        .reason-item input:checked ~ .reason-checkmark {
+            border-color: #F6AD55;
+        }
+        .reason-item input:checked ~ .reason-checkmark:after {
+            content: "";
+            position: absolute;
+            display: block;
+            top: 3px; left: 3px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #F6AD55;
+        }
+        .reason-item input:checked {
+            background: #FFF9F0;
+        }
+        .reason-item.active {
+            border-color: #F6AD55;
+            background: #FFF9F0;
+        }
+
     </style>
     @stack('styles')
 </head>
@@ -268,7 +474,6 @@
         <a href="{{ route('home') }}" class="brand-logo">
             SÀN TÍM
         </a>
-
         <!-- Desktop Menu -->
         <ul class="nav-menu d-none d-lg-flex">
             <li><a href="{{ route('home') }}">Trang chủ</a></li>
@@ -326,6 +531,17 @@
                         </div>
                     </div>
 
+                    
+                <a href="{{ route('cart.index') }}" class="position-relative" style="color:var(--text-main);">
+                    <i class="fas fa-shopping-bag"></i>
+                    @php $cartCount = \App\Http\Controllers\CartController::cartCount(); @endphp
+                    @if($cartCount > 0)
+                        <span id="cart-badge-count" class="cart-badge">{{ $cartCount }}</span>
+                    @else
+                        <span id="cart-badge-count" class="cart-badge d-none">0</span>
+                    @endif
+                </a>
+                
                     {{-- User Menu --}}
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="color:var(--text-main); text-decoration:none;">
@@ -350,16 +566,6 @@
                 @else
                     <a href="{{ route('login') }}" style="color:var(--text-main);"><i class="far fa-user"></i></a>
                 @endauth
-
-                <a href="{{ route('cart.index') }}" class="position-relative" style="color:var(--text-main);">
-                    <i class="fas fa-shopping-bag"></i>
-                    @php $cartCount = \App\Http\Controllers\CartController::cartCount(); @endphp
-                    @if($cartCount > 0)
-                        <span id="cart-badge-count" class="cart-badge">{{ $cartCount }}</span>
-                    @else
-                        <span id="cart-badge-count" class="cart-badge d-none">0</span>
-                    @endif
-                </a>
             </div>
         </div>
     </div>
@@ -511,6 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /* ── TOAST ── */
     window.showToast = function(message, type = 'success') {
         const container = document.getElementById('toast-container');
+        if (!container) return;
         const el = document.createElement('div');
         el.className = `toast align-items-center text-bg-${type} border-0`;
         el.setAttribute('role', 'alert');
@@ -780,7 +987,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
 
                                     <div id="reviewActionsView" class="d-none">
-                                        <form id="deleteReviewForm" action="" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?')">
+                                        <form id="deleteReviewForm" action="" method="POST" onsubmit="return confirmForm(this, 'Đánh giá này sẽ bị xóa vĩnh viễn và không thể khôi phục.', 'XÓA ĐÁNH GIÁ')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-outline-danger w-100 py-3" style="border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; font-size:13px;">
@@ -926,5 +1133,201 @@ document.addEventListener('DOMContentLoaded', function() {
     @endauth
 
     @stack('scripts')
+<!-- ── PREMIUM DELETE MODAL ── -->
+<div class="modal fade premium-modal" id="stDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="premium-icon-wrap premium-icon-delete">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="premium-title" id="stDeleteTitle">Xóa sản phẩm</h3>
+                <div class="premium-subtitle-pill" id="stDeletePill"></div>
+                <p class="premium-description" id="stDeleteMessage">
+                    Sản phẩm sẽ bị xóa vĩnh viễn khỏi giỏ hàng và không thể khôi phục.
+                </p>
+                <div class="premium-btn-group">
+                    <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Giữ lại</button>
+                    <button type="button" class="premium-btn premium-btn-danger" id="stDeleteConfirmBtn">
+                        <i class="fas fa-trash-alt me-2"></i>Xóa ngay
+                    </button>
+                </div>
+                <div class="premium-footer-note">
+                    <i class="fas fa-exclamation-triangle" style="color:#F6AD55;"></i> Thao tác này không thể hoàn tác
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PREMIUM CANCEL ORDER MODAL ── -->
+<div class="modal fade premium-modal" id="stCancelOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="premium-icon-wrap premium-icon-cancel">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <h3 class="premium-title">Hủy đơn hàng</h3>
+                <div class="premium-subtitle-pill" id="stCancelOrderPill">#ORD00000</div>
+                <p class="premium-description">Bạn có chắc chắn muốn hủy đơn hàng này không? Yêu cầu hủy sẽ được gửi cho Admin phê duyệt.</p>
+                <div class="premium-btn-group">
+                    <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+                    <button type="button" class="premium-btn premium-btn-orange" id="stCancelOrderConfirmBtn">Xác nhận hủy</button>
+                </div>
+                <div class="premium-footer-note">
+                    <i class="fas fa-info-circle"></i> Tiền sẽ được hoàn lại trong 3-5 ngày làm việc
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PREMIUM SUCCESS MODAL ── -->
+<div class="modal fade premium-modal" id="stSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="premium-icon-wrap premium-icon-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="premium-title" id="stSuccessTitle">Xác nhận</h3>
+                <div class="premium-subtitle-pill" id="stSuccessPill">#000000</div>
+                <p class="premium-description" id="stSuccessMessage">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+                <div class="premium-btn-group">
+                    <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="premium-btn premium-btn-success" id="stSuccessConfirmBtn">Xác nhận ngay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ── GLOBAL PREMIUM CONFIRM FUNCTIONS ── */
+    
+    // 1. Confirm Delete
+    window.stConfirmDelete = function(options) {
+        const modalEl = document.getElementById('stDeleteModal');
+        if (!modalEl) return;
+        
+        // Use existing instance or create new
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) modal = new bootstrap.Modal(modalEl);
+        
+        document.getElementById('stDeleteTitle').innerText = options.title || 'Xóa sản phẩm';
+        document.getElementById('stDeletePill').innerText = options.pill || '';
+        document.getElementById('stDeleteMessage').innerText = options.message || 'Hành động này không thể hoàn tác.';
+        
+        const confirmBtn = document.getElementById('stDeleteConfirmBtn');
+        confirmBtn.innerText = options.confirmText || 'Xóa ngay';
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+        
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            newBtn.disabled = true;
+            newBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+            if (options.onConfirm) options.onConfirm();
+            setTimeout(() => modal.hide(), 500); 
+        });
+        
+        modal.show();
+    };
+
+    // 2. Confirm Cancel Order
+    window.stConfirmCancelOrder = function(options) {
+        const modalEl = document.getElementById('stCancelOrderModal');
+        if (!modalEl) return;
+
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) modal = new bootstrap.Modal(modalEl);
+        
+        document.getElementById('stCancelOrderPill').innerText = options.orderCode || '';
+
+        const confirmBtn = document.getElementById('stCancelOrderConfirmBtn');
+        confirmBtn.innerText = options.confirmText || 'Xác nhận hủy';
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            newBtn.disabled = true;
+            newBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+            if (options.onConfirm) options.onConfirm();
+            setTimeout(() => modal.hide(), 500);
+        });
+        
+        modal.show();
+    };
+
+    // 3. Confirm Success Action
+    window.stConfirmSuccess = function(options) {
+        const modalEl = document.getElementById('stSuccessModal');
+        if (!modalEl) return;
+
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) modal = new bootstrap.Modal(modalEl);
+        
+        document.getElementById('stSuccessTitle').innerText = options.title || 'Xác nhận';
+        document.getElementById('stSuccessPill').innerText = options.pill || 'Hành động';
+        document.getElementById('stSuccessMessage').innerText = options.message || 'Bạn có chắc chắn?';
+
+        const confirmBtn = document.getElementById('stSuccessConfirmBtn');
+        confirmBtn.innerText = options.confirmText || 'Xác nhận ngay';
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            newBtn.disabled = true;
+            newBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+            if (options.onConfirm) options.onConfirm();
+            setTimeout(() => modal.hide(), 500);
+        });
+        
+        modal.show();
+    };
+
+    // Legacy helper for forms (updated to use premium designs)
+    window.confirmForm = function(form, message, title = 'XÁC NHẬN', type = 'danger', confirmText = null) {
+        const pill = title === 'HỦY ĐƠN HÀNG' ? 'Đơn hàng' : (form.dataset.itemName || 'Sản phẩm');
+        const finalConfirmText = confirmText || form.dataset.confirmText || null;
+        
+        if (title === 'HỦY ĐƠN HÀNG') {
+             stConfirmCancelOrder({
+                orderCode: form.dataset.orderCode || 'Đơn hàng',
+                confirmText: finalConfirmText,
+                onConfirm: () => {
+                    form.onsubmit = null;
+                    form.submit();
+                }
+            });
+        } else if (type === 'success') {
+            stConfirmSuccess({
+                title: title,
+                pill: pill,
+                message: message,
+                confirmText: finalConfirmText,
+                onConfirm: () => {
+                    form.onsubmit = null;
+                    form.submit();
+                }
+            });
+        } else {
+            stConfirmDelete({
+                title: title,
+                pill: pill,
+                message: message,
+                confirmText: finalConfirmText,
+                onConfirm: () => {
+                    form.onsubmit = null;
+                    form.submit();
+                }
+            });
+        }
+        return false;
+    };
+</script>
 </body>
 </html>

@@ -51,6 +51,7 @@ class OrderController extends Controller
             'shipping'      => Order::where('trang_thai', 'shipping')->count(),
             'disputing'     => Order::where('trang_thai', 'disputing')->count(),
             'completed'     => Order::where('trang_thai', 'completed')->count(),
+            'cancelling'    => Order::where('trang_thai', 'cancelling')->count(),
             'cancelled'     => Order::where('trang_thai', 'cancelled')->count(),
             'total_revenue' => Order::where('trang_thai', 'completed')->sum('thanh_tien'),
         ];
@@ -88,9 +89,20 @@ class OrderController extends Controller
         //     return back()->with('error', 'Không thể chuyển từ "' . $order->status_label . '" sang trạng thái này!');
         // }
 
-        // Hoàn kho khi hủy
-        if ($oldStatus !== 'cancelled' && $newStatus === 'cancelled') {
+        // Hoàn kho khi hủy (Chỉ hoàn nếu đã từng trừ kho - tức là đã confirmed, shipping, delivered)
+        $statusesWithDeductedInventory = ['confirmed', 'shipping', 'delivered', 'disputing'];
+        if (in_array($oldStatus, $statusesWithDeductedInventory) && $newStatus === 'cancelled') {
             $this->restoreInventory($order);
+            
+            // Nếu đã thanh toán, chuyển sang chờ hoàn tiền
+            if ($order->trang_thai_thanh_toan === 'paid' && $order->refund_status === 'none') {
+                $order->update(['refund_status' => 'pending']);
+            }
+        }
+
+        // Trừ kho khi duyệt đơn
+        if ($oldStatus === 'pending' && $newStatus === 'confirmed') {
+            $this->deductInventory($order);
         }
 
         $order->update(['trang_thai' => $newStatus]);
@@ -243,7 +255,7 @@ class OrderController extends Controller
     public function cancel(Order $order)
     {
         if ($order->user_id !== Auth::id()) {
-            abort(403);
+            abort(403, 'Bạn không có quyền thực hiện hành động này!');
         }
 
         // Chỉ cho phép hủy khi đang ở trạng thái pending (Chờ duyệt)
@@ -413,21 +425,30 @@ class OrderController extends Controller
      */
     public function approveCancel(Order $order)
     {
+        if ($order->trang_thai !== 'cancelling') {
+            return back()->with('error', 'Đơn hàng không ở trạng thái chờ duyệt hủy!');
+        }
+
         DB::beginTransaction();
         try {
             $oldStatus = $order->trang_thai;
             
-            // Hoàn tồn kho
-            $this->restoreInventory($order);
+            // Hoàn tồn kho (Chỉ hoàn nếu đã từng trừ kho)
+            $statusesWithDeductedInventory = ['confirmed', 'shipping', 'delivered', 'disputing'];
+            if (in_array($oldStatus, $statusesWithDeductedInventory)) {
+                $this->restoreInventory($order);
+            }
 
-            $updateData = ['trang_thai' => 'cancelled'];
+            $updateData = [
+                'trang_thai' => 'cancelled',
+                'previous_trang_thai' => null,
+            ];
 
             // Nếu đã thanh toán, yêu cầu hoàn tiền
+            $message = 'Đơn hàng đã được hủy thành công.';
             if ($order->trang_thai_thanh_toan === 'paid') {
                 $updateData['refund_status'] = 'pending';
-                $message = 'Đơn hàng đã được chấp nhận hủy và cần cung cấp thông tin nhận hoàn tiền.';
-            } else {
-                $message = 'Đơn hàng đã được hủy thành công.';
+                $message = 'Đơn hàng đã được chấp nhận hủy. Vui lòng kiểm tra và xử lý hoàn tiền cho khách hàng.';
             }
 
             $order->update($updateData);
@@ -442,7 +463,7 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            return back()->with('success', 'Đã chấp nhận hủy đơn hàng!');
+            return back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
@@ -454,6 +475,10 @@ class OrderController extends Controller
      */
     public function rejectCancel(Order $order)
     {
+        if ($order->trang_thai !== 'cancelling') {
+            return back()->with('error', 'Đơn hàng không ở trạng thái chờ duyệt hủy!');
+        }
+
         $oldStatus = $order->trang_thai;
         $revertStatus = $order->previous_trang_thai ?? 'pending';
 
@@ -464,10 +489,12 @@ class OrderController extends Controller
 
         try {
             // Thông báo cho user
-            // $order->user->notify(new OrderStatusUpdated($order, $oldStatus, $revertStatus));
-        } catch (\Exception $e) {}
+            $order->user->notify(new OrderStatusUpdated($order, $oldStatus, $revertStatus));
+        } catch (\Exception $e) {
+            \Log::warning('Could not send notification: ' . $e->getMessage());
+        }
 
-        return back()->with('success', 'Đã từ chối yêu cầu hủy. Đơn hàng quay lại trạng thái ' . $revertStatus);
+        return back()->with('success', 'Đã từ chối yêu cầu hủy. Đơn hàng quay lại trạng thái ' . (Order::adminStatusLabels()[$revertStatus] ?? $revertStatus));
     }
 
     /**
@@ -480,10 +507,20 @@ class OrderController extends Controller
             'refund_admin_note' => 'nullable|string',
         ]);
 
+        $oldRefundStatus = $order->refund_status;
+
         $order->update([
             'refund_status' => $request->refund_status,
             'refund_admin_note' => $request->refund_admin_note,
         ]);
+
+        if ($oldRefundStatus !== $request->refund_status) {
+            try {
+                $order->user->notify(new \App\Notifications\RefundStatusUpdated($order, $request->refund_status));
+            } catch (\Exception $e) {
+                \Log::warning('Could not send refund status notification: ' . $e->getMessage());
+            }
+        }
 
         return back()->with('success', 'Cập nhật thông tin hoàn tiền thành công!');
     }

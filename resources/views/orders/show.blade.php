@@ -192,6 +192,29 @@
         font-size: 12px;
         font-weight: 600;
     }
+
+    #copyToast {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #27AE60;
+        color: #fff;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 9999;
+        display: none;
+        animation: fadeInOut 2s ease forwards;
+    }
+
+    @keyframes fadeInOut {
+        0% { opacity: 0; bottom: 20px; }
+        20% { opacity: 1; bottom: 30px; }
+        80% { opacity: 1; bottom: 30px; }
+        100% { opacity: 0; bottom: 40px; }
+    }
 </style>
 @endpush
 
@@ -213,19 +236,24 @@
                     <i class="fas fa-map-marker-alt"></i> THÔNG TIN GIAO HÀNG
                 </div>
                 <div class="section-body">
-                    <div class="info-label">Người nhận</div>
-                    <div class="info-value">{{ $order->ten_nguoi_nhan }}</div>
-                    <div class="info-label">Số điện thoại</div>
-                    <div class="info-value">{{ $order->sdt_nguoi_nhan }}</div>
-                    <div class="info-label">Địa chỉ</div>
-                    <div class="info-value">{{ $order->dia_chi_giao_hang }}</div>
-                    @if($order->ghi_chu)
-                        <div class="info-label">Ghi chú</div>
-                        <div class="info-value">{{ $order->ghi_chu }}</div>
-                    @endif
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <div class="info-label">Người nhận</div>
+                            <div class="info-value">{{ $order->ten_nguoi_nhan }}</div>
+                            <div class="info-label">Địa chỉ</div>
+                            <div class="info-value">{{ $order->dia_chi_giao_hang }}</div>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <div class="info-label">Số điện thoại</div>
+                            <div class="info-value">{{ $order->sdt_nguoi_nhan }}</div>
+                            @if($order->ghi_chu)
+                            <div class="info-label">Ghi chú</div>
+                            <div class="info-value">{{ $order->ghi_chu }}</div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
-            
             <!-- Order Status -->
             <div class="order-section">
                 <div class="section-header">
@@ -241,10 +269,10 @@
                     @else
                         @php
                             $steps = [
-                                ['key' => 'pending',   'icon' => 'clipboard-list', 'label' => 'Chờ xác nhận'],
-                                ['key' => 'confirmed', 'icon' => 'box',            'label' => 'Đang chuẩn bị hàng'],
-                                ['key' => 'shipping',  'icon' => 'shipping-fast',  'label' => 'Đang giao hàng'],
-                                ['key' => 'delivered', 'icon' => 'user-check',     'label' => 'Chờ xác nhận'],
+                                ['key' => 'pending',   'icon' => 'clipboard-list', 'label' => 'Chờ duyệt'],
+                                ['key' => 'confirmed', 'icon' => 'box',            'label' => 'Chuẩn bị hàng'],
+                                ['key' => 'shipping',  'icon' => 'shipping-fast',  'label' => 'Đang giao'],
+                                ['key' => 'delivered', 'icon' => 'user-check',     'label' => 'Đã giao'],
                                 ['key' => 'completed', 'icon' => 'box-open',       'label' => 'Hoàn thành'],
                             ];
 
@@ -272,51 +300,12 @@
                                 <i class="fas fa-exclamation-circle fa-2x mb-2" style="color:#EB5757;"></i>
                                 <p class="mb-0 fw-bold" style="color:#EB5757;">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
                             </div>
-                        @endif
-                        
-                        {{-- Nút Hủy đơn hàng (User) --}}
-                        @if($order->trang_thai === 'pending')
-                            <div class="mt-4 p-3 text-center" style="background:#FFF5F5; border:1px dashed #EB5757;">
-                                <p class="mb-3" style="font-size:14px; color:#EB5757; font-weight:600;">Bạn muốn hủy đơn hàng này?</p>
-                                <form method="POST" action="{{ route('orders.cancel', $order) }}" id="cancelOrderForm">
-                                    @csrf
-                                    <button type="button" class="btn btn-danger" 
-                                        style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
-                                        onclick="confirmCancel()">
-                                        <i class="fas fa-times-circle me-2"></i>Hủy đơn hàng
-                                    </button>
-                                </form>
-                            </div>
-
-                            <script>
-                                function confirmCancel() {
-                                    if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
-                                        document.getElementById('cancelOrderForm').submit();
-                                    }
-                                }
-                            </script>
-                        @endif
-
-                        {{-- Banner thông tin hoàn tiền --}}
-                        @if($order->refund_status !== 'none')
-                            <div class="mt-4 p-3" style="background:#E3F2FD; border:1px solid #2196F3;">
-                                <div class="d-flex align-items-center gap-3">
-                                    <i class="fas fa-info-circle fa-2x" style="color:#1976D2;"></i>
-                                    <div style="flex:1;">
-                                        <h6 class="mb-1 fw-bold" style="color:#1976D2;">Yêu cầu hoàn tiền</h6>
-                                        <p class="mb-0 small">Đơn hàng đã được chấp nhận hủy. Vui lòng cung cấp thông tin ngân hàng để nhận hoàn tiền.</p>
-                                    </div>
-                                    @if($order->refund_status === 'pending' && !$order->refund_bank_name)
-                                        <a href="{{ route('orders.refund', $order) }}" class="btn btn-primary btn-sm" style="border-radius:0;">NHẬP THÔNG TIN</a>
-                                    @elseif($order->refund_status === 'pending')
-                                        <span class="badge bg-warning">ĐANG XỬ LÝ HOÀN TIỀN</span>
-                                    @else
-                                        <span class="badge bg-success">ĐÃ HOÀN TIỀN</span>
-                                    @endif
-                                </div>
+                        @elseif($order->trang_thai === 'cancelling')
+                            <div class="text-center mt-3 py-3" style="background:#FFF5F5; border:1px solid #FFCCCC;">
+                                <i class="fas fa-clock fa-2x mb-2" style="color:#EB5757;"></i>
+                                <p class="mb-0 fw-bold" style="color:#EB5757;">Yêu cầu hủy đơn hàng đang được xử lý — chúng tôi sẽ phản hồi sớm nhất</p>
                             </div>
                         @endif
-
                         {{-- Nút hành động của user khi đơn đang giao --}}
                         @php $userNext = \App\Models\Order::userNextStatuses($order->trang_thai); @endphp
                         @if(count($userNext) > 0)
@@ -346,6 +335,86 @@
                                 </div>
                             </div>
                         @endif
+                    @endif
+
+                    {{-- Banner thông tin hoàn tiền --}}
+                    @if($order->refund_status !== 'none')
+                        <div class="mt-4 p-4" style="background:#F0F7FF; border:1px solid #BEE3F8;">
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <i class="fas fa-info-circle fa-2x" style="color:#2B6CB0;"></i>
+                                <div style="flex:1;">
+                                    <h6 class="mb-1 fw-bold" style="color:#2B6CB0; text-transform:uppercase; letter-spacing:1px;">Thông tin hoàn tiền</h6>
+                                    <p class="mb-0 text-muted small">Đơn hàng này đủ điều kiện hoàn tiền. Vui lòng kiểm tra và cung cấp thông tin bên dưới.</p>
+                                </div>
+                                @if($order->refund_status === 'completed')
+                                    <span class="badge bg-success" style="border-radius:0; padding:8px 15px;">ĐÃ HOÀN TIỀN</span>
+                                @endif
+                            </div>
+
+                            @if($order->refund_status === 'pending' && !$order->refund_bank_name)
+                                <form action="{{ route('orders.submitRefund', $order) }}" method="POST" class="bg-white p-3 border">
+                                    @csrf
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Số tiền hoàn trả</label>
+                                            <input type="text" class="form-control form-control-sm bg-light fw-bold" value="{{ number_format($order->thanh_tien) }}đ" readonly>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Tên ngân hàng</label>
+                                            <input type="text" name="refund_bank_name" class="form-control form-control-sm rounded-0" placeholder="Ví dụ: Vietcombank..." required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Số tài khoản</label>
+                                            <input type="text" name="refund_account_number" class="form-control form-control-sm rounded-0" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Tên chủ tài khoản</label>
+                                            <input type="text" name="refund_account_name" class="form-control form-control-sm rounded-0" placeholder="NGUYEN VAN A" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small fw-bold text-muted">Ghi chú (nếu có)</label>
+                                            <textarea name="refund_user_note" class="form-control form-control-sm rounded-0" rows="2"></textarea>
+                                        </div>
+                                        <div class="col-12 text-end">
+                                            <button type="submit" class="btn btn-dark btn-sm px-4" style="border-radius:0; font-weight:700;">GỬI THÔNG TIN</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            @elseif($order->refund_status === 'pending')
+                                <div class="bg-white p-3 border">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="small text-muted">Số tiền:</div>
+                                            <div class="fw-bold">{{ number_format($order->thanh_tien) }}đ</div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="small text-muted">Ngân hàng:</div>
+                                            <div class="fw-bold">{{ $order->refund_bank_name }}</div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="small text-muted">Số tài khoản:</div>
+                                            <div class="fw-bold">{{ $order->refund_account_number }}</div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="small text-muted">Chủ tài khoản:</div>
+                                            <div class="fw-bold">{{ $order->refund_account_name }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-warning py-2 mb-0 mt-2 rounded-0 small">
+                                        <i class="fas fa-clock me-2"></i>Thông tin đã được gửi. Đang chờ Admin thực hiện chuyển khoản.
+                                    </div>
+                                </div>
+                            @else
+                                <div class="bg-white p-3 border">
+                                    <div class="alert alert-success py-2 mb-0 rounded-0 small">
+                                        <i class="fas fa-check-circle me-2"></i>Tiền đã được hoàn về tài khoản của bạn.
+                                    </div>
+                                    @if($order->refund_admin_note)
+                                        <div class="mt-2 small text-muted"><strong>Ghi chú từ Admin:</strong> {{ $order->refund_admin_note }}</div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
                     @endif
                 </div>
             </div>
@@ -436,7 +505,18 @@
                     </div>
                 </div>
             </div>
-            
+            @if($order->trang_thai === 'pending')
+            <div class="mt-4 p-3 text-center" style="background:#FFF5F5; border:1px dashed #EB5757;">
+                <p class="mb-3" style="font-size:14px; color:#EB5757; font-weight:600;">Bạn muốn hủy đơn hàng này?</p>
+                <form method="POST" action="{{ route('orders.cancel', $order) }}" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">
+                @csrf
+                <button type="submit" class="btn btn-danger" 
+                style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;">
+                <i class="fas fa-times-circle me-2"></i>Hủy đơn hàng
+                </button>
+                </form>
+            </div>
+            @endif
         </div>
 
         <!-- Sidebar -->
@@ -468,7 +548,7 @@
                     @if($order->phuong_thuc_thanh_toan === 'vietqr' && $order->trang_thai_thanh_toan === 'unpaid')
                         <div class="mt-4 pt-4 border-top text-center">
                             <div class="info-label mb-3 text-center">Quét mã QR để thanh toán</div>
-                            <img src="{{ $order->vietqr_url }}" alt="VietQR Code" class="img-fluid border p-2 bg-white mb-2" style="max-width: 250px; border-radius: 8px;">
+                            <img src="{{ $order->vietqr_url }}" alt="VietQR Code" class="img-fluid border p-2 bg-white mb-2" style="max-width: 340px; border-radius: 8px;">
                             <p class="text-muted small mt-2">Sử dụng App ngân hàng của bạn để quét mã này.<br>Nội dung chuyển khoản: <strong>{{ $order->ma_don_hang }}</strong></p>
                         </div>
                     @endif
@@ -476,31 +556,31 @@
             </div>
             <!-- Payment Copy -->
             <div class="order-section">
-                <div class="section-header">
-                    <i class="fas fa-copy"></i> SAO CHÉP THÔNG TIN THANH TOÁN
+                <div class="section-header">SAO CHÉP THÔNG TIN THANH TOÁN
                 </div>
                 <div class="section-body">
                     <div class="info-label">Số tài khoản</div>
-                    <div class="info-value" id="stk" onclick="copyToClipboard(document.getElementById('stk').innerText)">1014232408</div>
+                    <div class="info-value" id="stk" onclick="copyToClipboard(document.getElementById('stk').innerText)">1014232408 <i class="fas fa-copy"></i></div>
                     <div class="info-label">Chủ tài khoản</div>
-                    <div class="info-value" id="owner" onclick="copyToClipboard(document.getElementById('owner').innerText)">Nguyễn Văn Sang</div>
+                    <div class="info-value">Nguyễn Văn Sang</div>
                     <div class="info-label">Ngân hàng</div>
-                    <div class="info-value" id="bank" onclick="copyToClipboard(document.getElementById('bank').innerText)" >Vietcombank</div>
+                    <div class="info-value">Vietcombank</div>
                     <div class="info-label">Số tiền</div>
-                    <div class="info-value" id="amount" onclick="copyToClipboard(document.getElementById('amount').innerText)">{{ number_format($order->tong_tien) }}đ</div>
+                    <div class="info-value" id="amount" onclick="copyToClipboard(document.getElementById('amount').innerText.replace(/\D/g, ''))">{{ number_format($order->tong_tien) }}đ  <i class="fas fa-copy"></i></div>
                     <div class="info-label">Nội dung</div>
-                    <div class="info-value" style="text-transform:uppercase;" id="content" onclick="copyToClipboard(document.getElementById('content').innerText)">{{ $order->ma_don_hang }}</div>
+                    <div class="info-value" style="text-transform:uppercase;" id="content" onclick="copyToClipboard(document.getElementById('content').innerText)">{{ $order->ma_don_hang }} <i class="fas fa-copy"></i></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div id="copyToast">Đã sao chép!</div>
+
 <script>
     function copyToClipboard(text) {
-        // Remove Vietnamese accents (optional)
-        text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        text = text.toLowerCase().trim();
+        // Clean text (remove icons and extra whitespace)
+        text = text.replace(/<[^>]*>?/gm, '').trim();
         
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -509,8 +589,18 @@
         document.execCommand('copy');
         document.body.removeChild(textarea);
 
-        // Show notification (replace with a toast system if you have one)
-        alert('Đã sao chép: ' + text);
+        // Show simple toast
+        const toast = document.getElementById('copyToast');
+        toast.style.display = 'block';
+        
+        // Reset animation
+        toast.style.animation = 'none';
+        toast.offsetHeight; // trigger reflow
+        toast.style.animation = null;
+
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 2000);
     }
 </script>
 @endsection

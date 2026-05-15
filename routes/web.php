@@ -109,6 +109,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/orders/{order}/status', [App\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.status');
     Route::put('/orders/{order}/payment', [App\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.payment');
     
+    // Cancellation approval
+    Route::post('/orders/{order}/approve-cancel', [App\Http\Controllers\OrderController::class, 'approveCancel'])->name('orders.approveCancel');
+    Route::post('/orders/{order}/reject-cancel', [App\Http\Controllers\OrderController::class, 'rejectCancel'])->name('orders.rejectCancel');
+    Route::put('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'updateRefund'])->name('orders.updateRefund');
+    
     // Inventory management
     Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index');
     Route::get('/inventory/logs', [App\Http\Controllers\InventoryController::class, 'logs'])->name('inventory.logs');
@@ -158,7 +163,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [App\Http\Controllers\OrderController::class, 'myOrderShow'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
     Route::post('/orders/{order}/update-status', [App\Http\Controllers\OrderController::class, 'updateStatusByUser'])->name('orders.updateStatus');
-});
+    
+    // Refund Info
+    Route::get('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'refundInfo'])->name('orders.refund');
+    Route::post('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'submitRefundInfo'])->name('orders.submitRefund');
+    });
 
 // Payment Webhook (Simulation)
 Route::post('/payment/webhook', [App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');

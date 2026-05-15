@@ -16,10 +16,13 @@ class Review extends Model
         'rating',
         'comment',
         'trang_thai',
+        'images',
+        'video',
     ];
 
     protected $casts = [
         'rating' => 'integer',
+        'images' => 'array',
     ];
 
     /**

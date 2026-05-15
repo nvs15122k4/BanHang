@@ -198,17 +198,28 @@ class OrderController extends Controller
      */
     public function myOrders(Request $request)
     {
-        $query = Auth::user()->orders()
-            ->with(['orderItems.product'])
-            ->orderBy('created_at', 'desc');
+        $currentStatus = $request->get('status', '');
+        $orders = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+        $reviews = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
 
-        if ($request->filled('status')) {
-            $query->where('trang_thai', $request->status);
+        if ($currentStatus === 'reviewed') {
+            $reviews = \App\Models\Review::where('user_id', Auth::id())
+                ->with(['product'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        } else {
+            $query = Auth::user()->orders()
+                ->with(['orderItems.product'])
+                ->orderBy('created_at', 'desc');
+
+            if ($request->filled('status')) {
+                $query->where('trang_thai', $request->status);
+            }
+
+            $orders = $query->paginate(10);
         }
 
-        $orders = $query->paginate(10);
-
-        return view('orders.index', compact('orders'));
+        return view('orders.index', compact('orders', 'reviews'));
     }
 
     /**

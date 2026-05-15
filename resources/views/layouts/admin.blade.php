@@ -249,10 +249,10 @@
                        href="{{ route('admin.inventory.index') }}">
                         <i class="fas fa-warehouse"></i> Quản lý Kho
                     </a>
-                    <a class="nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}"
+                    <!-- <a class="nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}"
                        href="{{ route('admin.reviews.index') }}">
                         <i class="fas fa-star"></i> Đánh giá SP
-                    </a>
+                    </a> -->
                     <a class="nav-link {{ request()->routeIs('admin.statistics') ? 'active' : '' }}"
                        href="{{ route('admin.statistics') }}">
                         <i class="fas fa-chart-bar"></i> Thống kê

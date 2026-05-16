@@ -2,6 +2,10 @@
 
 @section('title', 'Quản lý Đánh giá')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <h1><i class="fas fa-star me-3"></i>QUẢN LÝ ĐÁNH GIÁ SẢN PHẨM</h1>
@@ -23,7 +27,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #FFC107;"><i class="fas fa-clock"></i></div>
+                <div class="stat-icon bg-warning-custom"><i class="fas fa-clock"></i></div>
                 <div class="ms-3">
                     <div class="stat-value text-warning">{{ $stats['pending'] }}</div>
                     <div class="stat-label">Chờ duyệt</div>
@@ -34,7 +38,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #28A745;"><i class="fas fa-check"></i></div>
+                <div class="stat-icon bg-success-custom"><i class="fas fa-check"></i></div>
                 <div class="ms-3">
                     <div class="stat-value text-success">{{ $stats['approved'] }}</div>
                     <div class="stat-label">Đã duyệt</div>
@@ -45,7 +49,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #FFC107;"><i class="fas fa-star-half-alt"></i></div>
+                <div class="stat-icon bg-warning-custom"><i class="fas fa-star-half-alt"></i></div>
                 <div class="ms-3">
                     <div class="stat-value">{{ number_format($stats['avg_rating'], 1) }} ★</div>
                     <div class="stat-label">Rating trung bình</div>
@@ -115,22 +119,22 @@
                 @forelse($reviews as $review)
                     <tr>
                         <td>
-                            <div style="font-weight: 500;">{{ $review->user->name }}</div>
+                            <div class="font-medium-custom">{{ $review->user->name }}</div>
                             <small class="text-muted">{{ $review->user->email }}</small>
                         </td>
                         <td>
-                            <div style="font-weight: 500;">{{ $review->product->ten_sp }}</div>
+                            <div class="font-medium-custom">{{ $review->product->ten_sp }}</div>
                         </td>
                         <td>
-                            <div style="color: #FFC107; font-size: 14px; letter-spacing: 1px;">
+                            <div class="text-warning-custom text-lg-custom letter-spacing-1-custom">
                                 @for($i = 1; $i <= 5; $i++)
                                     <i class="fas fa-star{{ $i <= $review->rating ? '' : ' text-muted' }}"></i>
                                 @endfor
                             </div>
-                            <small style="font-weight: 500;">{{ $review->rating }}/5</small>
+                            <small class="font-medium-custom">{{ $review->rating }}/5</small>
                         </td>
                         <td>
-                            <span style="color: var(--text-secondary);">
+                            <span class="text-gray-medium">
                                 {{ $review->comment ? \Str::limit($review->comment, 80) : '(Không có nhận xét)' }}
                             </span>
                         </td>

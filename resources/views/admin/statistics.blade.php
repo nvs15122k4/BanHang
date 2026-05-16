@@ -2,6 +2,10 @@
 
 @section('title', 'Thống kê')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -231,7 +235,7 @@
                     <tbody>
                         @foreach($topStockProducts as $product)
                             <tr>
-                                <td style="font-weight: 500;">{{ $product->ten_sp }}</td>
+                                <td class="font-medium-custom">{{ $product->ten_sp }}</td>
                                 <td>{{ number_format($product->gia) }}đ</td>
                                 <td class="text-warning fw-bold">{{ $product->so_luong }}</td>
                                 <td>

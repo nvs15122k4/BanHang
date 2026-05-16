@@ -2,6 +2,10 @@
 
 @section('title', 'Quản lý Users')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -73,15 +77,14 @@
             <tbody>
                 @forelse($users as $user)
                     <tr class="{{ !$user->is_active ? 'table-secondary' : '' }}">
-                        <td style="font-weight:500;">#{{ $user->id }}</td>
-                        <td style="font-weight:500;{{ !$user->is_active ? 'color:#AAAAAA;' : '' }}">
+                        <td class="font-medium-custom {{ !$user->is_active ? 'text-gray-custom' : '' }}">
                             {{ $user->name }}
                             @if(!$user->is_active)
-                                <small style="color:#AAAAAA;">(vô hiệu)</small>
+                                <small class="text-gray-custom">(vô hiệu)</small>
                             @endif
                         </td>
-                        <td style="{{ !$user->is_active ? 'color:#AAAAAA;' : '' }}">{{ $user->email }}</td>
-                        <td style="{{ !$user->is_active ? 'color:#AAAAAA;' : '' }}">{{ $user->phone ?? '-' }}</td>
+                        <td class="{{ !$user->is_active ? 'text-gray-custom' : '' }}">{{ $user->email }}</td>
+                        <td class="{{ !$user->is_active ? 'text-gray-custom' : '' }}">{{ $user->phone ?? '-' }}</td>
                         <td>
                             <span class="badge-role-{{ $user->role }}">
                                 {{ $user->role === 'admin' ? 'ADMIN' : 'USER' }}
@@ -89,11 +92,11 @@
                         </td>
                         <td>
                             @if($user->is_active)
-                                <span style="background:#007D48;color:#FFFFFF;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;">
+                                <span class="badge-active-custom">
                                     <i class="fas fa-check-circle me-1"></i>Hoạt động
                                 </span>
                             @else
-                                <span style="background:#707072;color:#FFFFFF;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;">
+                                <span class="badge-inactive-custom">
                                     <i class="fas fa-ban me-1"></i>Vô hiệu hóa
                                 </span>
                             @endif
@@ -114,8 +117,7 @@
                                           id="form-status-{{ $user->id }}">
                                         @csrf @method('PUT')
                                         @if($user->is_active)
-                                            <button type="button" class="btn btn-sm"
-                                                    style="background:#FCA600;color:var(--text);border-radius:30px;"
+                                            <button type="button" class="btn btn-sm bg-warning-custom rounded-pill-custom"
                                                     title="Vô hiệu hóa tài khoản"
                                                     onclick="showConfirm(
                                                         'Tài khoản &quot;{{ addslashes($user->name) }}&quot; sẽ bị vô hiệu hóa. Người dùng sẽ không thể đăng nhập.',
@@ -125,8 +127,7 @@
                                                 <i class="fas fa-ban"></i>
                                             </button>
                                         @else
-                                            <button type="button" class="btn btn-sm"
-                                                    style="background:#007D48;color:#FFFFFF;border-radius:30px;"
+                                            <button type="button" class="btn btn-sm bg-success-custom-dark rounded-pill-custom text-white"
                                                     title="Mở lại tài khoản"
                                                     onclick="document.getElementById('form-status-{{ $user->id }}').submit()">
                                                 <i class="fas fa-check-circle"></i>
@@ -152,7 +153,7 @@
     </div>
 
     @if($users->hasPages())
-        <div class="card-footer" style="background-color:#F5F5F5;">
+        <div class="card-footer bg-gray-light-custom">
             {{ $users->appends(request()->query())->links('pagination.bootstrap-5') }}
         </div>
     @endif
@@ -161,9 +162,9 @@
 <!-- Create User Modal -->
 <div class="modal fade" id="createUserModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
-                <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif;">TẠO USER MỚI</h5>
+        <div class="modal-content glass-modal-custom">
+            <div class="modal-header border-bottom-1-px-rgba-custom">
+                <h5 class="modal-title font-bold font-outfit-custom">TẠO USER MỚI</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('admin.users.create') }}">
@@ -194,9 +195,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 1px solid rgba(0,0,0,0.1);">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 12px; padding: 0.5rem 1.5rem;" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-primary" style="border-radius: 12px; padding: 0.5rem 1.5rem;">TẠO USER</button>
+                <div class="modal-footer border-top-1-px-rgba-custom">
+                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-primary rounded-12-px-custom px-15-rem-custom py-05-rem-custom">TẠO USER</button>
                 </div>
             </form>
         </div>
@@ -206,9 +207,9 @@
 <!-- Change Role Modal -->
 <div class="modal fade" id="changeRoleModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
-                <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif;">THAY ĐỔI VAI TRÒ</h5>
+        <div class="modal-content glass-modal-custom">
+            <div class="modal-header border-bottom-1-px-rgba-custom">
+                <h5 class="modal-title font-bold font-outfit-custom">THAY ĐỔI VAI TRÒ</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" id="changeRoleForm">
@@ -223,9 +224,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 1px solid rgba(0,0,0,0.1);">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 12px; padding: 0.5rem 1.5rem;" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-primary" style="border-radius: 12px; padding: 0.5rem 1.5rem;">CẬP NHẬT</button>
+                <div class="modal-footer border-top-1-px-rgba-custom">
+                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-primary rounded-12-px-custom px-15-rem-custom py-05-rem-custom">CẬP NHẬT</button>
                 </div>
             </form>
         </div>

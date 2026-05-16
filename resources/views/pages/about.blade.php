@@ -3,116 +3,14 @@
 @section('title', 'Về chúng tôi - Sàn Tím Vi En')
 
 @push('styles')
-<style>
-    .about-hero {
-        background: #F9F9F9;
-        padding: 100px 0;
-        text-align: center;
-        margin-bottom: 80px;
-    }
-
-    .page-title {
-        font-weight: 700;
-        font-size: 48px;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-    }
-
-    .about-content {
-        margin-bottom: 100px;
-    }
-
-    .section-title {
-        font-weight: 700;
-        font-size: 28px;
-        margin-bottom: 30px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        position: relative;
-        padding-bottom: 15px;
-    }
-    
-    .section-title::after {
-        content: '';
-        position: absolute; bottom:0; left:0;
-        width: 60px; height: 3px;
-        background: #7C3AED;
-    }
-
-    .about-text {
-        font-size: 18px;
-        line-height: 1.8;
-        color: var(--text-light);
-    }
-
-    .about-img-wrapper {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .about-img {
-        width: 100%;
-        height: 600px;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-    
-    .about-img:hover {
-        transform: scale(1.05);
-    }
-
-    .stat-container {
-        background: #000;
-        color: #fff;
-        padding: 80px 0;
-        margin-bottom: 100px;
-    }
-
-    .stat-box {
-        text-align: center;
-        padding: 20px;
-    }
-
-    .stat-number {
-        font-size: 48px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        display: block;
-    }
-
-    .stat-label {
-        font-weight: 500;
-        text-transform: uppercase;
-        font-size: 14px;
-        letter-spacing: 2px;
-        color: #999;
-    }
-
-    .vision-card {
-        padding: 40px;
-        border: 1px solid #EEE;
-        height: 100%;
-        transition: all 0.3s;
-    }
-    
-    .vision-card:hover {
-        border-color: #000;
-    }
-
-    .vision-icon {
-        font-size: 32px;
-        margin-bottom: 25px;
-        color: var(--text-main);
-    }
-</style>
+    @vite(['resources/css/views/static_pages.css'])
 @endpush
 
 @section('content')
 <section class="about-hero">
     <div class="container">
         <h1 class="page-title">Về Sàn Tím Vi En</h1>
-        <p class="text-muted" style="max-width: 600px; margin: 0 auto;">Thương hiệu thời trang Việt — Phong cách hiện đại, thuần Việt.</p>
+        <p class="text-muted mx-auto-custom max-w-600-px-custom">Thương hiệu thời trang Việt — Phong cách hiện đại, thuần Việt.</p>
     </div>
 </section>
 

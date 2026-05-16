@@ -2,6 +2,10 @@
 
 @section('title', 'Chi tiết đơn hàng')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -62,7 +66,7 @@
             </div>
             <div class="card-body p-0">
                 <table class="table mb-0">
-                    <thead style="background-color: var(--bg);">
+                    <thead class="bg-gray-light-custom">
                         <tr>
                             <th>Sản phẩm</th>
                             <th>Đơn giá</th>
@@ -73,14 +77,14 @@
                     <tbody>
                         @foreach($order->orderItems as $item)
                             <tr>
-                                <td style="font-weight: 500;">{{ $item->ten_san_pham }}</td>
+                                <td class="font-medium-custom">{{ $item->ten_san_pham }}</td>
                                 <td>{{ number_format($item->gia) }}đ</td>
                                 <td>{{ $item->so_luong }}</td>
-                                <td style="font-weight: 500;">{{ number_format($item->thanh_tien) }}đ</td>
+                                <td class="font-medium-custom">{{ number_format($item->thanh_tien) }}đ</td>
                             </tr>
                         @endforeach
                     </tbody>
-                    <tfoot style="background-color: var(--bg);">
+                    <tfoot class="bg-gray-light-custom">
                         <tr>
                             <td colspan="3" class="text-end"><strong>Tổng tiền hàng:</strong></td>
                             <td><strong>{{ number_format($order->tong_tien) }}đ</strong></td>

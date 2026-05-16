@@ -3,128 +3,7 @@
 @section('title', 'Tài khoản của tôi - Sàn Tím Vi En')
 
 @push('styles')
-<style>
-    .page-title {
-        font-weight: 700;
-        font-size: 32px;
-        color: var(--text-main);
-        text-align: center;
-        margin: 40px 0;
-        text-transform: uppercase;
-    }
-    .profile-sidebar {
-        background: #F6F6F6;
-        padding: 30px;
-        position: sticky;
-        top: 80px;
-    }
-    .sidebar-title {
-        font-weight: 700;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #DDD;
-        padding-bottom: 10px;
-    }
-    .sidebar-nav .nav-link {
-        color: #888;
-        font-weight: 500;
-        font-size: 14px;
-        padding: 10px 15px;
-        border-radius: 0;
-        border-left: 3px solid transparent;
-        transition: all 0.2s;
-    }
-    .sidebar-nav .nav-link:hover { color: var(--text-main); background: rgba(0,0,0,0.04); }
-    .sidebar-nav .nav-link.active { color: var(--text-main); font-weight: 700; border-left-color: var(--primary); background: rgba(124,58,237,0.05); }
-
-    .profile-card {
-        border: 1px solid #EEE;
-        padding: 36px 40px;
-        background: #fff;
-    }
-    .card-section-title {
-        font-weight: 700;
-        font-size: 18px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 28px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid #EEE;
-    }
-    .form-control, .form-select {
-        border-radius: 0;
-        border: 1px solid #DDD;
-        padding: 11px 14px;
-        font-size: 14px;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
-    }
-    .form-label {
-        font-weight: 600;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-main);
-    }
-    .btn-save {
-        background: var(--text-main);
-        color: #fff;
-        border: none;
-        padding: 12px 40px;
-        font-weight: 700;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 0;
-        transition: background 0.2s;
-    }
-    .btn-save:hover { background: var(--primary); color: #fff; }
-    .btn-save:disabled { background: #AAA; cursor: not-allowed; }
-
-    /* Address cards */
-    .address-card {
-        border: 1px solid #EEE;
-        padding: 20px;
-        margin-bottom: 16px;
-        transition: border-color 0.2s;
-        position: relative;
-    }
-    .address-card:hover { border-color: #CCC; }
-    .address-card.is-default { border-color: var(--primary); background: rgba(124,58,237,0.03); }
-    .btn-link-action {
-        background: none;
-        border: none;
-        padding: 0;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text-main);
-        text-decoration: underline;
-        cursor: pointer;
-    }
-    .btn-link-action:hover { color: var(--primary); }
-    .btn-link-action.danger { color: #E53E3E; }
-    .btn-link-action.danger:hover { color: #C53030; }
-
-    /* Inline feedback */
-    .form-feedback {
-        font-size: 13px;
-        padding: 10px 14px;
-        border-left: 3px solid;
-        margin-top: 16px;
-        display: none;
-    }
-    .form-feedback.success { border-color: #27AE60; background: #F0FFF4; color: #276749; }
-    .form-feedback.error   { border-color: #E53E3E; background: #FFF5F5; color: #C53030; }
-
-    /* Modal */
-    .modal-content { border-radius: 0; border: none; }
-    .modal-header  { background: #F6F6F6; border-bottom: 1px solid #EEE; }
-    .modal-title   { font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-</style>
+    @vite(['resources/css/views/profile.css'])
 @endpush
 
 @section('content')
@@ -174,7 +53,7 @@
                                 <label class="col-md-3 col-form-label form-label">Số điện thoại tài khoản</label>
                                 <div class="col-md-9">
                                     <input type="text" name="phone" class="form-control" value="{{ $user->phone }}" placeholder="Số điện thoại liên hệ của bạn">
-                                    <div class="form-text text-muted" style="font-size:12px;">Số điện thoại cá nhân, khác với số điện thoại nhận hàng.</div>
+                                    <div class="form-text text-muted text-sm-custom">Số điện thoại cá nhân, khác với số điện thoại nhận hàng.</div>
                                     <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
@@ -241,7 +120,7 @@
                     <div class="profile-card">
                         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
                             <h4 class="card-section-title mb-0 border-0 pb-0">Sổ địa chỉ</h4>
-                            <button class="btn-save" style="padding:10px 20px;" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                            <button class="btn-save px-4 py-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">
                                 + THÊM ĐỊA CHỈ
                             </button>
                         </div>
@@ -251,7 +130,7 @@
                                 @include('profile.partials.address-card', ['address' => $address])
                             @empty
                                 <div class="text-center py-5 text-muted" id="emptyAddresses">
-                                    <i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#DDD;"></i>
+                                    <i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-gray-light"></i>
                                     <p>Bạn chưa lưu địa chỉ nào.</p>
                                 </div>
                             @endforelse
@@ -309,7 +188,7 @@
                     </div>
                     <div class="form-check mt-2">
                         <input class="form-check-input" type="checkbox" name="is_default" id="add_is_default" value="1">
-                        <label class="form-check-label" for="add_is_default" style="font-size:14px;">Đặt làm địa chỉ mặc định</label>
+                        <label class="form-check-label text-lg-custom" for="add_is_default">Đặt làm địa chỉ mặc định</label>
                     </div>
                     <div class="form-feedback mt-3" id="addAddressFeedback"></div>
                 </div>
@@ -543,7 +422,7 @@ document.addEventListener('click', async function(e) {
                 if (json.success) {
                     addrCard.remove();
                     if (!document.querySelector('.address-card-wrap')) {
-                        document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#DDD;"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
+                        document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-gray-light"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
                     }
                     window.showToast && window.showToast(json.message, 'success');
                 }

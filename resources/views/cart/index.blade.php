@@ -3,135 +3,7 @@
 @section('title', 'Giỏ hàng - AVA')
 
 @push('styles')
-<style>
-    /* =========================================
-       CART PAGE - AVA STYLE
-       ========================================= */
-    .page-title {
-        font-weight: 700;
-        font-size: 32px;
-        color: var(--text-main);
-        text-align: center;
-        margin: 40px 0;
-        text-transform: uppercase;
-    }
-
-    .empty-cart-msg {
-        text-align: center;
-        padding: 80px 0;
-    }
-
-    .cart-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 40px;
-    }
-    
-    .cart-table th {
-        border-bottom: 2px solid #EEEEEE;
-        padding: 15px;
-        font-weight: 600;
-        color: var(--text-main);
-        text-transform: uppercase;
-        font-size: 14px;
-    }
-    
-    .cart-table td {
-        padding: 20px 15px;
-        border-bottom: 1px solid #EEEEEE;
-        vertical-align: middle;
-    }
-
-    .cart-item-img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        background: #F6F6F6;
-    }
-
-    .cart-item-title {
-        font-weight: 600;
-        color: var(--text-main);
-        text-decoration: none;
-    }
-    
-    .cart-item-title:hover {
-        color: var(--text-light);
-    }
-
-    .cart-item-price, .cart-item-subtotal {
-        font-weight: 700;
-        color: var(--text-main);
-    }
-
-    .qty-input-wrap {
-        display: flex;
-        align-items: center;
-        border: 1px solid #DDDDDD;
-        width: max-content;
-    }
-    
-    .qty-input-wrap input {
-        border: none;
-        text-align: center;
-        width: 50px;
-        padding: 10px 0;
-        font-weight: 600;
-        outline: none;
-    }
-    
-    .qty-input-wrap input::-webkit-outer-spin-button, .qty-input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    
-    .btn-remove {
-        background: transparent;
-        color: #E74C3C;
-        border: none;
-        font-size: 18px;
-    }
-
-    .summary-card {
-        background: #F6F6F6;
-        padding: 40px;
-    }
-    
-    .summary-title {
-        font-weight: 700;
-        font-size: 20px;
-        margin-bottom: 30px;
-        text-transform: uppercase;
-        border-bottom: 1px solid #DDDDDD;
-        padding-bottom: 15px;
-    }
-    
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-        color: var(--text-main);
-        font-weight: 500;
-    }
-    
-    .summary-total {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #DDDDDD;
-        font-weight: 700;
-        font-size: 24px;
-        color: var(--text-main);
-    }
-
-    @media (max-width: 991px) {
-        .cart-table thead { display: none; }
-        .cart-table, .cart-table tbody, .cart-table tr, .cart-table td { display: block; width: 100%; }
-        .cart-table tr { border-bottom: 1px solid #EEEEEE; padding-bottom: 20px; margin-bottom: 20px; }
-        .cart-table td { padding: 10px 0; border: none; text-align: right; display: flex; justify-content: space-between; align-items: center; }
-        .cart-table td::before { content: attr(data-label); font-weight: 600; font-size: 14px; text-transform: uppercase; }
-        .td-product { flex-direction: column !important; align-items: flex-start !important; }
-        .td-product::before { display: none; }
-    }
-</style>
+    @vite(['resources/css/views/cart.css'])
 @endpush
 
 @section('content')
@@ -139,12 +11,12 @@
     <h1 class="page-title">GIỎ HÀNG</h1>
 
     @if(session('success'))
-        <div class="alert alert-success rounded-0 border-0" style="background-color: #E8F5E9; color: #2E7D32;">
+        <div class="alert alert-success rounded-0 border-0 bg-success-light-custom text-success-custom">
             <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
         </div>
     @endif
     @if(session('error'))
-        <div class="alert alert-danger rounded-0 border-0" style="background-color: #FFEBEE; color: #C62828;">
+        <div class="alert alert-danger rounded-0 border-0 bg-danger-light-custom text-danger-custom">
             <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
         </div>
     @endif
@@ -210,11 +82,11 @@
                 </table>
                 
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-dark" style="border-radius: 0;">TIẾP TỤC MUA SẮM</a>
+                    <a href="{{ route('products.index') }}" class="btn btn-outline-dark rounded-0">TIẾP TỤC MUA SẮM</a>
                     <form action="{{ route('cart.clear') }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-link text-muted p-0" style="font-size: 14px; text-decoration: none;" onclick="return confirmForm(this.form, 'Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?', 'XÓA GIỎ HÀNG')">XÓA GIỎ HÀNG</button>
+                        <button type="submit" class="btn btn-link text-muted p-0 text-sm-custom no-underline-custom" onclick="return confirmForm(this.form, 'Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?', 'XÓA GIỎ HÀNG')">XÓA GIỎ HÀNG</button>
                     </form>
                 </div>
             </div>
@@ -244,7 +116,7 @@
     @else
         <div class="empty-cart-msg">
             <i class="fas fa-shopping-bag fa-4x text-muted mb-4"></i>
-            <h3 style="font-weight: 700;">GIỎ HÀNG CỦA BẠN ĐANG TRỐNG</h3>
+            <h3 class="font-bold">GIỎ HÀNG CỦA BẠN ĐANG TRỐNG</h3>
             <p class="text-muted mb-4">Trước khi tiến hành thanh toán, bạn phải thêm sản phẩm vào giỏ hàng. Bạn sẽ tìm thấy nhiều sản phẩm thú vị trên trang "Cửa hàng" của chúng tôi.</p>
             <a href="{{ route('products.index') }}" class="btn btn-ava-dark px-5 py-3 bg-black text-white">BẮT ĐẦU MUA SẮM</a>
         </div>

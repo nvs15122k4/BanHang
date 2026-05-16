@@ -3,87 +3,7 @@
 @section('title', 'Sản phẩm - Sàn Tím Vi En')
 
 @push('styles')
-<style>
-    .breadcrumb-st {
-        font-size: 12px; color: var(--text-light);
-        margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px;
-    }
-    .breadcrumb-st a { color: var(--text-main); font-weight: 600; }
-    .breadcrumb-st a:hover { color: var(--primary); }
-
-    /* Sidebar */
-    .sidebar-filter { position: sticky; top: 90px; }
-    .filter-section { margin-bottom: 35px; }
-    .filter-title {
-        font-weight: 700; font-size: 12px; text-transform: uppercase;
-        letter-spacing: 1.5px; margin-bottom: 18px;
-        display: flex; justify-content: space-between; align-items: center;
-        cursor: pointer; color: var(--text-main);
-    }
-    .filter-list { list-style: none; padding: 0; margin: 0; }
-    .filter-item { margin-bottom: 10px; }
-    .filter-link {
-        color: #999; font-size: 14px; transition: all 0.2s;
-        display: flex; justify-content: space-between;
-    }
-    .filter-link:hover, .filter-link.active {
-        color: var(--primary); font-weight: 600; padding-left: 6px;
-    }
-
-    /* Result bar */
-    .result-bar {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #EEE;
-    }
-    .result-count { font-size: 13px; color: var(--text-light); }
-    .sort-select {
-        border: none; font-weight: 600; font-size: 13px;
-        text-transform: uppercase; outline: none;
-        background: transparent; cursor: pointer;
-    }
-
-    /* Product card */
-    .product-card { border: none; margin-bottom: 50px; position: relative; }
-    .product-img-wrapper {
-        position: relative; aspect-ratio: 3/4;
-        background: #F5F5F5; overflow: hidden; margin-bottom: 14px;
-    }
-    .product-img {
-        position: absolute; top:0; left:0; width:100%; height:100%;
-        object-fit: cover; transition: transform 1.2s cubic-bezier(.165,.84,.44,1);
-    }
-    .product-card:hover .product-img { transform: scale(1.06); }
-    .product-badge {
-        position: absolute; top:12px; left:12px; z-index:3;
-        font-size:10px; font-weight:700; text-transform:uppercase;
-        letter-spacing:1px; padding:5px 10px;
-        background: var(--primary); color: #FFF;
-    }
-    .badge-out { background: #E53E3E; }
-    .product-actions {
-        position: absolute; bottom:0; left:0; width:100%;
-        transform: translateY(100%);
-        transition: transform 0.4s cubic-bezier(.165,.84,.44,1); z-index:4;
-    }
-    .product-card:hover .product-actions { transform: translateY(0); }
-    .btn-quick-add {
-        background: rgba(255,255,255,0.92); color:#000; border:none;
-        padding:14px; width:100%; font-weight:700; font-size:11px;
-        text-transform:uppercase; letter-spacing:2px;
-        backdrop-filter:blur(6px); transition:all 0.3s; cursor:pointer;
-    }
-    .btn-quick-add:hover { background: var(--primary); color:#FFF; }
-    .btn-quick-add:disabled { background:rgba(0,0,0,0.5); color:#FFF; cursor:not-allowed; }
-    .product-category { font-size:10px; color:#999; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:5px; display:block; }
-    .product-title { font-weight:600; font-size:14px; margin-bottom:6px; color:#000; display:block; line-height:1.4; }
-    .product-title:hover { color: var(--primary); }
-    .product-price { font-weight:700; font-size:14px; color:#000; display:flex; gap:8px; align-items:center; }
-    .price-old { text-decoration:line-through; color:#BBB; font-size:12px; font-weight:400; }
-
-    /* Pagination */
-    .page-link { color: var(--text-main); border:1px solid #DDD; padding:10px 18px; margin:0 3px; }
-    .page-item.active .page-link { background: var(--primary); border-color: var(--primary); color:#FFF; }
-</style>
+    @vite(['resources/css/views/product_index.css'])
 @endpush
 
 @section('content')
@@ -103,8 +23,7 @@
                     <div class="filter-section">
                         <div class="filter-title">Tìm kiếm</div>
                         <div class="position-relative">
-                            <input type="text" name="search" class="form-control" placeholder="Tên sản phẩm..."
-                                value="{{ request('search') }}" style="padding-right:40px; border-radius:0;">
+                            <input type="text" name="search" class="form-control rounded-0" placeholder="Tên sản phẩm..."
                             <button type="submit" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;">
                                 <i class="fas fa-search text-muted" style="font-size:13px;"></i>
                             </button>
@@ -135,13 +54,11 @@
                     <div class="filter-section">
                         <div class="filter-title">Khoảng giá <i class="fas fa-chevron-down" style="font-size:9px;"></i></div>
                         <div class="d-flex gap-2 align-items-center mb-3">
-                            <input type="number" name="min_price" class="form-control form-control-sm"
-                                placeholder="Từ" value="{{ request('min_price') }}" style="border-radius:0;">
+                            <input type="number" name="min_price" class="form-control form-control-sm rounded-0"
                             <span style="color:#CCC;">—</span>
-                            <input type="number" name="max_price" class="form-control form-control-sm"
-                                placeholder="Đến" value="{{ request('max_price') }}" style="border-radius:0;">
+                            <input type="number" name="max_price" class="form-control form-control-sm rounded-0"
                         </div>
-                        <button type="submit" class="btn-st-dark w-100" style="padding:10px 0; font-size:12px;">ÁP DỤNG</button>
+                        <button type="submit" class="btn-st-dark w-100 py-2-custom text-xs-custom">ÁP DỤNG</button>
                     </div>
                 </form>
             </div>
@@ -209,7 +126,7 @@
                     <div class="col-12 text-center py-5">
                         <i class="fas fa-search fa-3x text-muted mb-3 d-block"></i>
                         <h4 class="text-muted">Không tìm thấy sản phẩm nào phù hợp.</h4>
-                        <a href="{{ route('products.index') }}" class="btn-st mt-3" style="display:inline-block;">Xóa bộ lọc</a>
+                        <a href="{{ route('products.index') }}" class="btn-st mt-3 d-inline-block-custom">Xóa bộ lọc</a>
                     </div>
                 @endforelse
             </div>

@@ -37,7 +37,8 @@ class AuthController extends Controller
             $user = Auth::user();
             $message = $user->isAdmin() ? 'Chào mừng Admin!' : 'Đăng nhập thành công!';
             
-            return redirect()->intended(route('dashboard'))->with('success', $message);
+            $redirect = Auth::user()->isAdmin() ? route('admin.dashboard') : route('home');
+            return redirect()->intended($redirect)->with('success', $message);
         }
 
         return back()->withErrors([
@@ -89,7 +90,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard'))->with('success', 'Đăng ký thành công! Chào mừng bạn đến với hệ thống.');
+        return redirect(route('home'))->with('success', 'Đăng ký thành công! Chào mừng bạn đến với hệ thống.');
     }
 
     /**

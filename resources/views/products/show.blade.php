@@ -3,430 +3,7 @@
 @section('title', $product->ten_sp . ' - Sàn Tím Vi En')
 
 @push('styles')
-<style>
-    /* =========================================
-       PRODUCT DETAIL - SÀN TÍM VI EN
-       ========================================= */
-    :root { --primary: #7C3AED; }
-    .breadcrumb-ava {
-        font-size: 13px;
-        color: var(--text-light);
-        margin: 20px 0 40px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .breadcrumb-ava a {
-        color: var(--text-main);
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .product-detail-container {
-        margin-bottom: 100px;
-    }
-
-    /* Gallery */
-    .detail-img-wrap {
-        background: #F9F9F9;
-        height: 700px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .detail-img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        transition: transform 0.5s ease;
-    }
-
-    .detail-img:hover {
-        transform: scale(1.05);
-    }
-
-    /* Info */
-    .detail-info {
-        padding-left: 60px;
-    }
-    
-    @media (max-width: 992px) {
-        .detail-info { padding-left: 0; margin-top: 40px; }
-        .detail-img-wrap { height: 500px; }
-    }
-
-    .detail-category {
-        font-size: 12px;
-        color: var(--text-light);
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 15px;
-        display: block;
-    }
-
-    .detail-title {
-        font-weight: 700;
-        font-size: 42px;
-        color: var(--text-main);
-        line-height: 1.1;
-        margin-bottom: 25px;
-        text-transform: uppercase;
-    }
-
-    .detail-price {
-        font-weight: 700;
-        font-size: 32px;
-        color: var(--text-main);
-        margin-bottom: 40px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .detail-price .price-old {
-        font-size: 20px;
-        color: #AAA;
-        text-decoration: line-through;
-        font-weight: 400;
-    }
-
-    .detail-desc {
-        color: var(--text-light);
-        font-size: 16px;
-        line-height: 1.8;
-        margin-bottom: 50px;
-        border-top: 1px solid #EEE;
-        padding-top: 30px;
-    }
-
-    /* Actions */
-    .action-row {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 40px;
-    }
-
-    .qty-control {
-        display: flex;
-        align-items: center;
-        border: 1px solid #000;
-        height: 55px;
-    }
-    
-    .qty-btn {
-        background: transparent;
-        border: none;
-        color: #000;
-        width: 50px;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        cursor: pointer;
-    }
-    
-    .qty-input {
-        background: transparent;
-        border: none;
-        color: #000;
-        text-align: center;
-        width: 60px;
-        font-weight: 700;
-        font-size: 16px;
-        outline: none;
-    }
-
-    .btn-add-cart {
-        background: var(--primary);
-        color: #fff;
-        border: none;
-        height: 55px;
-        padding: 0 60px;
-        font-weight: 700;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        flex-grow: 1;
-        transition: all 0.3s;
-    }
-    
-    .btn-add-cart:hover {
-        background: #6D28D9;
-    }
-
-    /* Delivery Options */
-    .delivery-options {
-        border: 1px solid #EEE;
-        padding: 20px;
-        margin-bottom: 30px;
-    }
-    .delivery-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px; }
-    .delivery-item { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; font-size:13px; color:#666; }
-    .delivery-item i { color:var(--primary); margin-top:2px; flex-shrink:0; }
-
-    .btn-add-cart:disabled {
-        background: #CCC;
-        cursor: not-allowed;
-    }
-
-    /* Meta */
-    .detail-meta {
-        border-top: 1px solid #EEE;
-        padding-top: 30px;
-        font-size: 14px;
-        color: var(--text-light);
-    }
-
-    .meta-item {
-        margin-bottom: 10px;
-        display: flex;
-        gap: 10px;
-    }
-
-    .meta-label {
-        font-weight: 700;
-        color: var(--text-main);
-        min-width: 100px;
-        text-transform: uppercase;
-        font-size: 12px;
-    }
-
-    /* Tabs */
-    .tabs-ava {
-        margin-top: 100px;
-        border-bottom: 1px solid #EEE;
-    }
-    
-    .tabs-ava .nav-link {
-        color: #AAA;
-        font-weight: 700;
-        font-size: 14px;
-        padding: 20px 40px;
-        border: none;
-        border-bottom: 2px solid transparent;
-        background: transparent;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    
-    .tabs-ava .nav-link.active {
-        color: #000;
-        border-bottom: 2px solid #000;
-    }
-    
-    .tab-content-ava {
-        padding: 60px 0;
-        color: var(--text-main);
-        line-height: 1.8;
-    }
-
-    /* Related Products */
-    .section-title {
-        font-weight: 700;
-        font-size: 24px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 40px;
-        text-align: center;
-    }
-
-    .product-card {
-        border: none;
-        margin-bottom: 60px;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .product-img-wrapper {
-        position: relative;
-        aspect-ratio: 3/4;
-        background: #F4F4F4;
-        overflow: hidden;
-        margin-bottom: 15px;
-    }
-    
-    .product-img {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        object-fit: cover;
-        transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-
-    .product-card:hover .product-img {
-        transform: scale(1.05);
-    }
-
-    .product-actions {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        transform: translateY(100%);
-        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        z-index: 4;
-        display: flex;
-    }
-
-    .product-card:hover .product-actions {
-        transform: translateY(0);
-    }
-
-    .btn-quick-add {
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
-        border: none;
-        padding: 15px;
-        width: 100%;
-        font-weight: 700;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        backdrop-filter: blur(5px);
-        transition: all 0.3s;
-    }
-
-    .btn-quick-add:hover {
-        background: #000;
-        color: #fff;
-    }
-
-    .product-info {
-        padding: 0;
-        text-align: left;
-    }
-
-    .product-category {
-        font-size: 10px;
-        color: #888;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    .product-title {
-        font-weight: 600;
-        font-size: 15px;
-        margin-bottom: 5px;
-        color: #000;
-        text-decoration: none;
-        display: block;
-        line-height: 1.4;
-    }
-
-    .product-price {
-        font-weight: 700;
-        font-size: 15px;
-        color: #000;
-    }
-
-    /* Reviews */
-    .review-item {
-        border-bottom: 1px solid #EEE;
-        padding: 30px 0;
-    }
-
-    .review-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-    }
-
-    .review-user {
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 14px;
-    }
-
-    .review-date {
-        font-size: 12px;
-        color: #AAA;
-    }
-
-    .review-rating {
-        color: #000;
-        margin-bottom: 10px;
-    }
-
-    .review-content {
-        color: var(--text-light);
-    }
-
-    /* Review Avatar */
-    .review-avatar {
-        width: 40px; height: 40px;
-        background: var(--primary);
-        color: #fff;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: 700; font-size: 16px;
-        flex-shrink: 0;
-    }
-
-    /* Review Summary */
-    .avg-rating-big {
-        font-size: 52px;
-        font-weight: 800;
-        line-height: 1;
-        color: var(--text-main);
-    }
-    .avg-stars { color: var(--primary); font-size: 18px; margin: 6px 0 4px; }
-    .avg-count { font-size: 13px; color: var(--text-light); }
-
-    /* Review Notice Boxes */
-    .review-notice {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-        padding: 20px 24px;
-        border-left: 4px solid;
-        background: #FAFAFA;
-    }
-    .review-notice i { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-    .review-notice strong { display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .review-notice .small { color: var(--text-light); }
-
-    .review-notice--done   { border-color: #28A745; }
-    .review-notice--done i { color: #28A745; }
-
-    .review-notice--pending   { border-color: #FFC107; }
-    .review-notice--pending i { color: #FFC107; }
-
-    .review-notice--locked   { border-color: #AAA; }
-    .review-notice--locked i { color: #AAA; }
-
-    /* Star Rating Interactive */
-    .star-rating-interactive { display: flex; gap: 6px; }
-    .star-btn {
-        background: none; border: none; padding: 0;
-        font-size: 28px; color: #DDD; cursor: pointer;
-        transition: color 0.15s, transform 0.15s;
-        line-height: 1;
-    }
-    .star-btn.active { color: var(--primary); }
-    .star-btn:hover  { transform: scale(1.15); }
-    .star-label { font-size: 13px; color: var(--text-light); min-height: 18px; }
-
-    /* Submit Review Button */
-    .btn-submit-review {
-        background: var(--text-main);
-        color: #fff;
-        border: none;
-        padding: 14px 40px;
-        font-weight: 700;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        transition: background 0.3s;
-        cursor: pointer;
-    }
-    .btn-submit-review:hover { background: var(--primary); }
-</style>
+    @vite(['resources/css/views/product_show.css'])
 @endpush
 
 @section('content')
@@ -442,7 +19,7 @@
             <div class="col-lg-6">
                 <div class="detail-img-wrap">
                     @if($product->so_luong <= 0)
-                        <div class="product-badge" style="position:absolute; top:20px; left:20px; background: #E74C3C; color: white; padding:6px 15px; font-weight:700; z-index:1; text-transform:uppercase;">Hết hàng</div>
+                        <div class="product-badge out-of-stock-badge-custom">Hết hàng</div>
                     @endif
                     
                     @if($product->anh)
@@ -498,7 +75,7 @@
                     <div class="detail-meta">
                         <div class="meta-item">
                             <span class="meta-label">Trạng thái:</span>
-                            <span class="{{ $product->so_luong > 0 ? 'text-success' : 'text-danger' }} font-weight-bold">
+                            <span class="{{ $product->so_luong > 0 ? 'text-success' : 'text-danger' }} font-bold">
                                 {{ $product->so_luong > 0 ? 'Còn hàng (' . $product->so_luong . ')' : 'Hết hàng' }}
                             </span>
                         </div>
@@ -594,7 +171,7 @@
                         @elseif($canReview)
                             {{-- Đã mua + đã thanh toán -> hiển thị form --}}
                             <div class="review-form-wrap mb-5 pb-5 border-bottom">
-                                <h4 class="mb-4 text-uppercase font-weight-bold" style="font-size:16px;letter-spacing:1px;">
+                                <h4 class="mb-4 uppercase font-bold text-md-custom letter-spacing-1-custom">
                                     <i class="fas fa-pen me-2" style="color:var(--primary);"></i>Viết đánh giá của bạn
                                 </h4>
                                 <form action="{{ route('reviews.store') }}" method="POST" id="reviewForm">
@@ -617,7 +194,7 @@
 
                                     <div class="mb-3">
                                         <label class="form-label text-uppercase small fw-bold">Nhận xét</label>
-                                        <textarea name="comment" class="form-control" rows="4" style="border-radius:0;"
+                                        <textarea name="comment" class="form-control rounded-0" rows="4"
                                             placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."></textarea>
                                     </div>
                                     <button type="submit" class="btn-submit-review">
@@ -681,7 +258,7 @@
                                                 <form action="{{ route('reviews.destroy', $review) }}" method="POST" data-item-name="Đánh giá của bạn" onsubmit="return confirmForm(this, 'Đánh giá này sẽ bị xóa vĩnh viễn và không thể khôi phục.', 'XÓA ĐÁNH GIÁ')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-link text-danger p-0" title="Xóa đánh giá" style="text-decoration:none; font-size:12px;">
+                                                    <button type="submit" class="btn btn-link text-danger p-0 no-underline-custom text-xs-custom" title="Xóa đánh giá">
                                                         <i class="fas fa-trash-alt me-1"></i>Xóa
                                                     </button>
                                                 </form>

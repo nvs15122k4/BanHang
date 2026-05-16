@@ -1,0 +1,122 @@
+/* Profile Page Styles */
+
+.page-title {
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--text-main);
+    text-align: center;
+    margin: 40px 0;
+    text-transform: uppercase;
+}
+.profile-sidebar {
+    background: #F6F6F6;
+    padding: 30px;
+    position: sticky;
+    top: 80px;
+}
+.sidebar-title {
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #DDD;
+    padding-bottom: 10px;
+}
+.sidebar-nav .nav-link {
+    color: #888;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 0;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+}
+.sidebar-nav .nav-link:hover { color: var(--text-main); background: rgba(0,0,0,0.04); }
+.sidebar-nav .nav-link.active { color: var(--text-main); font-weight: 700; border-left-color: var(--primary); background: rgba(124,58,237,0.05); }
+
+.profile-card {
+    border: 1px solid #EEE;
+    padding: 36px 40px;
+    background: #fff;
+}
+.card-section-title {
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #EEE;
+}
+.form-control, .form-select {
+    border-radius: 0;
+    border: 1px solid #DDD;
+    padding: 11px 14px;
+    font-size: 14px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+}
+.form-label {
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-main);
+}
+.btn-save {
+    background: var(--text-main);
+    color: #fff;
+    border: none;
+    padding: 12px 40px;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 0;
+    transition: background 0.2s;
+}
+.btn-save:hover { background: var(--primary); color: #fff; }
+.btn-save:disabled { background: #AAA; cursor: not-allowed; }
+
+/* Address cards */
+.address-card {
+    border: 1px solid #EEE;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+    position: relative;
+}
+.address-card:hover { border-color: #CCC; }
+.address-card.is-default { border-color: var(--primary); background: rgba(124,58,237,0.03); }
+.btn-link-action {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-decoration: underline;
+    cursor: pointer;
+}
+.btn-link-action:hover { color: var(--primary); }
+.btn-link-action.danger { color: #E53E3E; }
+.btn-link-action.danger:hover { color: #C53030; }
+
+/* Inline feedback */
+.form-feedback {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-left: 3px solid;
+    margin-top: 16px;
+    display: none;
+}
+.form-feedback.success { border-color: #27AE60; background: #F0FFF4; color: #276749; }
+.form-feedback.error   { border-color: #E53E3E; background: #FFF5F5; color: #C53030; }
+
+/* Modal */
+.modal-content { border-radius: 0; border: none; }
+.modal-header  { background: #F6F6F6; border-bottom: 1px solid #EEE; }
+.modal-title   { font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; }

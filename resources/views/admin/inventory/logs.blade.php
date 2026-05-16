@@ -2,6 +2,10 @@
 
 @section('title', 'Lịch sử xuất nhập kho')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -73,7 +77,7 @@
                 @forelse($logs as $log)
                     <tr>
                         <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
-                        <td style="font-weight:500;">{{ $log->product->ten_sp ?? 'N/A' }}</td>
+                        <td class="font-medium-custom">{{ $log->product->ten_sp ?? 'N/A' }}</td>
                         <td>
                             @if($log->loai === 'in')
                                 <span class="badge bg-success">Nhập kho</span>
@@ -89,7 +93,7 @@
                                 {{ $log->so_luong_thay_doi > 0 ? '+' : '' }}{{ $log->so_luong_thay_doi }}
                             </span>
                         </td>
-                        <td style="font-weight:500;">{{ $log->so_luong_sau }}</td>
+                        <td class="font-medium-custom">{{ $log->so_luong_sau }}</td>
                         <td>{{ $log->ly_do }}</td>
                         <td>
                             @if($log->order)
@@ -114,7 +118,7 @@
         </table>
     </div>
     @if($logs->hasPages())
-        <div class="card-footer" style="background-color:#F5F5F5;">
+        <div class="card-footer bg-gray-light-custom">
             {{ $logs->appends(request()->query())->links('pagination.bootstrap-5') }}
         </div>
     @endif

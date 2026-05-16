@@ -97,11 +97,12 @@
                         </td>
                         <td>{{ number_format($product->gia) }}đ</td>
                         <td>
-                            <span class="{{ $product->so_luong < 10 ? 'text-danger fw-bold' : '' }}"
+                        <td>
+                            <span class="{{ $product->so_luong < 10 ? 'text-danger fw-bold' : '' }} font-medium-custom"
                                   id="stock-val-{{ $product->id }}">
                                 {{ $product->so_luong }}
                             </span>
-                            <button type="button" class="btn btn-sm btn-link p-0 ms-1"
+                            <button type="button" class="btn btn-sm btn-link p-0 ms-2 text-primary"
                                     onclick="openStockModal({{ $product->id }}, {{ $product->so_luong }}, '{{ addslashes($product->ten_sp) }}')">
                                 <i class="fas fa-edit"></i>
                             </button>

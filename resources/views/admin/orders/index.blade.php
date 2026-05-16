@@ -7,66 +7,63 @@
 @endpush
 
 @section('content')
-<!-- <div class="page-header">
+<div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-shopping-cart me-3"></i>QUẢN LÝ ĐƠN HÀNG</h1>
         <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>TẠO ĐƠN HÀNG MỚI
         </a>
     </div>
-</div> -->
+</div>
 
 <!-- Statistics -->
-<div class="row mb-4">
-    <div class="col-md-2">
-        <div class="stat-card">
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value">{{ $stats['total'] }}</div>
             <div class="stat-label">Tổng đơn</div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="stat-card">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value text-warning">{{ $stats['pending'] }}</div>
             <div class="stat-label">Chờ duyệt đơn</div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="stat-card">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value text-info">{{ $stats['confirmed'] }}</div>
             <div class="stat-label">Đã duyệt đơn</div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="stat-card">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value text-primary">{{ $stats['shipping'] }}</div>
             <div class="stat-label">Đang giao hàng</div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="stat-card">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value text-danger">{{ $stats['disputing'] }}</div>
             <div class="stat-label">Đang khiếu nại</div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="stat-card">
-            <div class="stat-value text-warning color-f39c12-custom">{{ $stats['cancelling'] }}</div>
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value text-warning">{{ $stats['cancelling'] }}</div>
             <div class="stat-label">Chờ duyệt hủy</div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="stat-card">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value text-success">{{ $stats['completed'] }}</div>
             <div class="stat-label">Hoàn thành</div>
         </div>
     </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="stat-card">
+    <div class="col-md-3">
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
             <div class="stat-value text-success">{{ number_format($stats['total_revenue']) }}đ</div>
-            <div class="stat-label">Tổng doanh thu (Đơn hoàn thành)</div>
+            <div class="stat-label">Tổng doanh thu</div>
         </div>
     </div>
 </div>

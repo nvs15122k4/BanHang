@@ -71,43 +71,56 @@
     <div class="container-fluid">
         <div class="row g-0">
             <!-- Sidebar -->
-            <div class="col-md-2 admin-sidebar">
-                <nav class="nav flex-column">
-                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
-                       href="{{ route('admin.dashboard') }}">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
-                    <a class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}"
-                       href="{{ route('admin.users') }}">
-                        <i class="fas fa-users"></i> Quản lý Users
-                    </a>
-                    <a class="nav-link {{ request()->routeIs('admin.products') ? 'active' : '' }}"
-                       href="{{ route('admin.products') }}">
-                        <i class="fas fa-box"></i> Quản lý Sản phẩm
-                    </a>
-                    <a class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}"
-                       href="{{ route('admin.orders.index') }}">
-                        <i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng
-                    </a>
-                    <a class="nav-link {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}"
-                       href="{{ route('admin.inventory.index') }}">
-                        <i class="fas fa-warehouse"></i> Quản lý Kho
-                    </a>
-                    <!-- <a class="nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}"
-                       href="{{ route('admin.reviews.index') }}">
-                        <i class="fas fa-star"></i> Đánh giá SP
-                    </a> -->
-                    <a class="nav-link {{ request()->routeIs('admin.statistics') ? 'active' : '' }}"
-                       href="{{ route('admin.statistics') }}">
-                        <i class="fas fa-chart-bar"></i> Thống kê
-                    </a>
-                </nav>
-            </div>
+            <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column gap-2 px-2">
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">
+                                <i class="fas fa-users me-2"></i> Người dùng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.products*') ? 'active' : '' }}" href="{{ route('admin.products') }}">
+                                <i class="fas fa-box me-2"></i> Sản phẩm
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}" href="{{ route('admin.orders.index') }}">
+                                <i class="fas fa-shopping-cart me-2"></i> Đơn hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.inventory*') ? 'active' : '' }}" href="{{ route('admin.inventory.index') }}">
+                                <i class="fas fa-warehouse me-2"></i> Kho hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.statistics') ? 'active' : '' }}" href="{{ route('admin.statistics') }}">
+                                <i class="fas fa-chart-bar me-2"></i> Thống kê
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="mt-5 px-3">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger w-100 rounded-12-px-custom py-2 fw-bold" style="font-size: 13px;">
+                                <i class="fas fa-sign-out-alt me-2"></i> ĐĂNG XUẤT
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
 
             <!-- Main Content -->
-            <div class="col-md-10 admin-content">
+            <main class="col-md-9 ms-sm-auto col-lg-10 admin-content">
                 @yield('content')
-            </div>
+            </main>
         </div>
     </div>
 

@@ -132,11 +132,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/inventory/export', [App\Http\Controllers\InventoryController::class, 'export'])->name('inventory.export');
     Route::post('/inventory/adjust', [App\Http\Controllers\InventoryController::class, 'adjust'])->name('inventory.adjust');
     
-    // Reviews management
-    Route::get('/reviews', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
-    Route::put('/reviews/{review}/approve', [App\Http\Controllers\ReviewController::class, 'approve'])->name('reviews.approve');
-    Route::put('/reviews/{review}/reject', [App\Http\Controllers\ReviewController::class, 'reject'])->name('reviews.reject');
-    Route::delete('/reviews/{review}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 // Customer review routes

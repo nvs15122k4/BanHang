@@ -16,11 +16,11 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row g-4">
     <!-- Order Info -->
     <div class="col-md-8">
         <div class="card admin-table mb-4">
-            <div class="card-header">
+            <div class="card-header d-flex align-items-center">
                 <i class="fas fa-info-circle me-2"></i>THÔNG TIN ĐƠN HÀNG
             </div>
             <div class="card-body">

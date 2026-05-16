@@ -17,6 +17,17 @@ Route::get('/forgot-password', function() {
     return view('auth.forgot-password');
 })->name('password.request');
 
+// Forgot password (stub - chưa có logic)
+Route::post('/forgot-password', function() {
+    return back()->with('status', 'Chức năng đang phát triển.');
+})->name('password.email');
+
+// Reset password (stub - chưa có logic)
+Route::post('/reset-password', function() {
+    return back()->with('status', 'Chức năng đang phát triển.');
+})->name('password.store');
+
+
 Route::get('/verify-email', function() {
     return view('auth.verify-email');
 })->name('verification.notice');

@@ -3,219 +3,7 @@
 @section('title', 'Chi tiết đơn hàng - ' . $order->id)
 
 @push('styles')
-<style>
-    /* =========================================
-       ORDER DETAILS - AVA STYLE
-       ========================================= */
-    .page-title {
-        font-weight: 700;
-        font-size: 28px;
-        color: var(--text-main);
-        text-transform: uppercase;
-        margin-bottom: 0;
-    }
-
-    .order-section {
-        border: 1px solid #EEEEEE;
-        margin-bottom: 30px;
-        background: #fff;
-    }
-
-    .section-header {
-        background: #F6F6F6;
-        padding: 15px 20px;
-        border-bottom: 1px solid #EEEEEE;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .section-body {
-        padding: 20px;
-    }
-
-    /* Status Track */
-    .status-track {
-        display: flex;
-        justify-content: space-between;
-        position: relative;
-        margin: 40px 20px 20px;
-    }
-    
-    .status-track::before {
-        content: '';
-        position: absolute;
-        top: 20px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: #EEEEEE;
-        z-index: 0;
-    }
-    
-    .status-step {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        flex: 1;
-    }
-    
-    .status-icon {
-        width: 40px;
-        height: 40px;
-        background: #EEEEEE;
-        color: #999999;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 10px;
-        font-size: 16px;
-        transition: all 0.3s;
-        border: 2px solid #fff;
-    }
-    
-    .status-label {
-        font-weight: 600;
-        font-size: 12px;
-        color: #999999;
-        text-transform: uppercase;
-        transition: all 0.3s;
-        letter-spacing: -0.5px;
-    }
-    
-    /* Active & Completed Steps */
-    .status-step.active .status-icon {
-        background: #111111;
-        color: #FFFFFF;
-        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
-    }
-    
-    .status-step.active .status-label {
-        color: #111111;
-    }
-
-    /* Progress Line Fill */
-    .status-track-fill {
-        position: absolute;
-        top: 20px;
-        left: 0;
-        height: 2px;
-        background: #111111;
-        z-index: 0;
-        transition: width 0.8s ease;
-    }
-
-    /* Cancelled State */
-    .cancelled-state {
-        text-align: center;
-        padding: 40px 20px;
-    }
-
-    /* Order Items */
-    .order-item {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        padding: 15px 0;
-        border-bottom: 1px dashed #EEEEEE;
-    }
-    
-    .order-item:first-child { padding-top: 0; }
-    .order-item:last-child { padding-bottom: 0; border-bottom: none; }
-    
-    .item-img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        background: #F6F6F6;
-    }
-    
-    .item-title {
-        font-weight: 600;
-        color: var(--text-main);
-        font-size: 15px;
-        margin-bottom: 5px;
-    }
-    
-    .item-meta {
-        color: var(--text-light);
-        font-size: 14px;
-    }
-
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        color: var(--text-light);
-    }
-    
-    .summary-total {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid #EEEEEE;
-        font-weight: 700;
-        font-size: 20px;
-        color: var(--text-main);
-    }
-
-    .info-label {
-        font-size: 12px;
-        color: var(--text-light);
-        text-transform: uppercase;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-    
-    .info-value {
-        font-weight: 500;
-        margin-bottom: 15px;
-    }
-
-    .badge-paid {
-        background: #27AE60;
-        color: white;
-        padding: 4px 12px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    
-    .badge-unpaid {
-        background: #999999;
-        color: white;
-        padding: 4px 12px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    #copyToast {
-        position: fixed;
-        bottom: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #27AE60;
-        color: #fff;
-        padding: 8px 20px;
-        border-radius: 30px;
-        font-size: 13px;
-        font-weight: 600;
-        z-index: 9999;
-        display: none;
-        animation: fadeInOut 2s ease forwards;
-    }
-
-    @keyframes fadeInOut {
-        0% { opacity: 0; bottom: 20px; }
-        20% { opacity: 1; bottom: 30px; }
-        80% { opacity: 1; bottom: 30px; }
-        100% { opacity: 0; bottom: 40px; }
-    }
-</style>
+    @vite(['resources/css/views/order_show.css'])
 @endpush
 
 @section('content')
@@ -223,7 +11,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="page-title">ĐƠN HÀNG #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
-        <a href="{{ route('orders.index') }}" class="btn btn-outline-dark" style="border-radius: 0;">VỀ DANH SÁCH</a>
+        <a href="{{ route('orders.index') }}" class="btn btn-outline-dark rounded-0">VỀ DANH SÁCH</a>
     </div>
 
     <div class="row">
@@ -263,7 +51,7 @@
                     @if($order->trang_thai === 'cancelled')
                         <div class="cancelled-state">
                             <i class="fas fa-times-circle fa-4x text-danger mb-3"></i>
-                            <h4 style="font-weight: 700; color: #EB5757;">Đơn hàng đã hủy</h4>
+                            <h4 class="font-bold" style="color: #EB5757;">Đơn hàng đã hủy</h4>
                             <p class="text-muted">Đơn hàng này đã bị hủy và sẽ không được xử lý.</p>
                         </div>
                     @else
@@ -298,26 +86,26 @@
                         @if($order->trang_thai === 'disputing')
                             <div class="text-center mt-3 py-3" style="background:#FFF5F5; border:1px solid #FFCCCC;">
                                 <i class="fas fa-exclamation-circle fa-2x mb-2" style="color:#EB5757;"></i>
-                                <p class="mb-0 fw-bold" style="color:#EB5757;">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
+                                <p class="mb-0 font-bold" style="color:#EB5757;">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
                             </div>
                         @elseif($order->trang_thai === 'cancelling')
                             <div class="text-center mt-3 py-3" style="background:#FFF5F5; border:1px solid #FFCCCC;">
                                 <i class="fas fa-clock fa-2x mb-2" style="color:#EB5757;"></i>
-                                <p class="mb-0 fw-bold" style="color:#EB5757;">Yêu cầu hủy đơn hàng đang được xử lý — chúng tôi sẽ phản hồi sớm nhất</p>
+                                <p class="mb-0 font-bold" style="color:#EB5757;">Yêu cầu hủy đơn hàng đang được xử lý — chúng tôi sẽ phản hồi sớm nhất</p>
                             </div>
                         @endif
                         {{-- Nút hành động của user khi đơn đang giao --}}
                         @php $userNext = \App\Models\Order::userNextStatuses($order->trang_thai); @endphp
                         @if(count($userNext) > 0)
                             <div class="mt-4 p-3" style="background:#F9F9F9; border:1px solid #EEE;">
-                                <p class="fw-bold mb-3" style="font-size:14px;">Bạn đã nhận được hàng chưa?</p>
+                                <p class="font-bold mb-3 text-sm-custom">Bạn đã nhận được hàng chưa?</p>
                                 <div class="d-flex gap-2 flex-wrap">
                                     {{-- Đã nhận --}}
                                     <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;" data-item-name="#{{ $order->ma_don_hang }}">
                                         @csrf
                                         <input type="hidden" name="trang_thai" value="completed">
-                                        <button type="submit" class="btn btn-success"
-                                            style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
+                                        <button type="submit" class="btn btn-success rounded-0 font-bold tracking-wide-custom"
+                                            style="text-transform:uppercase; font-size:13px;"
                                             onclick="return confirmForm(this.form, 'Xác nhận bạn đã nhận được hàng? Trạng thái đơn hàng sẽ chuyển thành Hoàn thành.', 'Xác nhận đã nhận được hàng', 'success', 'Xác nhận đã nhận')">
                                             <i class="fas fa-check-circle me-2"></i>ĐÃ NHẬN ĐƯỢC HÀNG
                                         </button>
@@ -326,8 +114,8 @@
                                     <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;" data-item-name="#{{ $order->ma_don_hang }}">
                                         @csrf
                                         <input type="hidden" name="trang_thai" value="disputing">
-                                        <button type="submit" class="btn btn-outline-danger"
-                                            style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;"
+                                        <button type="submit" class="btn btn-outline-danger rounded-0 font-bold tracking-wide-custom"
+                                            style="text-transform:uppercase; font-size:13px;"
                                             onclick="return confirmForm(this.form, 'Xác nhận bạn chưa nhận được hàng và muốn khiếu nại? Chúng tôi sẽ tiếp nhận và xử lý sớm nhất.', 'Xác nhận gửi khiếu nại', 'danger', 'Gửi khiếu nại')">
                                             <i class="fas fa-exclamation-circle me-2"></i>CHƯA NHẬN ĐƯỢC HÀNG
                                         </button>
@@ -347,7 +135,7 @@
                                     <p class="mb-0 text-muted small">Đơn hàng này đủ điều kiện hoàn tiền. Vui lòng kiểm tra và cung cấp thông tin bên dưới.</p>
                                 </div>
                                 @if($order->refund_status === 'completed')
-                                    <span class="badge bg-success" style="border-radius:0; padding:8px 15px;">ĐÃ HOÀN TIỀN</span>
+                                    <span class="badge bg-success rounded-0 px-3 py-2">ĐÃ HOÀN TIỀN</span>
                                 @endif
                             </div>
 
@@ -376,7 +164,7 @@
                                             <textarea name="refund_user_note" class="form-control form-control-sm rounded-0" rows="2"></textarea>
                                         </div>
                                         <div class="col-12 text-end">
-                                            <button type="submit" class="btn btn-dark btn-sm px-4" style="border-radius:0; font-weight:700;">GỬI THÔNG TIN</button>
+                                            <button type="submit" class="btn btn-dark btn-sm px-4 rounded-0 font-bold">GỬI THÔNG TIN</button>
                                         </div>
                                     </div>
                                 </form>
@@ -510,8 +298,8 @@
                 <p class="mb-3" style="font-size:14px; color:#EB5757; font-weight:600;">Bạn muốn hủy đơn hàng này?</p>
                 <form method="POST" action="{{ route('orders.cancel', $order) }}" data-order-code="{{ $order->ma_don_hang }}" data-confirm-text="Xác nhận hủy" onsubmit="return confirmForm(this, 'Xác nhận hủy đơn hàng này?', 'HỦY ĐƠN HÀNG')">
                 @csrf
-                <button type="submit" class="btn btn-danger" 
-                style="border-radius:0; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:1px;">
+                <button type="submit" class="btn btn-danger rounded-0 font-bold tracking-wide-custom" 
+                style="text-transform:uppercase; font-size:13px;">
                 <i class="fas fa-times-circle me-2"></i>Hủy đơn hàng
                 </button>
                 </form>

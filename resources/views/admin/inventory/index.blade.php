@@ -2,6 +2,10 @@
 
 @section('title', 'Quản lý Kho')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -28,7 +32,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #28A745;"><i class="fas fa-cubes"></i></div>
+                <div class="stat-icon bg-success-custom"><i class="fas fa-cubes"></i></div>
                 <div class="ms-3">
                     <div class="stat-value">{{ number_format($stats['total_stock']) }}</div>
                     <div class="stat-label">Tổng tồn kho</div>
@@ -39,7 +43,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #FFC107;"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="stat-icon bg-warning-custom"><i class="fas fa-exclamation-triangle"></i></div>
                 <div class="ms-3">
                     <div class="stat-value">{{ $stats['low_stock'] }}</div>
                     <div class="stat-label">Sắp hết hàng</div>
@@ -50,7 +54,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #DC3545;"><i class="fas fa-times-circle"></i></div>
+                <div class="stat-icon bg-danger-custom"><i class="fas fa-times-circle"></i></div>
                 <div class="ms-3">
                     <div class="stat-value">{{ $stats['out_of_stock'] }}</div>
                     <div class="stat-label">Hết hàng</div>
@@ -72,7 +76,7 @@
 <!-- Filter -->
 <div class="filter-section">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <span style="font-size:13px;color:var(--text-secondary);">
+        <span class="text-xs-custom text-gray-medium">
             <i class="fas fa-info-circle me-1"></i>
             Trạng thái tự động: <strong>Tồn kho = 0</strong> → Ngừng bán &nbsp;|&nbsp; <strong>Tồn kho > 0</strong> → Còn hàng
         </span>
@@ -116,18 +120,18 @@
             <tbody>
                 @forelse($products as $product)
                     <tr class="{{ $product->so_luong === 0 ? 'table-danger' : ($product->so_luong < 10 ? 'table-warning' : '') }}">
-                        <td style="font-weight:500;">#{{ $product->id }}</td>
+                        <td class="font-medium-custom">#{{ $product->id }}</td>
                         <td>
                             @if($product->anh)
                                 <img src="{{ $product->image_path }}"
-                                     style="width:50px;height:50px;object-fit:cover;">
+                                     class="w-50-px-custom h-50-px-custom object-cover">
                             @else
-                                <div style="width:50px;height:50px;background:var(--bg);display:flex;align-items:center;justify-content:center;">
+                                <div class="w-50-px-custom h-50-px-custom bg-gray-light-custom d-flex align-items-center justify-content-center">
                                     <i class="fas fa-image text-muted"></i>
                                 </div>
                             @endif
                         </td>
-                        <td style="font-weight:500;">{{ $product->ten_sp }}</td>
+                        <td class="font-medium-custom">{{ $product->ten_sp }}</td>
                         <td>{{ number_format($product->gia) }}đ</td>
                         <td>
                             @if($product->so_luong === 0)
@@ -175,7 +179,7 @@
         </table>
     </div>
     @if($products->hasPages())
-        <div class="card-footer" style="background-color:#F5F5F5;">
+        <div class="card-footer bg-gray-light-custom">
             {{ $products->appends(request()->query())->links('pagination.bootstrap-5') }}
         </div>
     @endif
@@ -184,9 +188,9 @@
 <!-- Import Modal -->
 <div class="modal fade" id="importModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(40, 167, 69, 0.2);">
-                <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #28a745;"><i class="fas fa-arrow-down me-2"></i>NHẬP KHO</h5>
+        <div class="modal-content glass-modal-custom">
+            <div class="modal-header border-bottom-1-px-rgba-custom">
+                <h5 class="modal-title font-bold font-outfit-custom text-success"><i class="fas fa-arrow-down me-2"></i>NHẬP KHO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('admin.inventory.import') }}">
@@ -204,9 +208,9 @@
                         <input type="text" name="ly_do" class="form-control" placeholder="VD: Nhập hàng từ nhà cung cấp" required>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 1px solid rgba(40, 167, 69, 0.2);">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 12px; padding: 0.5rem 1.5rem;" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-success" style="border-radius: 12px; padding: 0.5rem 1.5rem;">NHẬP KHO</button>
+                <div class="modal-footer border-top-1-px-rgba-custom">
+                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-success rounded-12-px-custom px-15-rem-custom py-05-rem-custom">NHẬP KHO</button>
                 </div>
             </form>
         </div>
@@ -216,9 +220,9 @@
 <!-- Export Modal -->
 <div class="modal fade" id="exportModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(255, 193, 7, 0.2);">
-                <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #d39e00;"><i class="fas fa-arrow-up me-2"></i>XUẤT KHO</h5>
+        <div class="modal-content glass-modal-custom">
+            <div class="modal-header border-bottom-1-px-rgba-custom">
+                <h5 class="modal-title font-bold font-outfit-custom text-warning"><i class="fas fa-arrow-up me-2"></i>XUẤT KHO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('admin.inventory.export') }}">
@@ -236,9 +240,9 @@
                         <input type="text" name="ly_do" class="form-control" placeholder="VD: Hàng hỏng, mất mát..." required>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 1px solid rgba(255, 193, 7, 0.2);">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 12px; padding: 0.5rem 1.5rem;" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-warning" style="border-radius: 12px; padding: 0.5rem 1.5rem;">XUẤT KHO</button>
+                <div class="modal-footer border-top-1-px-rgba-custom">
+                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-warning rounded-12-px-custom px-15-rem-custom py-05-rem-custom">XUẤT KHO</button>
                 </div>
             </form>
         </div>
@@ -248,9 +252,9 @@
 <!-- Adjust Modal -->
 <div class="modal fade" id="adjustModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(23, 162, 184, 0.2);">
-                <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #17a2b8;"><i class="fas fa-edit me-2"></i>ĐIỀU CHỈNH TỒN KHO</h5>
+        <div class="modal-content glass-modal-custom">
+            <div class="modal-header border-bottom-1-px-rgba-custom">
+                <h5 class="modal-title font-bold font-outfit-custom text-info"><i class="fas fa-edit me-2"></i>ĐIỀU CHỈNH TỒN KHO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('admin.inventory.adjust') }}">
@@ -268,9 +272,9 @@
                         <input type="text" name="ly_do" class="form-control" placeholder="VD: Kiểm kê thực tế..." required>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 1px solid rgba(23, 162, 184, 0.2);">
-                    <button type="button" class="btn btn-secondary" style="border-radius: 12px; padding: 0.5rem 1.5rem;" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-info text-white" style="border-radius: 12px; padding: 0.5rem 1.5rem;">ĐIỀU CHỈNH</button>
+                <div class="modal-footer border-top-1-px-rgba-custom">
+                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-info text-white rounded-12-px-custom px-15-rem-custom py-05-rem-custom">ĐIỀU CHỈNH</button>
                 </div>
             </form>
         </div>

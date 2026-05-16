@@ -2,6 +2,10 @@
 
 @section('title', 'Dashboard')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <h1><i class="fas fa-tachometer-alt me-3"></i>DASHBOARD</h1>
@@ -26,7 +30,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #DC3545;">
+                <div class="stat-icon bg-danger-custom">
                     <i class="fas fa-user-shield"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -40,7 +44,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #28A745;">
+                <div class="stat-icon bg-success-custom">
                     <i class="fas fa-box"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -54,7 +58,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #FFC107;">
+                <div class="stat-icon bg-warning-custom">
                     <i class="fas fa-warehouse"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -70,7 +74,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #17A2B8;">
+                <div class="stat-icon bg-info-custom">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -84,7 +88,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #28A745;">
+                <div class="stat-icon bg-success-custom">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -98,7 +102,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #6C757D;">
+                <div class="stat-icon bg-secondary-custom">
                     <i class="fas fa-times-circle"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -112,7 +116,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon" style="background-color: #DC3545;">
+                <div class="stat-icon bg-danger-custom">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -135,7 +139,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <thead>
-                        <tr style="background-color: var(--bg);">
+                        <tr class="bg-gray-light-custom">
                             <th>Tên</th>
                             <th>Email</th>
                             <th>Vai trò</th>
@@ -145,7 +149,7 @@
                     <tbody>
                         @forelse($recentUsers as $user)
                             <tr>
-                                <td style="font-weight: 500;">{{ $user->name }}</td>
+                                <td class="font-medium-custom">{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     <span class="badge-role-{{ $user->role }}">
@@ -162,7 +166,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer text-center" style="background-color: var(--bg);">
+            <div class="card-footer text-center bg-gray-light-custom">
                 <a href="{{ route('admin.users') }}" class="btn btn-sm btn-primary">
                     Xem tất cả <i class="fas fa-arrow-right ms-2"></i>
                 </a>
@@ -179,7 +183,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <thead>
-                        <tr style="background-color: var(--bg);">
+                        <tr class="bg-gray-light-custom">
                             <th>Tên sản phẩm</th>
                             <th>Giá</th>
                             <th>Số lượng</th>
@@ -189,10 +193,10 @@
                     <tbody>
                         @forelse($recentProducts as $product)
                             <tr>
-                                <td style="font-weight: 500;">{{ Str::limit($product->ten_sp, 30) }}</td>
+                                <td class="font-medium-custom">{{ Str::limit($product->ten_sp, 30) }}</td>
                                 <td>{{ number_format($product->gia) }}đ</td>
                                 <td>
-                                    <span class="{{ $product->so_luong < 10 ? 'text-danger' : '' }}" style="font-weight: 500;">
+                                    <span class="{{ $product->so_luong < 10 ? 'text-danger' : '' }} font-medium-custom">
                                         {{ $product->so_luong }}
                                     </span>
                                 </td>
@@ -210,7 +214,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer text-center" style="background-color: var(--bg);">
+            <div class="card-footer text-center bg-gray-light-custom">
                 <a href="{{ route('admin.products') }}" class="btn btn-sm btn-primary">
                     Xem tất cả <i class="fas fa-arrow-right ms-2"></i>
                 </a>
@@ -224,13 +228,13 @@
 <div class="row mt-4">
     <div class="col-12">
         <div class="card admin-table">
-            <div class="card-header" style="background-color: rgba(220, 53, 69, 0.1) !important; color: #dc3545 !important; border-bottom: 1px solid rgba(220, 53, 69, 0.2);">
+            <div class="card-header bg-danger-light-alert-custom text-danger-alert-custom border-danger-alert-custom">
                 <i class="fas fa-exclamation-triangle me-2"></i>CẢNH BÁO: SẢN PHẨM SẮP HẾT HÀNG (< 10)
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <thead>
-                        <tr style="background-color: var(--bg);">
+                        <tr class="bg-gray-light-custom">
                             <th>Tên sản phẩm</th>
                             <th>Giá</th>
                             <th>Số lượng còn</th>
@@ -241,7 +245,7 @@
                     <tbody>
                         @foreach($lowStockProducts as $product)
                             <tr>
-                                <td style="font-weight: 500;">{{ $product->ten_sp }}</td>
+                                <td class="font-medium-custom">{{ $product->ten_sp }}</td>
                                 <td>{{ number_format($product->gia) }}đ</td>
                                 <td>
                                     <span class="text-danger fw-bold">{{ $product->so_luong }}</span>
@@ -287,23 +291,23 @@
             <div class="card-body">
                 <table class="table table-borderless mb-0">
                     <tr>
-                        <td style="font-weight: 500;"><i class="fas fa-calendar me-2"></i>Ngày hôm nay:</td>
+                        <td class="font-medium-custom"><i class="fas fa-calendar me-2"></i>Ngày hôm nay:</td>
                         <td>{{ now()->format('d/m/Y') }}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 500;"><i class="fas fa-clock me-2"></i>Giờ hiện tại:</td>
+                        <td class="font-medium-custom"><i class="fas fa-clock me-2"></i>Giờ hiện tại:</td>
                         <td>{{ now()->format('H:i:s') }}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 500;"><i class="fas fa-user-shield me-2"></i>Đăng nhập với:</td>
+                        <td class="font-medium-custom"><i class="fas fa-user-shield me-2"></i>Đăng nhập với:</td>
                         <td>{{ Auth::user()->name }} ({{ Auth::user()->email }})</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 500;"><i class="fas fa-database me-2"></i>Database:</td>
+                        <td class="font-medium-custom"><i class="fas fa-database me-2"></i>Database:</td>
                         <td>MySQL</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 500;"><i class="fas fa-code me-2"></i>Framework:</td>
+                        <td class="font-medium-custom"><i class="fas fa-code me-2"></i>Framework:</td>
                         <td>Laravel {{ app()->version() }}</td>
                     </tr>
                 </table>

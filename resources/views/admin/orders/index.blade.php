@@ -2,6 +2,10 @@
 
 @section('title', 'Quản lý Đơn hàng')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <!-- <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -46,7 +50,7 @@
     </div>
     <div class="col-md-2">
         <div class="stat-card">
-            <div class="stat-value text-warning" style="color: #f39c12 !important;">{{ $stats['cancelling'] }}</div>
+            <div class="stat-value text-warning color-f39c12-custom">{{ $stats['cancelling'] }}</div>
             <div class="stat-label">Chờ duyệt hủy</div>
         </div>
     </div>
@@ -116,13 +120,13 @@
             <tbody>
                 @forelse($orders as $order)
                     <tr>
-                        <td style="font-weight: 500;">{{ $order->ma_don_hang }}</td>
+                        <td class="font-medium-custom">{{ $order->ma_don_hang }}</td>
                         <td>{{ $order->user->name }}</td>
                         <td>
                             {{ $order->ten_nguoi_nhan }}<br>
                             <small class="text-muted">{{ $order->sdt_nguoi_nhan }}</small>
                         </td>
-                        <td style="font-weight: 500;">{{ number_format($order->thanh_tien) }}đ</td>
+                        <td class="font-medium-custom">{{ number_format($order->thanh_tien) }}đ</td>
                         <td>
                             <span class="badge bg-{{ $order->status_color }}">{{ $order->status_label }}</span>
                         </td>

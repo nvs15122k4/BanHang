@@ -2,6 +2,10 @@
 
 @section('title', 'Quản lý Sản phẩm')
 
+@push('styles')
+    @vite(['resources/css/admin_common.css'])
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
@@ -69,26 +73,26 @@
             <tbody>
                 @forelse($products as $product)
                     <tr>
-                        <td style="font-weight: 500;">#{{ $product->id }}</td>
+                        <td class="font-medium-custom">#{{ $product->id }}</td>
                         <td>
                             @if($product->anh)
                                 <img src="{{ $product->image_path }}" 
                                      alt="{{ $product->ten_sp }}" 
-                                     style="width: 50px; height: 50px; object-fit: cover;">
+                                     class="w-50-px-custom h-50-px-custom object-cover">
                             @else
-                                <div style="width: 50px; height: 50px; background-color: var(--bg); display: flex; align-items: center; justify-content: center;">
+                                <div class="w-50-px-custom h-50-px-custom bg-gray-light-custom d-flex align-items-center justify-content-center">
                                     <i class="fas fa-image text-muted"></i>
                                 </div>
                             @endif
                         </td>
-                        <td style="font-weight: 500;">{{ $product->ten_sp }}</td>
+                        <td class="font-medium-custom">{{ $product->ten_sp }}</td>
                         <td>
                             @if($product->loai)
-                                <span style="background:var(--bg);color:var(--text);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;">
+                                <span class="badge-loai-custom">
                                     {{ $product->loai_label }}
                                 </span>
                             @else
-                                <span style="color:#AAAAAA;font-size:12px;">—</span>
+                                <span class="text-gray-custom text-xs-custom">—</span>
                             @endif
                         </td>
                         <td>{{ number_format($product->gia) }}đ</td>
@@ -106,8 +110,7 @@
                             <button type="button"
                                     id="status-btn-{{ $product->id }}"
                                     onclick="toggleStatus({{ $product->id }}, '{{ $product->trang_thai }}')"
-                                    class="{{ $product->trang_thai === 'con' ? 'badge-status-active' : 'badge-status-inactive' }} border-0"
-                                    style="cursor:pointer;">
+                                    class="{{ $product->trang_thai === 'con' ? 'badge-status-active' : 'badge-status-inactive' }} border-0 cursor-pointer-custom">
                                 {{ $product->trang_thai === 'con' ? 'CÒN HÀNG' : 'HẾT HÀNG' }}
                             </button>
                         </td>
@@ -139,7 +142,7 @@
     </div>
     
     @if($products->hasPages())
-        <div class="card-footer" style="background-color: var(--bg);">
+        <div class="card-footer bg-gray-light-custom">
             {{ $products->appends(request()->query())->links('pagination.bootstrap-5') }}
         </div>
     @endif
@@ -148,9 +151,9 @@
 <!-- Update Stock Modal -->
 <div class="modal fade" id="updateStockModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: 24px;">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
-                <h5 class="modal-title" style="font-weight: 700; font-family: 'Outfit', sans-serif;">CẬP NHẬT SỐ LƯỢNG</h5>
+        <div class="modal-content glass-modal-custom">
+            <div class="modal-header border-bottom-1-px-rgba-custom">
+                <h5 class="modal-title font-bold font-outfit-custom">CẬP NHẬT SỐ LƯỢNG</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -160,9 +163,9 @@
                     <input type="number" id="newStock" class="form-control" min="0" required>
                 </div>
             </div>
-            <div class="modal-footer" style="border-top: 1px solid rgba(0,0,0,0.1);">
-                <button type="button" class="btn btn-secondary" style="border-radius: 12px; padding: 0.5rem 1.5rem;" data-bs-dismiss="modal">HỦY</button>
-                <button type="button" class="btn btn-primary" style="padding: 0.5rem 1.5rem; border-radius: 12px;" id="btnSaveStock">CẬP NHẬT</button>
+            <div class="modal-footer border-top-1-px-rgba-custom">
+                <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
+                <button type="button" class="btn btn-primary px-15-rem-custom py-05-rem-custom rounded-12-px-custom" id="btnSaveStock">CẬP NHẬT</button>
             </div>
         </div>
     </div>

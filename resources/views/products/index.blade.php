@@ -24,6 +24,7 @@
                         <div class="filter-title">Tìm kiếm</div>
                         <div class="position-relative">
                             <input type="text" name="search" class="form-control rounded-0" placeholder="Tên sản phẩm..."
+                                   value="{{ request('search') }}">
                             <button type="submit" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;">
                                 <i class="fas fa-search text-muted" style="font-size:13px;"></i>
                             </button>
@@ -55,8 +56,10 @@
                         <div class="filter-title">Khoảng giá <i class="fas fa-chevron-down" style="font-size:9px;"></i></div>
                         <div class="d-flex gap-2 align-items-center mb-3">
                             <input type="number" name="min_price" class="form-control form-control-sm rounded-0"
+                                   placeholder="Từ" value="{{ request('min_price') }}">
                             <span style="color:#CCC;">—</span>
                             <input type="number" name="max_price" class="form-control form-control-sm rounded-0"
+                                   placeholder="Đến" value="{{ request('max_price') }}">
                         </div>
                         <button type="submit" class="btn-st-dark w-100 py-2-custom text-xs-custom">ÁP DỤNG</button>
                     </div>

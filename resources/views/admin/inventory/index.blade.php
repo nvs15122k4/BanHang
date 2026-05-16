@@ -17,58 +17,35 @@
 </div>
 
 <!-- Statistics -->
-<div class="row mb-4">
+<div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon"><i class="fas fa-box"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value">{{ $stats['total_products'] }}</div>
-                    <div class="stat-label">Tổng sản phẩm</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value">{{ $stats['total_products'] }}</div>
+            <div class="stat-label">Tổng sản phẩm</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon bg-success-custom"><i class="fas fa-cubes"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value">{{ number_format($stats['total_stock']) }}</div>
-                    <div class="stat-label">Tổng tồn kho</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value text-success">{{ number_format($stats['total_stock']) }}</div>
+            <div class="stat-label">Tổng tồn kho</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon bg-warning-custom"><i class="fas fa-exclamation-triangle"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value">{{ $stats['low_stock'] }}</div>
-                    <div class="stat-label">Sắp hết hàng</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value text-warning">{{ $stats['low_stock'] }}</div>
+            <div class="stat-label">Sắp hết hàng</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon bg-danger-custom"><i class="fas fa-times-circle"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value">{{ $stats['out_of_stock'] }}</div>
-                    <div class="stat-label">Hết hàng</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value text-danger">{{ $stats['out_of_stock'] }}</div>
+            <div class="stat-label">Hết hàng</div>
         </div>
     </div>
-</div>
-
-<div class="row mb-4">
     <div class="col-12">
-        <div class="stat-card">
+        <div class="stat-card text-center">
             <div class="stat-value text-success">{{ number_format($stats['total_value']) }}đ</div>
-            <div class="stat-label">Tổng giá trị tồn kho (Số lượng × Giá)</div>
+            <div class="stat-label">Tổng giá trị tồn kho</div>
         </div>
     </div>
 </div>

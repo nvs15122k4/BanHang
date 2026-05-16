@@ -12,7 +12,7 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="row">
+<div class="row g-4">
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
@@ -30,7 +30,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-danger-custom">
+                <div class="stat-icon">
                     <i class="fas fa-user-shield"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -44,7 +44,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-success-custom">
+                <div class="stat-icon">
                     <i class="fas fa-box"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -58,7 +58,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-warning-custom">
+                <div class="stat-icon">
                     <i class="fas fa-warehouse"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -68,13 +68,11 @@
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-info-custom">
+                <div class="stat-icon">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -88,7 +86,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-success-custom">
+                <div class="stat-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -102,7 +100,7 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-secondary-custom">
+                <div class="stat-icon">
                     <i class="fas fa-times-circle"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -116,11 +114,11 @@
     <div class="col-md-3">
         <div class="stat-card">
             <div class="d-flex align-items-center">
-                <div class="stat-icon bg-danger-custom">
+                <div class="stat-icon">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
-                    <div class="stat-value">{{ $stats['low_stock_products'] }}</div>
+                    <div class="stat-value text-danger">{{ $stats['low_stock_products'] }}</div>
                     <div class="stat-label">SP Sắp hết</div>
                 </div>
             </div>

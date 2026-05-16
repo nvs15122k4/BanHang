@@ -242,6 +242,15 @@ class AdminController extends Controller
             'out_of_stock' => Product::where('so_luong', 0)->count(),
         ];
 
+        // Order statistics
+        $orderStats = [
+            'total' => \App\Models\Order::count(),
+            'pending' => \App\Models\Order::where('trang_thai', 'pending')->count(),
+            'completed' => \App\Models\Order::where('trang_thai', 'completed')->count(),
+            'cancelled' => \App\Models\Order::where('trang_thai', 'cancelled')->count(),
+            'revenue' => \App\Models\Order::where('trang_thai', 'completed')->sum('thanh_tien'),
+        ];
+
         // Top 10 most expensive products
         $topExpensiveProducts = Product::orderBy('gia', 'desc')->take(10)->get();
 
@@ -251,34 +260,61 @@ class AdminController extends Controller
         // Top 10 highest stock products
         $topStockProducts = Product::orderBy('so_luong', 'desc')->take(10)->get();
 
-        // Users registered per month (last 12 months)
-        $usersPerMonth = User::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('count(*) as total')
-        )
-        ->where('created_at', '>=', now()->subMonths(12))
-        ->groupBy('month')
-        ->orderBy('month', 'asc')
-        ->get();
+        // Helper to fill last 12 months
+        $last12Months = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $last12Months[] = now()->subMonths($i)->format('Y-m');
+        }
 
-        // Products created per month (last 12 months)
-        $productsPerMonth = Product::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('count(*) as total')
-        )
-        ->where('created_at', '>=', now()->subMonths(12))
-        ->groupBy('month')
-        ->orderBy('month', 'asc')
-        ->get();
+        $usersPerMonthData = collect($last12Months)->mapWithKeys(fn($m) => [$m => 0]);
+        $productsPerMonthData = collect($last12Months)->mapWithKeys(fn($m) => [$m => 0]);
+        $revenuePerMonthData = collect($last12Months)->mapWithKeys(fn($m) => [$m => 0]);
+
+        User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'), DB::raw('count(*) as total'))
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->groupBy('month')
+            ->get()
+            ->each(fn($item) => $usersPerMonthData[$item->month] = $item->total);
+
+        Product::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'), DB::raw('count(*) as total'))
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->groupBy('month')
+            ->get()
+            ->each(fn($item) => $productsPerMonthData[$item->month] = $item->total);
+
+        \App\Models\Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'), DB::raw('SUM(thanh_tien) as total'))
+            ->where('trang_thai', 'completed')
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->groupBy('month')
+            ->get()
+            ->each(fn($item) => $revenuePerMonthData[$item->month] = (float)$item->total);
+
+        $usersPerMonth = collect($usersPerMonthData)->map(fn($total, $month) => ['month' => $month, 'total' => $total])->values();
+        $productsPerMonth = collect($productsPerMonthData)->map(fn($total, $month) => ['month' => $month, 'total' => $total])->values();
+        $revenuePerMonth = collect($revenuePerMonthData)->map(fn($total, $month) => ['month' => $month, 'total' => $total])->values();
+
+        // Category distribution
+        $categoryDistribution = Product::select('loai', DB::raw('count(*) as total'))
+            ->groupBy('loai')
+            ->get();
+
+        // Order status distribution
+        $orderStatusDistribution = \App\Models\Order::select('trang_thai', DB::raw('count(*) as total'))
+            ->groupBy('trang_thai')
+            ->get();
 
         return view('admin.statistics', compact(
             'userStats',
             'productStats',
+            'orderStats',
             'topExpensiveProducts',
             'topCheapestProducts',
             'topStockProducts',
             'usersPerMonth',
-            'productsPerMonth'
+            'productsPerMonth',
+            'revenuePerMonth',
+            'categoryDistribution',
+            'orderStatusDistribution'
         ));
     }
 

@@ -77,6 +77,7 @@
             <tbody>
                 @forelse($users as $user)
                     <tr class="{{ !$user->is_active ? 'table-secondary' : '' }}">
+                        <td>{{ $user->id }}</td>
                         <td class="font-medium-custom {{ !$user->is_active ? 'text-gray-custom' : '' }}">
                             {{ $user->name }}
                             @if(!$user->is_active)
@@ -92,11 +93,11 @@
                         </td>
                         <td>
                             @if($user->is_active)
-                                <span class="badge-active-custom">
+                                <span class="badge-status-active">
                                     <i class="fas fa-check-circle me-1"></i>Hoạt động
                                 </span>
                             @else
-                                <span class="badge-inactive-custom">
+                                <span class="badge-status-inactive">
                                     <i class="fas fa-ban me-1"></i>Vô hiệu hóa
                                 </span>
                             @endif
@@ -104,9 +105,9 @@
                         <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
                         <td>
                             @if($user->id !== auth()->id())
-                                <div class="d-flex gap-1">
+                                <div class="d-flex gap-2">
                                     {{-- Đổi vai trò --}}
-                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                    <button type="button" class="btn btn-sm btn-outline-primary"
                                             onclick="changeRole({{ $user->id }}, '{{ $user->role }}', '{{ addslashes($user->name) }}')"
                                             title="Đổi vai trò">
                                         <i class="fas fa-user-tag"></i>
@@ -117,7 +118,7 @@
                                           id="form-status-{{ $user->id }}">
                                         @csrf @method('PUT')
                                         @if($user->is_active)
-                                            <button type="button" class="btn btn-sm bg-warning-custom rounded-pill-custom"
+                                            <button type="button" class="btn btn-sm btn-outline-warning"
                                                     title="Vô hiệu hóa tài khoản"
                                                     onclick="showConfirm(
                                                         'Tài khoản &quot;{{ addslashes($user->name) }}&quot; sẽ bị vô hiệu hóa. Người dùng sẽ không thể đăng nhập.',
@@ -127,7 +128,7 @@
                                                 <i class="fas fa-ban"></i>
                                             </button>
                                         @else
-                                            <button type="button" class="btn btn-sm bg-success-custom-dark rounded-pill-custom text-white"
+                                            <button type="button" class="btn btn-sm btn-outline-success"
                                                     title="Mở lại tài khoản"
                                                     onclick="document.getElementById('form-status-{{ $user->id }}').submit()">
                                                 <i class="fas fa-check-circle"></i>
@@ -136,7 +137,7 @@
                                     </form>
                                 </div>
                             @else
-                                <span class="badge bg-secondary">Bạn</span>
+                                <span class="badge-status-inactive">BẠN</span>
                             @endif
                         </td>
                     </tr>

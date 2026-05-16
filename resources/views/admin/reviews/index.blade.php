@@ -12,49 +12,29 @@
 </div>
 
 <!-- Statistics -->
-<div class="row mb-4">
+<div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon"><i class="fas fa-star"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value">{{ $stats['total'] }}</div>
-                    <div class="stat-label">Tổng đánh giá</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value">{{ $stats['total'] }}</div>
+            <div class="stat-label">Tổng đánh giá</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon bg-warning-custom"><i class="fas fa-clock"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value text-warning">{{ $stats['pending'] }}</div>
-                    <div class="stat-label">Chờ duyệt</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value text-warning">{{ $stats['pending'] }}</div>
+            <div class="stat-label">Chờ duyệt</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon bg-success-custom"><i class="fas fa-check"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value text-success">{{ $stats['approved'] }}</div>
-                    <div class="stat-label">Đã duyệt</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value text-success">{{ $stats['approved'] }}</div>
+            <div class="stat-label">Đã duyệt</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon bg-warning-custom"><i class="fas fa-star-half-alt"></i></div>
-                <div class="ms-3">
-                    <div class="stat-value">{{ number_format($stats['avg_rating'], 1) }} ★</div>
-                    <div class="stat-label">Rating trung bình</div>
-                </div>
-            </div>
+        <div class="stat-card h-100 text-center d-flex flex-column justify-content-center">
+            <div class="stat-value">{{ number_format($stats['avg_rating'], 1) }} ★</div>
+            <div class="stat-label">Rating trung bình</div>
         </div>
     </div>
 </div>

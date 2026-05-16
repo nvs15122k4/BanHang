@@ -1,22 +1,30 @@
 /* Admin Layout Styles */
 
 :root {
-    --primary: #6366f1;
+    --primary: #7C3AED;
+    --primary-light: rgba(124, 58, 237, 0.1);
     --bg-dark: #f8fafc;
     --bg-card: rgba(0,0,0,0.05);
     --text-main: #1e293b;
     --text-muted: #64748b;
     --border-color: rgba(0,0,0,0.05);
-    --gradient-brand: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: 1px solid rgba(0,0,0,0.05);
+    --gradient-brand: linear-gradient(135deg, #7C3AED, #9F67FF, #C084FC);
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: 1px solid rgba(0,0,0,0.08);
+    
+    /* Layer Z-indices */
+    --z-sidebar: 1040;
+    --z-navbar: 1050;
+    --z-modal: 1060;
+    --z-toast: 1070;
+    --z-confirm: 1080;
 }
 
 body {
     background-color: var(--bg-dark);
     background-image: 
-        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.1), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(217, 70, 239, 0.1), transparent 25%);
+        radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.05), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.05), transparent 25%);
     background-attachment: fixed;
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
@@ -26,11 +34,12 @@ body {
 .admin-navbar {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: var(--glass-border);
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     position: sticky;
     top: 0;
-    z-index: 1050;
+    z-index: var(--z-navbar);
 }
 
 .admin-navbar .navbar-brand {

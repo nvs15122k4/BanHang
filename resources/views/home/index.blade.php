@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Trẻ em & Thể thao</h3>
-                        <a href="{{ route('products.index', ['loai_filter' => 'kids']) }}" class="btn-shop-now">Khám phá</a>
+                        <a href="{{ route('products.index') }}" class="btn-shop-now">Khám phá</a>
                     </div>
                 </div>
             </div>
@@ -143,22 +143,99 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </section>
 
-<!-- ── SẢN PHẨM MỚI NHẤT ── -->
+<!-- ── HÀNG KHUYẾN MÃI ── -->
 <section class="py-5">
     <div class="container py-4">
         <div class="section-header">
-            <h2 class="section-title">Hàng mới về</h2>
-            <a href="{{ route('products.index') }}" class="section-link">Xem tất cả</a>
+            <h2 class="section-title">Hàng khuyến mãi</h2>
+            <a href="{{ route('promotions.index') }}" class="section-link">Xem tất cả</a>
         </div>
         <div class="row">
-            @foreach($products->take(8) as $product)
+            @foreach($promoProducts as $product)
+                @php
+                    $promo      = $product->promo;
+                    $promoPrice = $product->promo_price;
+                    $pct        = $product->gia > 0 ? round(($product->gia - $promoPrice) / $product->gia * 100) : 0;
+                @endphp
                 <div class="col-md-3 col-6">
                     <div class="product-card">
                         <div class="product-img-wrapper">
                             <a href="{{ route('products.show', $product->id) }}">
                                 @if($product->so_luong <= 0)
                                     <div class="product-badge badge-out">Hết hàng</div>
-                                @elseif($product->created_at > now()->subDays(7))
+                                @else
+                                    <div class="product-badge" style="background:#e11d48; color:#fff; border:none;">
+                                        @if($promo && $promo->tag)
+                                            {{ $promo->tag }}
+                                        @else
+                                            -{{ $pct }}%
+                                        @endif
+                                    </div>
+                                @endif
+                                @if($product->anh)
+                                    <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="product-img">
+                                @else
+                                    <div class="product-img d-flex align-items-center justify-content-center bg-light">
+                                        <i class="fas fa-image fa-3x text-muted"></i>
+                                    </div>
+                                @endif
+                            </a>
+                            <div class="product-actions">
+                                @if($product->so_luong > 0)
+                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="so_luong" value="1">
+                                        <button type="submit" class="btn-quick-add">Thêm vào giỏ</button>
+                                    </form>
+                                @else
+                                    <button class="btn-quick-add" disabled>Tạm hết hàng</button>
+                                @endif
+                            </div>
+                        </div>
+                        <span class="product-category">{{ $product->loai }}</span>
+                        <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
+                        <div class="product-price">
+                            {{ number_format($promoPrice) }}đ
+                            <span class="price-old">{{ number_format($product->gia) }}đ</span>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            @if($promoProducts->isEmpty())
+                <div class="col-12 text-center text-muted my-4">Hiện tại không có chương trình khuyến mãi nào.</div>
+            @endif
+        </div>
+    </div>
+</section>
+
+<!-- ── PROMO BANNER ── -->
+<section class="promo-banner">
+    <div class="container position-relative">
+        <div class="promo-eyebrow">Ưu đãi đặc biệt</div>
+        <div class="promo-title">BỘ SƯU TẬP<br>NĂM <span>2026</span></div>
+        <div class="promo-title text-primary-custom" style="font-size:36px;">GIẢM ĐẾN 50%</div>
+        <p class="promo-desc">Chương trình khuyến mãi có thời hạn — Đừng bỏ lỡ!</p>
+        <a href="{{ route('products.index') }}" class="btn-st-dark px-5 py-3 bg-white text-dark display-inline-block">MUA NGAY</a>
+    </div>
+</section>
+
+<!-- ── HÀNG MỚI VỀ ── -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="section-header">
+            <h2 class="section-title">Hàng mới về</h2>
+            <a href="{{ route('products.index', ['sort' => 'newest']) }}" class="section-link">Xem tất cả</a>
+        </div>
+        <div class="row">
+            @foreach($latestProducts as $product)
+                <div class="col-md-3 col-6">
+                    <div class="product-card">
+                        <div class="product-img-wrapper">
+                            <a href="{{ route('products.show', $product->id) }}">
+                                @if($product->so_luong <= 0)
+                                    <div class="product-badge badge-out">Hết hàng</div>
+                                @elseif($product->is_new)
                                     <div class="product-badge">Mới</div>
                                 @endif
                                 @if($product->anh)
@@ -186,69 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
                         <div class="product-price">
                             {{ number_format($product->gia) }}đ
-                            @if($product->gia_goc > $product->gia)
-                                <span class="price-old">{{ number_format($product->gia_goc) }}đ</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- ── PROMO BANNER ── -->
-<section class="promo-banner">
-    <div class="container position-relative">
-        <div class="promo-eyebrow">Ưu đãi đặc biệt</div>
-        <div class="promo-title">BỘ SƯU TẬP<br>NĂM <span>2026</span></div>
-        <div class="promo-title text-primary-custom" style="font-size:36px;">GIẢM ĐẾN 50%</div>
-        <p class="promo-desc">Chương trình khuyến mãi có thời hạn — Đừng bỏ lỡ!</p>
-        <a href="{{ route('products.index') }}" class="btn-st-dark px-5 py-3 bg-white text-dark display-inline-block">MUA NGAY</a>
-    </div>
-</section>
-
-<!-- ── SẢN PHẨM NỔI BẬT ── -->
-<section class="py-5">
-    <div class="container py-4">
-        <div class="section-header">
-            <h2 class="section-title">Sản phẩm nổi bật</h2>
-            <a href="{{ route('products.index') }}" class="section-link">Xem tất cả</a>
-        </div>
-        <div class="row">
-            @foreach($products->take(4) as $product)
-                <div class="col-md-3 col-6">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <a href="{{ route('products.show', $product->id) }}">
-                                @if($product->anh)
-                                    <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="product-img">
-                                @else
-                                    <div class="product-img d-flex align-items-center justify-content-center bg-light">
-                                        <i class="fas fa-image fa-3x text-muted"></i>
-                                    </div>
-                                @endif
-                            </a>
-                            <div class="product-actions">
-                                @if($product->so_luong > 0)
-                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="so_luong" value="1">
-                                        <button type="submit" class="btn-quick-add">Thêm vào giỏ</button>
-                                    </form>
-                                @else
-                                    <button class="btn-quick-add" disabled>Tạm hết hàng</button>
-                                @endif
-                            </div>
-                        </div>
-                        <span class="product-category">{{ $product->loai }}</span>
-                        <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
-                        <div class="product-price">
-                            {{ number_format($product->gia) }}đ
-                            @if($product->gia_goc > $product->gia)
-                                <span class="price-old">{{ number_format($product->gia_goc) }}đ</span>
-                            @endif
                         </div>
                     </div>
                 </div>

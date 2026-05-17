@@ -3,7 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
+
+
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -47,6 +51,9 @@ Route::get('/confirm-password', function() {
 
 // Home route (public)
 Route::get('/', [ProductController::class, 'home'])->name('home');
+
+// Public Promotions page
+Route::get('/khuyen-mai', [PromotionController::class, 'publicIndex'])->name('promotions.index');
 
 // Public product routes - guest có thể xem
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -125,6 +132,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/orders/{order}/reject-cancel', [App\Http\Controllers\OrderController::class, 'rejectCancel'])->name('orders.rejectCancel');
     Route::put('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'updateRefund'])->name('orders.updateRefund');
     
+    // Promotions management
+    Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
+    Route::get('/promotions/create', [PromotionController::class, 'create'])->name('promotions.create');
+    Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');
+    Route::get('/promotions/{promotion}/edit', [PromotionController::class, 'edit'])->name('promotions.edit');
+    Route::put('/promotions/{promotion}', [PromotionController::class, 'update'])->name('promotions.update');
+    Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy'])->name('promotions.destroy');
+    Route::patch('/promotions/{promotion}/toggle', [PromotionController::class, 'toggle'])->name('promotions.toggle');
+
     // Inventory management
     Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index');
     Route::get('/inventory/logs', [App\Http\Controllers\InventoryController::class, 'logs'])->name('inventory.logs');
@@ -138,6 +154,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware('auth')->group(function () {
     Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::delete('/reviews/{review}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
+
+// Wishlist routes (auth required)
+Route::middleware('auth')->group(function () {
+    Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
 });
 
 // Cart routes (auth required)

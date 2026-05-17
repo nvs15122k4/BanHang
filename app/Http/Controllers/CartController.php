@@ -35,11 +35,19 @@ class CartController extends Controller
         foreach ($cart as $productId => $item) {
             $product = Product::find($productId);
             if ($product) {
-                $subtotal = $product->gia * $item['so_luong'];
+                $promo = $product->getActivePromotion();
+                $discountedPrice = $product->gia;
+                if ($promo) {
+                    $discountedPrice = $promo->getDiscountedPrice($product);
+                }
+                $subtotal = $discountedPrice * $item['so_luong'];
                 $total += $subtotal;
                 $items[] = [
                     'product'   => $product,
                     'so_luong'  => $item['so_luong'],
+                    'gia_goc'   => $product->gia,
+                    'gia_ban'   => $discountedPrice,
+                    'promo'     => $promo,
                     'subtotal'  => $subtotal,
                 ];
             }

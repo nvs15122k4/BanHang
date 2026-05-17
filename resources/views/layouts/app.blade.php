@@ -46,12 +46,12 @@
         <!-- Desktop Menu -->
         <ul class="nav-menu d-none d-lg-flex">
             <li><a href="{{ route('home') }}">Trang chủ</a></li>
+            <li><a href="{{ route('promotions.index') }}" class="sale-link">KHUYẾN MÃI</a></li>
+            <li><a href="{{ route('products.index') }}" class="products-link">Sản Phẩm</a></li>
             <li><a href="{{ route('products.index', ['loai_filter' => 'men']) }}">Nam</a></li>
             <li><a href="{{ route('products.index', ['loai_filter' => 'women']) }}">Nữ</a></li>
-            <li><a href="{{ route('products.index', ['loai_filter' => 'kids']) }}">Trẻ em</a></li>
             <li><a href="{{ route('pages.blog') }}">Blog</a></li>
-            <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>
-            <li><a href="{{ route('products.index') }}" class="sale-link">KHUYẾN MÃI</a></li>
+            <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>            
         </ul>
 
         <!-- Mobile Toggle -->
@@ -100,7 +100,17 @@
                         </div>
                     </div>
 
-                    
+                    {{-- Wishlist --}}
+                    <a href="{{ route('wishlist.index') }}" class="position-relative mx-2" style="color:var(--text-main);" title="Yêu thích">
+                        <i class="fas fa-heart" style="font-size:18px;"></i>
+                        @php $wishlistCount = auth()->user()->wishlists()->count(); @endphp
+                        @if($wishlistCount > 0)
+                            <span class="cart-badge">{{ $wishlistCount }}</span>
+                        @else
+                            <span class="cart-badge d-none">0</span>
+                        @endif
+                    </a>
+
                 <a href="{{ route('cart.index') }}" class="position-relative" style="color:var(--text-main);">
                     <i class="fas fa-shopping-bag"></i>
                     @php $cartCount = \App\Http\Controllers\CartController::cartCount(); @endphp
@@ -151,10 +161,10 @@
             <a href="{{ route('home') }}" class="list-group-item list-group-item-action py-3 border-0 fw-600">TRANG CHỦ</a>
             <a href="{{ route('products.index', ['loai_filter' => 'men']) }}" class="list-group-item list-group-item-action py-3 border-0">NAM</a>
             <a href="{{ route('products.index', ['loai_filter' => 'women']) }}" class="list-group-item list-group-item-action py-3 border-0">NỮ</a>
-            <a href="{{ route('products.index', ['loai_filter' => 'kids']) }}" class="list-group-item list-group-item-action py-3 border-0">TRẺ EM</a>
+            <a href="{{ route('products.index') }}" class="list-group-item list-group-item-action py-3 border-0">TRẺ EM</a>
             <a href="{{ route('pages.blog') }}" class="list-group-item list-group-item-action py-3 border-0">BLOG</a>
             <a href="{{ route('pages.about') }}" class="list-group-item list-group-item-action py-3 border-0">VỀ CHÚNG TÔI</a>
-            <a href="{{ route('products.index') }}" class="list-group-item list-group-item-action py-3 border-0 text-danger fw-bold">KHUYẾN MÃI</a>
+            <a href="{{ route('promotions.index') }}" class="list-group-item list-group-item-action py-3 border-0 text-danger fw-bold">KHUYẾN MÃI</a>
         </div>
         <div class="p-3 mt-3">
             <form action="{{ route('products.index') }}" method="GET" class="d-flex align-items-center bg-light p-2 rounded-pill">
@@ -199,7 +209,7 @@
                 <ul class="footer-links">
                     <li><a href="{{ route('products.index', ['loai_filter' => 'men']) }}">Nam</a></li>
                     <li><a href="{{ route('products.index', ['loai_filter' => 'women']) }}">Nữ</a></li>
-                    <li><a href="{{ route('products.index', ['loai_filter' => 'kids']) }}">Trẻ em</a></li>
+                    <li><a href="{{ route('products.index') }}">Trẻ em</a></li>
                     <li><a href="{{ route('products.index') }}">Hàng mới về</a></li>
                 </ul>
             </div>
@@ -315,9 +325,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
             fetch(form.action, {
                 method: 'POST', body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': CSRF }
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' }
             })
-            .then(r => r.json())
+            .then(r => {
+                if (r.status === 401) {
+                    window.location.href = '/login';
+                    throw new Error('Unauthenticated');
+                }
+                return r.json();
+            })
             .then(data => {
                 showToast(data.message || (data.success ? 'Đã thêm vào giỏ!' : 'Có lỗi!'), data.success ? 'success' : 'danger');
                 if (data.success) {
@@ -325,7 +341,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (badge) { badge.innerText = data.cart_count; badge.classList.remove('d-none'); }
                 }
             })
-            .catch(() => showToast('Không thể kết nối máy chủ!', 'danger'))
+            .catch((e) => {
+                if (e.message !== 'Unauthenticated') {
+                    showToast('Không thể kết nối máy chủ!', 'danger');
+                }
+            })
             .finally(() => { if (btn) { btn.disabled = false; btn.innerHTML = orig; } });
         }
     });

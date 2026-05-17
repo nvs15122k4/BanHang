@@ -157,3 +157,63 @@
     font-size: 0.7rem;
     font-weight: 800;
 }
+
+/* Admin Modals */
+.admin-modal-content {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: var(--glass-border);
+    border-radius: 24px;
+    background: var(--glass-bg);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.admin-modal-header {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 1.25rem 1.5rem;
+}
+
+.admin-modal-title {
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-main);
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.admin-modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 1.25rem 1.5rem;
+}
+
+.admin-btn-rounded {
+    border-radius: 12px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+}
+
+/* Address Cards in User Detail Modal */
+.admin-address-card {
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    background: #f8f9fa;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.admin-address-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.admin-address-card.is-default {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.02);
+}
+
+.admin-address-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.75rem;
+}

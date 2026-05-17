@@ -67,11 +67,10 @@
                     <th>ID</th>
                     <th>Tên</th>
                     <th>Email</th>
-                    <th>Số điện thoại</th>
                     <th>Vai trò</th>
                     <th>Trạng thái</th>
-                    <th>Ngày tạo</th>
                     <th>Hành động</th>
+                    <th>Chi tiết</th>
                 </tr>
             </thead>
             <tbody>
@@ -85,7 +84,6 @@
                             @endif
                         </td>
                         <td class="{{ !$user->is_active ? 'text-gray-custom' : '' }}">{{ $user->email }}</td>
-                        <td class="{{ !$user->is_active ? 'text-gray-custom' : '' }}">{{ $user->phone ?? '-' }}</td>
                         <td>
                             <span class="badge-role-{{ $user->role }}">
                                 {{ $user->role === 'admin' ? 'ADMIN' : 'USER' }}
@@ -102,10 +100,9 @@
                                 </span>
                             @endif
                         </td>
-                        <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
                         <td>
-                            @if($user->id !== auth()->id())
-                                <div class="d-flex gap-2">
+                            <div class="d-flex gap-2">
+                                @if($user->id !== auth()->id())
                                     {{-- Đổi vai trò --}}
                                     <button type="button" class="btn btn-sm btn-outline-primary"
                                             onclick="changeRole({{ $user->id }}, '{{ $user->role }}', '{{ addslashes($user->name) }}')"
@@ -135,12 +132,18 @@
                                             </button>
                                         @endif
                                     </form>
-                                </div>
-                            @else
-                                <span class="badge-status-inactive">BẠN</span>
-                            @endif
+                                @else
+                                    <span class="badge-status-inactive align-self-center">BẠN</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#userDetailModal{{ $user->id }}">
+                                Xem chi tiết
+                            </button>
                         </td>
                     </tr>
+
                 @empty
                     <tr>
                         <td colspan="8" class="text-center text-muted py-5">
@@ -160,17 +163,52 @@
     @endif
 </div>
 
-<!-- Create User Modal -->
-<div class="modal fade" id="createUserModal" tabindex="-1">
+@foreach($users as $user)
+<div class="modal fade admin-modal" id="userDetailModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content glass-modal-custom">
-            <div class="modal-header border-bottom-1-px-rgba-custom">
-                <h5 class="modal-title font-bold font-outfit-custom">TẠO USER MỚI</h5>
+        <div class="modal-content admin-modal-content">
+            <div class="modal-header admin-modal-header">
+                <h5 class="modal-title admin-modal-title">Chi tiết người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-4"><strong>Số điện thoại cá nhân:</strong> {{ $user->phone ?? '-' }}</p>
+                <h6 class="font-bold mb-3">Danh sách địa chỉ giao hàng:</h6>
+                @if($user->addresses && $user->addresses->count() > 0)
+                    <div class="d-flex flex-column gap-3">
+                        @foreach($user->addresses as $address)
+                            <div class="admin-address-card {{ $address->is_default ? 'is-default' : '' }}">
+                                @if($address->is_default)
+                                    <span class="badge bg-primary admin-address-badge">Mặc định</span>
+                                @endif
+                                <p class="mb-1"><strong>Người nhận:</strong> {{ $address->recipient_name ?? $user->name }}</p>
+                                <p class="mb-1"><strong>SĐT liên hệ:</strong> {{ $address->phone ?? $user->phone ?? '-' }}</p>
+                                <p class="mb-0"><strong>Địa chỉ:</strong> {{ $address->full_address }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-muted mb-0">Chưa có địa chỉ giao hàng nào.</p>
+                @endif
+            </div>
+            <div class="modal-footer admin-modal-footer">
+                <button type="button" class="btn btn-secondary admin-btn-rounded" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+<!-- Create User Modal -->
+<div class="modal fade admin-modal" id="createUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content admin-modal-content">
+            <div class="modal-header admin-modal-header">
+                <h5 class="modal-title admin-modal-title">TẠO USER MỚI</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('admin.users.create') }}">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control" required>
@@ -196,9 +234,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer border-top-1-px-rgba-custom">
-                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-primary rounded-12-px-custom px-15-rem-custom py-05-rem-custom">TẠO USER</button>
+                <div class="modal-footer admin-modal-footer">
+                    <button type="button" class="btn btn-secondary admin-btn-rounded" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-primary admin-btn-rounded">TẠO USER</button>
                 </div>
             </form>
         </div>
@@ -206,16 +244,16 @@
 </div>
 
 <!-- Change Role Modal -->
-<div class="modal fade" id="changeRoleModal" tabindex="-1">
+<div class="modal fade admin-modal" id="changeRoleModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content glass-modal-custom">
-            <div class="modal-header border-bottom-1-px-rgba-custom">
-                <h5 class="modal-title font-bold font-outfit-custom">THAY ĐỔI VAI TRÒ</h5>
+        <div class="modal-content admin-modal-content">
+            <div class="modal-header admin-modal-header">
+                <h5 class="modal-title admin-modal-title">THAY ĐỔI VAI TRÒ</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" id="changeRoleForm">
                 @csrf @method('PUT')
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <p>Thay đổi vai trò của: <strong id="roleUserName"></strong></p>
                     <div class="mb-3">
                         <label class="form-label">Vai trò mới</label>
@@ -225,9 +263,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer border-top-1-px-rgba-custom">
-                    <button type="button" class="btn btn-secondary rounded-12-px-custom px-15-rem-custom py-05-rem-custom" data-bs-dismiss="modal">HỦY</button>
-                    <button type="submit" class="btn btn-primary rounded-12-px-custom px-15-rem-custom py-05-rem-custom">CẬP NHẬT</button>
+                <div class="modal-footer admin-modal-footer">
+                    <button type="button" class="btn btn-secondary admin-btn-rounded" data-bs-dismiss="modal">HỦY</button>
+                    <button type="submit" class="btn btn-primary admin-btn-rounded">CẬP NHẬT</button>
                 </div>
             </form>
         </div>

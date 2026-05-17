@@ -282,13 +282,19 @@
                             <span>Tạm tính:</span>
                             <span class="fw-bold" style="color: var(--text-main);">{{ number_format($order->tong_tien) }}đ</span>
                         </div>
+                        @if($order->giam_gia > 0)
+                        <div class="summary-row text-danger">
+                            <span>Khuyến mãi:</span>
+                            <span class="fw-bold">-{{ number_format($order->giam_gia) }}đ</span>
+                        </div>
+                        @endif
                         <div class="summary-row">
                             <span>Vận chuyển:</span>
                             <span class="fw-bold" style="color: #27AE60;">Miễn phí</span>
                         </div>
                         <div class="summary-total">
                             <span>Tổng tiền:</span>
-                            <span>{{ number_format($order->tong_tien) }}đ</span>
+                            <span>{{ number_format($order->thanh_tien) }}đ</span>
                         </div>
                     </div>
                 </div>
@@ -354,7 +360,7 @@
                     <div class="info-label">Ngân hàng</div>
                     <div class="info-value">Vietcombank</div>
                     <div class="info-label">Số tiền</div>
-                    <div class="info-value" id="amount" onclick="copyToClipboard(document.getElementById('amount').innerText.replace(/\D/g, ''))">{{ number_format($order->tong_tien) }}đ  <i class="fas fa-copy"></i></div>
+                    <div class="info-value" id="amount" onclick="copyToClipboard(document.getElementById('amount').innerText.replace(/\D/g, ''))">{{ number_format($order->thanh_tien) }}đ  <i class="fas fa-copy"></i></div>
                     <div class="info-label">Nội dung</div>
                     <div class="info-value" style="text-transform:uppercase;" id="content" onclick="copyToClipboard(document.getElementById('content').innerText)">{{ $order->ma_don_hang }} <i class="fas fa-copy"></i></div>
                 </div>

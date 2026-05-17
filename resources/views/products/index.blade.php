@@ -91,7 +91,7 @@
                                 <a href="{{ route('products.show', $product->id) }}">
                                     @if($product->so_luong <= 0)
                                         <div class="product-badge badge-out">Hết hàng</div>
-                                    @elseif($product->created_at > now()->subDays(7))
+                                    @elseif($product->is_new)
                                         <div class="product-badge">Mới</div>
                                     @endif
                                     @if($product->anh)

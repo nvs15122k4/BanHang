@@ -29,11 +29,19 @@ class CheckoutController extends Controller
         foreach ($cart as $productId => $item) {
             $product = Product::find($productId);
             if ($product) {
-                $subtotal = $product->gia * $item['so_luong'];
+                $promo = $product->getActivePromotion();
+                $discountedPrice = $product->gia;
+                if ($promo) {
+                    $discountedPrice = $promo->getDiscountedPrice($product);
+                }
+                $subtotal = $discountedPrice * $item['so_luong'];
                 $total   += $subtotal;
                 $items[]  = [
                     'product'  => $product,
                     'so_luong' => $item['so_luong'],
+                    'gia_goc'  => $product->gia,
+                    'gia_ban'  => $discountedPrice,
+                    'promo'    => $promo,
                     'subtotal' => $subtotal,
                 ];
             }
@@ -73,6 +81,8 @@ class CheckoutController extends Controller
             $tongTien = 0;
             $orderItems = [];
 
+            $tongTienGoc = 0;
+
             // Kiểm tra tồn kho và tính tổng tiền
             foreach ($cart as $productId => $item) {
                 $product = Product::lockForUpdate()->find($productId);
@@ -84,16 +94,25 @@ class CheckoutController extends Controller
                     throw new \Exception("Sản phẩm \"{$product->ten_sp}\" chỉ còn {$product->so_luong} trong kho!");
                 }
 
-                $subtotal   = $product->gia * $item['so_luong'];
+                $promo = $product->getActivePromotion();
+                $discountedPrice = $product->gia;
+                if ($promo) {
+                    $discountedPrice = $promo->getDiscountedPrice($product);
+                }
+
+                $subtotal   = $discountedPrice * $item['so_luong'];
                 $tongTien  += $subtotal;
+                $tongTienGoc += $product->gia * $item['so_luong'];
 
                 $orderItems[] = [
                     'product'    => $product,
                     'so_luong'   => $item['so_luong'],
-                    'gia'        => $product->gia,
+                    'gia'        => $discountedPrice,
                     'subtotal'   => $subtotal,
                 ];
             }
+
+            $giamGia = $tongTienGoc - $tongTien;
 
             // Tạo đơn hàng
             $order = Order::create([
@@ -102,9 +121,9 @@ class CheckoutController extends Controller
                 'ten_nguoi_nhan'         => $validated['ten_nguoi_nhan'],
                 'sdt_nguoi_nhan'         => $validated['sdt_nguoi_nhan'],
                 'dia_chi_giao_hang'      => $validated['dia_chi_giao_hang'],
-                'tong_tien'              => $tongTien,
+                'tong_tien'              => $tongTienGoc,
                 'phi_van_chuyen'         => 0,
-                'giam_gia'               => 0,
+                'giam_gia'               => $giamGia,
                 'thanh_tien'             => $tongTien,
                 'trang_thai'             => 'pending',
                 'phuong_thuc_thanh_toan' => $validated['phuong_thuc_thanh_toan'],

@@ -59,6 +59,11 @@ class Product extends Model
         return $this->trang_thai === 'con' ? 'Con hang' : 'Het hang';
     }
 
+    public function getIsNewAttribute(): bool
+    {
+        return $this->created_at && $this->created_at > now()->subDays(14);
+    }
+
     public function getImagePathAttribute(): string
     {
         if (empty($this->anh)) {
@@ -100,6 +105,19 @@ class Product extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    /**
+     * Lấy KM đang active tốt nhất cho sản phẩm này (Option A: runtime)
+     */
+    public function getActivePromotion(): ?Promotion
+    {
+        return Promotion::getBestForProduct($this);
     }
 
     public function reviews()

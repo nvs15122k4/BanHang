@@ -100,6 +100,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.promotions*') ? 'active' : '' }}" href="{{ route('admin.promotions.index') }}">
+                                <i class="fas fa-tags me-2"></i> Khuyến mãi
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.statistics') ? 'active' : '' }}" href="{{ route('admin.statistics') }}">
                                 <i class="fas fa-chart-bar me-2"></i> Thống kê
                             </a>
@@ -326,6 +331,12 @@
     @foreach($toastMessages ?? [] as $t)
         showToast('{{ addslashes($t['msg']) }}', '{{ $t['type'] }}');
     @endforeach
+
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            showToast('{{ addslashes($error) }}', 'error');
+        @endforeach
+    @endif
     </script>
 
     @stack('scripts')

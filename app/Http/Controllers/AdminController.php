@@ -58,7 +58,7 @@ class AdminController extends Controller
      */
     public function users(Request $request)
     {
-        $query = User::query();
+        $query = User::query()->with(['defaultAddress', 'addresses']);
 
         // Search
         if ($request->filled('search')) {
@@ -168,7 +168,7 @@ class AdminController extends Controller
 
         $products = $query->paginate(15);
 
-        return view('admin.products', compact('products'));
+        return view('admin.products.index', compact('products'));
     }
 
     /**

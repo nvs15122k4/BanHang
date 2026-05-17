@@ -25,7 +25,6 @@ class ProductController extends Controller
      */
     public function home()
     {
-        $products = Product::orderBy('created_at', 'desc')->take(4)->get();
         $totalProducts = Product::count();
         $inStockProducts = Product::where('trang_thai', 'con')->count();
         $outOfStockProducts = Product::where('trang_thai', 'het')->count();
@@ -33,7 +32,41 @@ class ProductController extends Controller
         // Sử dụng raw SQL để tránh cast issue
         $totalValue = \DB::table('products')->sum('gia');
 
-        return view('home.index', compact('products', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'totalValue'));
+        // Lấy 8 sản phẩm mới nhất
+        $latestProducts = Product::where('trang_thai', 'con')
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+
+        // Lấy danh sách sản phẩm có khuyến mãi
+        $activePromotions = \App\Models\Promotion::currentlyActive()->with('items')->get();
+        $allProducts = Product::where('trang_thai', 'con')->with(['wishlists'])->limit(1000)->get();
+        
+        $promoProducts = collect();
+        foreach ($allProducts as $product) {
+            $bestPromo = null;
+            $bestDiscount = 0;
+            foreach ($activePromotions as $promo) {
+                $discountedPrice = $promo->getDiscountedPrice($product);
+                if ($discountedPrice !== null) {
+                    $discount = $product->gia - $discountedPrice;
+                    if ($discount > $bestDiscount) {
+                        $bestDiscount = $discount;
+                        $bestPromo = $promo;
+                        $product->promo_price = $discountedPrice;
+                        $product->promo = $promo;
+                    }
+                }
+            }
+            if ($bestPromo) {
+                $promoProducts->push($product);
+            }
+        }
+        
+        // Sắp xếp giảm nhiều nhất và lấy 8 sản phẩm
+        $promoProducts = $promoProducts->sortByDesc(fn($p) => $p->gia - $p->promo_price)->take(8);
+
+        return view('home.index', compact('latestProducts', 'promoProducts', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'totalValue'));
     }
 
     public function index(Request $request)
@@ -88,7 +121,7 @@ class ProductController extends Controller
     public function create()
     {
         $loaiList = Product::getLoaiList();
-        return view('products.create', compact('loaiList'));
+        return view('admin.products.create', compact('loaiList'));
     }
     
     public function show(Product $product)
@@ -179,7 +212,7 @@ class ProductController extends Controller
             ]);
         }
         $loaiList = Product::getLoaiList();
-        return view('products.edit', compact('product', 'loaiList'));
+        return view('admin.products.edit', compact('product', 'loaiList'));
     }
 
     public function update(Request $request, Product $product)

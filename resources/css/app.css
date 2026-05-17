@@ -75,6 +75,7 @@ a:hover { color: var(--text-light); }
 }
 .nav-menu li a:hover { color: var(--primary); }
 .nav-menu li a.sale-link { color: #E53E3E; font-weight: 700; }
+.nav-menu li a.products-link { color: #7c3aed; font-weight: 700; }
 
 /* ── SEARCH BAR ── */
 .search-bar {

@@ -118,9 +118,14 @@
                                 @endif
                                 <div class="item-info">
                                     <div class="item-title">{{ $product->ten_sp }}</div>
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-between align-items-end mt-1">
                                         <span class="item-qty">Số lượng: {{ $item['so_luong'] }}</span>
-                                        <span class="item-price">{{ number_format($item['subtotal']) }}đ</span>
+                                        <div class="text-end">
+                                            @if(isset($item['promo']) && $item['promo'])
+                                                <div class="text-muted text-decoration-line-through" style="font-size: 0.8em;">{{ number_format($item['gia_goc'] * $item['so_luong']) }}đ</div>
+                                            @endif
+                                            <div class="item-price">{{ number_format($item['subtotal']) }}đ</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -128,10 +133,21 @@
                     </div>
                     
                     <div class="pt-3">
+                        @php
+                            $tongTienGoc = 0;
+                            foreach($items as $i) $tongTienGoc += $i['gia_goc'] * $i['so_luong'];
+                            $giamGia = $tongTienGoc - $total;
+                        @endphp
                         <div class="summary-row">
                             <span>Tạm tính</span>
-                            <span>{{ number_format($total) }}đ</span>
+                            <span>{{ number_format($tongTienGoc) }}đ</span>
                         </div>
+                        @if($giamGia > 0)
+                        <div class="summary-row text-danger">
+                            <span>Khuyến mãi</span>
+                            <span>-{{ number_format($giamGia) }}đ</span>
+                        </div>
+                        @endif
                         <div class="summary-row">
                             <span>Phí vận chuyển</span>
                             <span>Miễn phí</span>

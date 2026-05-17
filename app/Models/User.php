@@ -78,4 +78,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    /**
+     * Get the wishlist items for the user
+     */
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    /**
+     * Kiểm tra sản phẩm có trong wishlist không
+     */
+    public function hasInWishlist(int $productId): bool
+    {
+        return $this->wishlists()->where('product_id', $productId)->exists();
+    }
 }

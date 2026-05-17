@@ -55,7 +55,13 @@
                                     </div>
                                 </td>
                                 <td class="text-center" data-label="Giá">
-                                    <span class="cart-item-price">{{ number_format($product->gia) }}đ</span>
+                                    @if(isset($item['promo']) && $item['promo'])
+                                        <div class="cart-item-price text-danger fw-bold mb-1">{{ number_format($item['gia_ban']) }}đ</div>
+                                        <div class="cart-item-price text-muted text-decoration-line-through" style="font-size:0.85em;">{{ number_format($item['gia_goc']) }}đ</div>
+                                        <div class="badge bg-danger mt-1" style="font-size: 0.7em;">-{{ number_format($item['gia_goc'] - $item['gia_ban']) }}đ</div>
+                                    @else
+                                        <span class="cart-item-price">{{ number_format($item['gia_goc']) }}đ</span>
+                                    @endif
                                 </td>
                                 <td data-label="Số lượng">
                                     <div class="d-flex justify-content-lg-center">
@@ -95,10 +101,21 @@
                 <div class="summary-card">
                     <h2 class="summary-title">Tóm tắt đơn hàng</h2>
                     
+                    @php
+                        $tongTienGoc = 0;
+                        foreach($items as $i) $tongTienGoc += $i['gia_goc'] * $i['so_luong'];
+                        $giamGia = $tongTienGoc - $total;
+                    @endphp
                     <div class="summary-row">
                         <span>Tạm tính</span>
-                        <span>{{ number_format($total) }}đ</span>
+                        <span>{{ number_format($tongTienGoc) }}đ</span>
                     </div>
+                    @if($giamGia > 0)
+                    <div class="summary-row text-danger">
+                        <span>Khuyến mãi</span>
+                        <span>-{{ number_format($giamGia) }}đ</span>
+                    </div>
+                    @endif
                     <div class="summary-row">
                         <span>Phí vận chuyển</span>
                         <span class="text-success">Miễn phí</span>

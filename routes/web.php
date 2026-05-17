@@ -111,6 +111,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/users/{user}/role', [App\Http\Controllers\AdminController::class, 'updateUserRole'])->name('users.role');
     Route::put('/users/{user}/status', [App\Http\Controllers\AdminController::class, 'toggleUserStatus'])->name('users.status');
     
+    // Categories management
+    Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
+    
     // Products management
     Route::get('/products', [App\Http\Controllers\AdminController::class, 'products'])->name('products');
     Route::put('/products/{product}/status', [App\Http\Controllers\AdminController::class, 'updateProductStatus'])->name('products.status');

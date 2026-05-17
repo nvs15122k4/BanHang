@@ -19,30 +19,16 @@ class Product extends Model
         'gia',
     ];
 
-    const LOAI_ICONS = [
-        'dien_tu' => 'fas fa-laptop',
-        'thoi_trang' => 'fas fa-tshirt',
-        'my_pham' => 'fas fa-spa',
-        'thuc_pham' => 'fas fa-utensils',
-        'sach' => 'fas fa-book',
-        'the_thao' => 'fas fa-running',
-        'noi_that' => 'fas fa-couch',
-        'khac' => 'fas fa-ellipsis-h',
-    ];
+    // Category management has been moved to the Category model and categories table
 
     public static function getLoaiList(): array
     {
-        return static::whereNotNull('loai')
-            ->where('loai', '!=', '')
-            ->distinct()
-            ->orderBy('loai')
-            ->pluck('loai', 'loai')
-            ->toArray();
+        return \App\Models\Category::pluck('name', 'slug')->toArray();
     }
 
     public static function getLoaiIcon(string $loai): string
     {
-        return self::LOAI_ICONS[$loai] ?? 'fas fa-tag';
+        return \App\Models\Category::where('slug', $loai)->value('icon') ?? 'fas fa-tag';
     }
 
     public function getLoaiLabelAttribute(): string

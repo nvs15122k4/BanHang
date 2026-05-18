@@ -184,6 +184,7 @@
                                 <p class="mb-1"><strong>Người nhận:</strong> {{ $address->recipient_name ?? $user->name }}</p>
                                 <p class="mb-1"><strong>SĐT liên hệ:</strong> {{ $address->phone ?? $user->phone ?? '-' }}</p>
                                 <p class="mb-0"><strong>Địa chỉ:</strong> {{ $address->full_address }}</p>
+                                <hr class="line">
                             </div>
                         @endforeach
                     </div>

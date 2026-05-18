@@ -80,6 +80,7 @@ class CheckoutController extends Controller
         try {
             $tongTien = 0;
             $orderItems = [];
+            $usedPromotions = []; // Track promotions used in this order to avoid double counting
 
             $tongTienGoc = 0;
 
@@ -98,6 +99,12 @@ class CheckoutController extends Controller
                 $discountedPrice = $product->gia;
                 if ($promo) {
                     $discountedPrice = $promo->getDiscountedPrice($product);
+                    
+                    // Increment usage count for this promotion if it hasn't been used in this order yet
+                    if ($promo && !in_array($promo->id, $usedPromotions)) {
+                        $promo->incrementUsage();
+                        $usedPromotions[] = $promo->id;
+                    }
                 }
 
                 $subtotal   = $discountedPrice * $item['so_luong'];

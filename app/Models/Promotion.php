@@ -13,6 +13,7 @@ class Promotion extends Model
     protected $fillable = [
         'ten', 'mo_ta', 'loai_km', 'gia_tri', 'gia_tri_toi_da',
         'ngay_bat_dau', 'ngay_ket_thuc', 'pham_vi', 'trang_thai', 'tag',
+        'used_count', 'usage_limit', 'usage_limit_per_user',
     ];
 
     protected $casts = [
@@ -74,6 +75,77 @@ class Promotion extends Model
             'Hết hạn'      => 'secondary',
             default        => 'danger',
         };
+    }
+
+    // ─── Usage Tracking ────────────────────────────────────────────────────────
+
+    /**
+     * Kiểm tra xem KM có thể sử dụng được không (based on limits)
+     * @return bool
+     */
+    public function canBeUsed(): bool
+    {
+        if (!$this->is_active_now) {
+            return false;
+        }
+
+        if ($this->usage_limit !== null && $this->used_count >= $this->usage_limit) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Tăng số lần sử dụng KM lên 1
+     * @return void
+     */
+    public function incrementUsage(): void
+    {
+        $this->increment('used_count');
+    }
+
+    /**
+     * Kiểm tra xem KM đã đạt giới hạn sử dụng chưa
+     * @return bool
+     */
+    public function isUsageLimitReached(): bool
+    {
+        return $this->usage_limit !== null && $this->used_count >= $this->usage_limit;
+    }
+
+    /**
+     * Lấy số lần sử dụng còn lại
+     * @return int|null
+     */
+    public function getRemainingUsage(): ?int
+    {
+        if ($this->usage_limit === null) {
+            return null;
+        }
+
+        return max(0, $this->usage_limit - $this->used_count);
+    }
+
+    /**
+     * Lấy nhãn trạng thái sử dụng
+     * @return string
+     */
+    public function getUsageStatusAttribute(): string
+    {
+        if (!$this->is_active_now) {
+            return $this->getStatusLabelAttribute();
+        }
+
+        if ($this->usage_limit === null) {
+            return 'Không giới hạn';
+        }
+
+        if ($this->isUsageLimitReached()) {
+            return 'Đã hết quota';
+        }
+
+        return $this->getRemainingUsage() . ' lần còn lại';
     }
 
     // ─── Discount Logic (Option A: runtime calculation) ──────────────────────

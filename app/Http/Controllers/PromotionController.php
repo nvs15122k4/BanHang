@@ -67,6 +67,9 @@ class PromotionController extends Controller
             'pham_vi'       => 'required|in:all,category,product',
             'trang_thai'    => 'required|in:active,inactive,scheduled',
             'tag'           => 'nullable|string|max:50',
+            // Usage limits
+            'usage_limit'   => 'nullable|integer|min:0',
+            'usage_limit_per_user' => 'nullable|integer|min:0',
             // Phạm vi items
             'categories'    => 'nullable|array',
             'product_ids'   => 'nullable|array',
@@ -77,6 +80,8 @@ class PromotionController extends Controller
             'ngay_ket_thuc.required' => 'Vui lòng chọn ngày kết thúc',
             'ngay_ket_thuc.after'    => 'Ngày kết thúc phải sau ngày bắt đầu',
             'pham_vi.required'       => 'Vui lòng chọn phạm vi áp dụng',
+            'usage_limit.min'        => 'Giới hạn sử dụng phải là số nguyên không âm',
+            'usage_limit_per_user.min' => 'Giới hạn sử dụng mỗi người phải là số nguyên không âm',
         ]);
 
         // Validate percent ≤ 100
@@ -97,6 +102,9 @@ class PromotionController extends Controller
                 'pham_vi'        => $validated['pham_vi'],
                 'trang_thai'     => $validated['trang_thai'],
                 'tag'            => $validated['tag'] ?? null,
+                'used_count'     => 0,
+                'usage_limit'    => $validated['usage_limit'] ?? null,
+                'usage_limit_per_user' => $validated['usage_limit_per_user'] ?? null,
             ]);
 
             // Lưu phạm vi items
@@ -157,6 +165,9 @@ class PromotionController extends Controller
             'pham_vi'       => 'required|in:all,category,product',
             'trang_thai'    => 'required|in:active,inactive,scheduled',
             'tag'           => 'nullable|string|max:50',
+            // Usage limits
+            'usage_limit'   => 'nullable|integer|min:0',
+            'usage_limit_per_user' => 'nullable|integer|min:0',
             'categories'    => 'nullable|array',
             'product_ids'   => 'nullable|array',
         ]);
@@ -174,6 +185,8 @@ class PromotionController extends Controller
                 'pham_vi'        => $validated['pham_vi'],
                 'trang_thai'     => $validated['trang_thai'],
                 'tag'            => $validated['tag'] ?? null,
+                'usage_limit'    => $validated['usage_limit'] ?? null,
+                'usage_limit_per_user' => $validated['usage_limit_per_user'] ?? null,
             ]);
 
             // Xóa items cũ và tạo lại
@@ -252,6 +265,11 @@ class PromotionController extends Controller
             $bestDiscount = 0;
 
             foreach ($activePromotions as $promo) {
+                // Check if promotion can still be used (usage limits)
+                if (!$promo->canBeUsed()) {
+                    continue;
+                }
+                
                 $discountedPrice = $promo->getDiscountedPrice($product);
                 if ($discountedPrice !== null) {
                     $discount = $product->gia - $discountedPrice;

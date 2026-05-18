@@ -156,16 +156,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
 });
 
-// Customer review routes
-Route::middleware('auth')->group(function () {
-    Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
-    Route::delete('/reviews/{review}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
-});
-
 // Wishlist routes (auth required)
 Route::middleware('auth')->group(function () {
-    Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
 // Cart routes (auth required)
@@ -201,9 +195,16 @@ Route::middleware('auth')->group(function () {
     // Refund Info
     Route::get('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'refundInfo'])->name('orders.refund');
     Route::post('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'submitRefundInfo'])->name('orders.submitRefund');
-    });
+});
+
+// Reviews routes (auth required)
+Route::middleware('auth')->group(function () {
+    Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::delete('/reviews/{review}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
 
 // Payment Webhook (Simulation)
 Route::post('/payment/webhook', [App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');
+
 
 

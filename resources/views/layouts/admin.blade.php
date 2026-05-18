@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ filemtime(public_path('css/admin.css')) }}">
 
     @stack('styles')
-    @vite(['resources/css/admin_layout.css'])
+    @vite(['resources/css/admin_layout.css', 'resources/js/app.js'])
 </head>
 <body>
 

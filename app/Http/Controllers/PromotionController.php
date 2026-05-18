@@ -269,7 +269,7 @@ class PromotionController extends Controller
                 if (!$promo->canBeUsed()) {
                     continue;
                 }
-                
+
                 $discountedPrice = $promo->getDiscountedPrice($product);
                 if ($discountedPrice !== null) {
                     $discount = $product->gia - $discountedPrice;

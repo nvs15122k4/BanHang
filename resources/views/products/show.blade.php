@@ -4,6 +4,32 @@
 
 @push('styles')
     @vite(['resources/css/views/product_show.css'])
+    <style>
+    .wishlist-btn-float {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        transition: all 0.2s;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .wishlist-btn-float:hover, .wishlist-btn-float.active {
+        color: #e11d48;
+        background: #fff;
+    }
+    .wishlist-btn-float i {
+        font-size: 18px;
+    }
+    </style>
 @endpush
 
 @section('content')
@@ -21,7 +47,21 @@
                     @if($product->so_luong <= 0)
                         <div class="product-badge out-of-stock-badge-custom">Hết hàng</div>
                     @endif
-                    
+
+                    {{-- Wishlist Toggle --}}
+                    @auth
+                        <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($product->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($product->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="wishlist-btn-float" title="Đăng nhập để yêu thích">
+                            <i class="fas fa-heart"></i>
+                        </a>
+                    @endauth
+
                     @if($product->anh)
                         <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="detail-img" id="mainImage">
                     @else
@@ -299,6 +339,20 @@
                                         </div>
                                     @endif
                                 </a>
+
+                                {{-- Wishlist Toggle --}}
+                                @auth
+                                    <form action="{{ route('wishlist.toggle', $rp->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($rp->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($rp->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" class="wishlist-btn-float" title="Đăng nhập để yêu thích">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                @endauth
 
                                 <div class="product-actions">
                                     @if($rp->so_luong > 0)

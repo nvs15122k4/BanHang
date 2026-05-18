@@ -4,6 +4,29 @@
 
 @push('styles')
     @vite(['resources/css/views/product_index.css'])
+    <style>
+    .wishlist-btn-float {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        transition: all 0.2s;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .wishlist-btn-float:hover, .wishlist-btn-float.active {
+        color: #e11d48;
+        background: #fff;
+    }
+    </style>
 @endpush
 
 @section('content')
@@ -102,6 +125,21 @@
                                         </div>
                                     @endif
                                 </a>
+
+                                {{-- Wishlist Toggle --}}
+                                @auth
+                                    <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($product->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($product->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" class="wishlist-btn-float" title="Đăng nhập để yêu thích">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                @endauth
+
                                 <div class="product-actions">
                                     @if($product->so_luong > 0)
                                         <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form" style="width:100%;">

@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\Models\Category;
+use Illuminate\Support\Str;
 
 class ImportProducts extends Command
 {
@@ -67,9 +69,23 @@ class ImportProducts extends Command
             // Sinh giá ngẫu nhiên hợp lý theo loại sản phẩm
             $gia = $this->generatePrice($row[2] ?? '', $row[4] ?? '');
 
+            $masterCategory = trim($row[2]); // masterCategory
+
+            // Đảm bảo danh mục masterCategory tồn tại trong bảng categories
+            if (!empty($masterCategory)) {
+                Category::firstOrCreate(
+                    ['slug' => Str::slug($masterCategory)],
+                    [
+                        'name' => $masterCategory,
+                        'icon' => 'fas fa-tag',
+                        'description' => null,
+                    ]
+                );
+            }
+
             $batch[] = [
                 'ten_sp'     => $tenSp,
-                'loai'       => trim($row[2]),   // masterCategory
+                'loai'       => $masterCategory,
                 'mo_ta'      => trim($row[8]),   // usage (Casual, Formal, Sports...)
                 'anh'        => $anhUrl,
                 'trang_thai' => 'con',

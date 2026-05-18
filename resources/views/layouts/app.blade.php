@@ -48,8 +48,8 @@
             <li><a href="{{ route('home') }}">Trang chủ</a></li>
             <li><a href="{{ route('promotions.index') }}" class="sale-link">KHUYẾN MÃI</a></li>
             <li><a href="{{ route('products.index') }}" class="products-link">Sản Phẩm</a></li>
-            <li><a href="{{ route('products.index', ['loai_filter' => 'men']) }}">Nam</a></li>
-            <li><a href="{{ route('products.index', ['loai_filter' => 'women']) }}">Nữ</a></li>
+            {{-- <li><a href="{{ route('products.index', ['loai_filter' => 'men']) }}">Nam</a></li>
+            <li><a href="{{ route('products.index', ['loai_filter' => 'women']) }}">Nữ</a></li> --}}
             <li><a href="{{ route('pages.blog') }}">Blog</a></li>
             <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>            
         </ul>
@@ -469,9 +469,10 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch {}
     }
 
-    // Initial fetch + poll every 30s
+    // Initial fetch + poll every 5s (update liên tục, không cần load trang mới)
     fetchNotifications();
-    setInterval(fetchNotifications, 30000);
+    setInterval(fetchNotifications, 5000);
+
 
     // Mark all read
     document.getElementById('markAllRead')?.addEventListener('click', function(e) {

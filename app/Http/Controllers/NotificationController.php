@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
 {
@@ -37,8 +38,8 @@ class NotificationController extends Controller
                 'id'       => $n->id,
                 'data'     => $n->data,
                 'read_at'  => $n->read_at,
-                'time'     => $n->created_at->diffForHumans(),
-                'time_fmt' => $n->created_at->format('H:i, d/m/Y'),
+                'time'     => $n->created_at?->diffForHumans(),
+                'time_fmt' => $n->created_at?->format('H:i, d/m/Y'),
             ]);
 
         return response()->json([

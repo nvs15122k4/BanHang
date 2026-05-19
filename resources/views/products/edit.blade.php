@@ -10,13 +10,13 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card" style="border: none; background-color: #FFFFFF;">
-                <div class="card-header" style="background-color: var(--bg); border: none; padding: 24px;">
-                    <h4 style="margin-bottom: 0; font-weight: 500; color: var(--text); font-size: 24px;">
+            <div class="card uix-29147033cb">
+                <div class="card-header uix-0151773bcf">
+                    <h4 class="uix-08f6e3acc8">
                         CHỈNH SỬA SẢN PHẨM
                     </h4>
                 </div>
-                <div class="card-body" style="padding: 32px;">
+                <div class="card-body uix-cee304f894">
                     <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -122,13 +122,13 @@
                             @if($product->anh)
                                 <div class="mb-2 d-flex align-items-center gap-3">
                                     <img src="{{ $product->image_path }}" alt="Ảnh hiện tại"
-                                         style="width:72px; height:72px; object-fit:cover; border-radius:8px; border:1px solid var(--border);"
+                                         class="inline-product-image-md"
                                          onerror="this.src='{{ asset('images/default-product.svg') }}'">
                                     <div>
-                                        <div style="font-size:12px; color:var(--text-secondary); font-weight:500;">Ảnh hiện tại</div>
-                                        <div style="font-size:13px; color:var(--text); word-break:break-all;">
+                                        <div class="uix-d36e78657d">Ảnh hiện tại</div>
+                                        <div class="uix-921de7d116">
                                             @if($isUrl)
-                                                <a href="{{ $product->anh }}" target="_blank" style="color:#0066CC;">{{ Str::limit($product->anh, 60) }}</a>
+                                                <a href="{{ $product->anh }}" target="_blank" class="inline-link-blue">{{ Str::limit($product->anh, 60) }}</a>
                                             @else
                                                 {{ $product->anh }}
                                             @endif
@@ -158,9 +158,9 @@
                                 @error('anh_file')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
-                                <div id="preview-file" class="mt-2" style="display:none;">
-                                    <img id="preview-file-img" src="" alt="Preview"
-                                         style="max-height:120px; border-radius:8px; border:1px solid var(--border);">
+                                <div id="preview-file" class="mt-2 uix-c8be1ccba6">
+                                    <img class="uix-e1fc704f82" id="preview-file-img" src="" alt="Preview"
+                                        >
                                 </div>
                             </div>
 
@@ -180,7 +180,7 @@
                                     <img id="preview-url-img"
                                          src="{{ $isUrl ? $product->anh : '' }}"
                                          alt="Preview"
-                                         style="max-height:120px; border-radius:8px; border:1px solid var(--border);"
+                                         class="inline-preview-image"
                                          onerror="this.parentElement.style.display='none'">
                                 </div>
                             </div>

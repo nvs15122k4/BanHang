@@ -4,53 +4,6 @@
 
 @push('styles')
 @vite(['resources/css/views/product_show.css'])
-<style>
-    .wishlist-btn-float {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255, 255, 255, 0.9);
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        transition: all 0.2s;
-        z-index: 10;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .wishlist-btn-float:hover,
-    .wishlist-btn-float.active {
-        color: #e11d48;
-        background: #fff;
-    }
-
-    .wishlist-btn-float i {
-        font-size: 18px;
-    }
-
-    .size-btn {
-        min-width: 50px;
-        padding: 8px 16px;
-        font-weight: 600;
-        transition: all 0.2s;
-    }
-
-    .size-btn.active {
-        background-color: var(--primary, #7C3AED) !important;
-        color: white !important;
-        border-color: var(--primary, #7C3AED) !important;
-    }
-
-    .size-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-</style>
 @endpush
 
 @section('content')
@@ -124,7 +77,10 @@
                 @endif
 
                 @if($product->so_luong > 0)
-                <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm">
+                <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm"
+                      data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                      data-product-name="{{ $product->ten_sp }}"
+                      data-size-options='@json($product->sizes ?? [])'>
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="size" id="cartSize" value="">
@@ -152,17 +108,17 @@
 
                 {{-- Size Recommendation --}}
                 @if($sizeRecommendation)
-                <div class="size-recommendation-card mt-4 p-3 border rounded" style="background-color: #f8f5ff; border-color: #ddd;">
+                <div class="size-recommendation-card mt-4 p-3 border rounded uix-14d428d219">
                     <div class="d-flex align-items-center gap-2 mb-2">
                         <i class="fas fa-info-circle text-primary"></i>
                         <strong>Gợi ý kích cỡ dựa vào thông tin cơ thể của bạn</strong>
                     </div>
-                    <p class="mb-2 text-muted" style="font-size: 14px;">
+                    <p class="mb-2 text-muted uix-df67104f3b">
                         Dựa vào chiều cao {{ $sizeRecommendation['height'] }}cm, cân nặng {{ $sizeRecommendation['weight'] }}kg (BMI: {{ $sizeRecommendation['bmi'] }}):
                     </p>
                     <div class="size-recommendation-badges">
                         @foreach($sizeRecommendation['all_sizes'] as $index => $rec)
-                        <span class="badge {{ $index === 0 ? 'bg-primary' : 'bg-light text-dark' }} me-2 mb-2" style="font-size: 13px; padding: 8px 12px;">
+                        <span class="badge {{ $index === 0 ? 'bg-primary' : 'bg-light text-dark' }} me-2 mb-2 uix-41fe5bbc0b">
                             {{ $rec['size'] }}
                             @if($index === 0)
                             <i class="fas fa-star ms-1"></i> Được gợi ý
@@ -175,22 +131,22 @@
                     </p>
                 </div>
                 @elseif(auth()->check())
-                <div class="size-recommendation-card mt-4 p-3 border rounded" style="background-color: #fff9e6; border-color: #ddd;">
+                <div class="size-recommendation-card mt-4 p-3 border rounded uix-cbcf40315a">
                     <div class="d-flex align-items-center gap-2 mb-2">
                         <i class="fas fa-info-circle text-warning"></i>
                         <strong>Nhận gợi ý kích cỡ phù hợp</strong>
                     </div>
-                    <p class="mb-0 text-muted" style="font-size: 14px;">
+                    <p class="mb-0 text-muted uix-df67104f3b">
                         Hãy cập nhật chiều cao và cân nặng trong <a href="{{ route('profile.index') }}">thông tin cá nhân</a> để nhận gợi ý kích cỡ sản phẩm phù hợp nhất.
                     </p>
                 </div>
                 @else
-                <div class="size-recommendation-card mt-4 p-3 border rounded" style="background-color: #f0f9ff; border-color: #ddd;">
+                <div class="size-recommendation-card mt-4 p-3 border rounded uix-c114d30d77">
                     <div class="d-flex align-items-center gap-2 mb-2">
                         <i class="fas fa-info-circle text-info"></i>
                         <strong>Cần gợi ý kích cỡ?</strong>
                     </div>
-                    <p class="mb-0 text-muted" style="font-size: 14px;">
+                    <p class="mb-0 text-muted uix-df67104f3b">
                         <a href="{{ route('login') }}">Đăng nhập</a> và cập nhật thông tin cơ thể của bạn để nhận gợi ý kích cỡ sản phẩm phù hợp.
                     </p>
                 </div>
@@ -261,11 +217,11 @@
                             @for($star = 5; $star >= 1; $star--)
                             @php $cnt = $reviews->where('rating', $star)->count(); $pct = $product->total_reviews > 0 ? ($cnt / $product->total_reviews) * 100 : 0; @endphp
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="small" style="min-width:40px;">{{ $star }} ★</span>
-                                <div class="flex-grow-1" style="background:#eee;height:8px;border-radius:4px;">
+                                <span class="small uix-516adaa881">{{ $star }} ★</span>
+                                <div class="flex-grow-1 uix-b0771944f3">
                                     <div style="width:{{ $pct }}%;background:var(--primary);height:8px;border-radius:4px;transition:width .5s;"></div>
                                 </div>
-                                <span class="small text-muted" style="min-width:20px;">{{ $cnt }}</span>
+                                <span class="small text-muted uix-acf8e3fb4b">{{ $cnt }}</span>
                             </div>
                             @endfor
                         </div>
@@ -296,7 +252,7 @@
                 {{-- Đã mua + đã thanh toán -> hiển thị form --}}
                 <div class="review-form-wrap mb-5 pb-5 border-bottom">
                     <h4 class="mb-4 uppercase font-bold text-md-custom letter-spacing-1-custom">
-                        <i class="fas fa-pen me-2" style="color:var(--primary);"></i>Viết đánh giá của bạn
+                        <i class="fas fa-pen me-2 uix-90010faf15"></i>Viết đánh giá của bạn
                     </h4>
                     <form action="{{ route('reviews.store') }}" method="POST" id="reviewForm">
                         @csrf
@@ -394,7 +350,7 @@
                     </div>
                     @empty
                     <div class="text-center py-5 text-muted">
-                        <i class="far fa-star fa-3x mb-3 d-block" style="color:#ddd;"></i>
+                        <i class="far fa-star fa-3x mb-3 d-block uix-30261166ec"></i>
                         Chưa có đánh giá nào được duyệt cho sản phẩm này.
                     </div>
                     @endforelse
@@ -440,7 +396,10 @@
 
                     <div class="product-actions">
                         @if($rp->so_luong > 0)
-                        <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1 add-to-cart-form">
+                        <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1 add-to-cart-form"
+                              data-requires-size="{{ count($rp->sizes ?? []) > 0 ? '1' : '0' }}"
+                              data-product-name="{{ $rp->ten_sp }}"
+                              data-size-options='@json($rp->sizes ?? [])'>
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $rp->id }}">
                             <input type="hidden" name="so_luong" value="1">
@@ -486,26 +445,12 @@
         document.querySelectorAll('.size-btn').forEach(btn => {
             btn.classList.remove('active');
         });
-        event.target.classList.add('active');
+        const activeBtn = document.querySelector(`.size-btn[data-size="${CSS.escape(size)}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
         document.getElementById('sizeError').classList.add('d-none');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('addToCartForm');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                const sizeOptions = document.getElementById('sizeOptions');
-                if (sizeOptions) {
-                    const selectedSize = document.getElementById('selectedSize').value;
-                    if (!selectedSize) {
-                        e.preventDefault();
-                        document.getElementById('sizeError').classList.remove('d-none');
-                        return false;
-                    }
-                }
-            });
-        }
-
         const starLabels = ['', 'Tệ', 'Không tốt', 'Bình thường', 'Tốt', 'Rất tốt'];
         const starBtns = document.querySelectorAll('.star-btn');
         const ratingInput = document.getElementById('ratingInput');

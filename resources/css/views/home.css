@@ -176,3 +176,27 @@
 }
 .newsletter-input::placeholder { color: rgba(255,255,255,0.4); }
 .btn-nl { background: transparent; color: #FFF; border: none; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 0 20px; cursor: pointer; }
+
+/* Extracted from resources/views/home/index.blade.php */
+.wishlist-btn-float {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        transition: all 0.2s;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .wishlist-btn-float:hover, .wishlist-btn-float.active {
+        color: #e11d48;
+        background: #fff;
+    }
+

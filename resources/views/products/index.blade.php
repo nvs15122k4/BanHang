@@ -4,29 +4,6 @@
 
 @push('styles')
     @vite(['resources/css/views/product_index.css'])
-    <style>
-    .wishlist-btn-float {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255,255,255,0.9);
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        transition: all 0.2s;
-        z-index: 10;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .wishlist-btn-float:hover, .wishlist-btn-float.active {
-        color: #e11d48;
-        background: #fff;
-    }
-    </style>
 @endpush
 
 @section('content')
@@ -39,7 +16,7 @@
         <!-- SIDEBAR FILTERS -->
         <aside class="col-lg-3 d-none d-lg-block">
             <div class="sidebar-filter">
-                <h1 style="font-weight:800; font-size:22px; text-transform:uppercase; letter-spacing:1px; margin-bottom:30px;">Cửa hàng</h1>
+                <h1 class="uix-30b515ec19">Cửa hàng</h1>
 
                 <form method="GET" action="{{ route('products.index') }}" id="filterForm">
                     <!-- Tìm kiếm -->
@@ -48,15 +25,15 @@
                         <div class="position-relative">
                             <input type="text" name="search" class="form-control rounded-0" placeholder="Tên sản phẩm..."
                                    value="{{ request('search') }}">
-                            <button type="submit" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;">
-                                <i class="fas fa-search text-muted" style="font-size:13px;"></i>
+                            <button class="uix-8493cc9cf4" type="submit">
+                                <i class="fas fa-search text-muted uix-9e6595fb01"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- Danh mục -->
                     <div class="filter-section">
-                        <div class="filter-title">Danh mục <i class="fas fa-chevron-down" style="font-size:9px;"></i></div>
+                        <div class="filter-title">Danh mục <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
                         <ul class="filter-list">
                             <li class="filter-item">
                                 <a href="{{ route('products.index', request()->except('loai_filter')) }}"
@@ -76,11 +53,11 @@
 
                     <!-- Khoảng giá -->
                     <div class="filter-section">
-                        <div class="filter-title">Khoảng giá <i class="fas fa-chevron-down" style="font-size:9px;"></i></div>
+                        <div class="filter-title">Khoảng giá <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
                         <div class="d-flex gap-2 align-items-center mb-3">
                             <input type="number" name="min_price" class="form-control form-control-sm rounded-0"
                                    placeholder="Từ" value="{{ request('min_price') }}">
-                            <span style="color:#CCC;">—</span>
+                            <span class="uix-8bd34921dd">—</span>
                             <input type="number" name="max_price" class="form-control form-control-sm rounded-0"
                                    placeholder="Đến" value="{{ request('max_price') }}">
                         </div>
@@ -97,7 +74,7 @@
                     Hiển thị {{ $products->count() }} / {{ $products->total() }} sản phẩm
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <span class="text-muted d-none d-md-block" style="font-size:11px; font-weight:700; letter-spacing:1px;">SẮP XẾP:</span>
+                    <span class="text-muted d-none d-md-block uix-3aa7552479">SẮP XẾP:</span>
                     <select class="sort-select" onchange="window.location.href=this.value">
                         <option value="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
                         <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá tăng dần</option>
@@ -142,7 +119,10 @@
 
                                 <div class="product-actions">
                                     @if($product->so_luong > 0)
-                                        <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form" style="width:100%;">
+                                        <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form uix-cad980f4b7"
+                                              data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                                              data-product-name="{{ $product->ten_sp }}"
+                                              data-size-options='@json($product->sizes ?? [])'>
                                             @csrf
                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                                             <input type="hidden" name="so_luong" value="1">
@@ -185,9 +165,9 @@
 @if(auth()->check() && auth()->user()->role === 'admin')
 <div class="modal fade" id="createProductModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="border-radius:0; border:none;">
-            <div class="modal-header" style="background:var(--text-main); color:#FFF; border-radius:0;">
-                <h5 class="modal-title" style="font-weight:700; text-transform:uppercase;">Thêm sản phẩm mới</h5>
+        <div class="modal-content uix-7f4ecc53cd">
+            <div class="modal-header uix-9d08eeeff3">
+                <h5 class="modal-title uix-8d366359a1">Thêm sản phẩm mới</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
@@ -196,19 +176,19 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <label class="form-label">Tên sản phẩm</label>
-                            <input type="text" name="ten_sp" class="form-control" style="border-radius:0;" required>
+                            <input type="text" name="ten_sp" class="form-control uix-4a2477fd2a" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Giá (vnđ)</label>
-                            <input type="number" name="gia" class="form-control" min="0" style="border-radius:0;" required>
+                            <input type="number" name="gia" class="form-control uix-4a2477fd2a" min="0" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Số lượng kho</label>
-                            <input type="number" name="so_luong" class="form-control" min="0" style="border-radius:0;" required>
+                            <input type="number" name="so_luong" class="form-control uix-4a2477fd2a" min="0" required>
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Danh mục</label>
-                            <select name="loai" class="form-select" style="border-radius:0;">
+                            <select name="loai" class="form-select uix-4a2477fd2a">
                                 @foreach($loaiList as $loai)
                                     <option value="{{ $loai }}">{{ ucfirst($loai) }}</option>
                                 @endforeach
@@ -216,11 +196,11 @@
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Mô tả</label>
-                            <textarea name="mo_ta" class="form-control" rows="4" style="border-radius:0;"></textarea>
+                            <textarea name="mo_ta" class="form-control uix-4a2477fd2a" rows="4"></textarea>
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Hình ảnh</label>
-                            <input type="file" name="anh_file" class="form-control" accept="image/*" style="border-radius:0;">
+                            <input type="file" name="anh_file" class="form-control uix-4a2477fd2a" accept="image/*">
                         </div>
                     </div>
                 </div>

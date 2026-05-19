@@ -117,13 +117,13 @@
   <div class="productSelector mt-3" style="display:{{ old('pham_vi', $promo->pham_vi ?? 'all') === 'product' ? 'block' : 'none' }}">
     <label class="form-label fw-semibold small text-warning">Chọn sản phẩm:</label>
     <input type="text" class="form-control form-control-sm mb-2" placeholder="Tìm sản phẩm..." id="productSearchInput" onkeyup="filterProducts(this)">
-    <div style="max-height:250px;overflow-y:auto;" id="productList">
+    <div class="uix-032ed80867" id="productList">
       @foreach($products as $prod)
       <label class="product-checkbox-item" data-name="{{ strtolower($prod->ten_sp) }}">
         <input type="checkbox" name="product_ids[]" value="{{ $prod->id }}">
         <div class="flex-grow-1">
           <div class="small fw-semibold">{{ $prod->ten_sp }}</div>
-          <div class="text-muted" style="font-size:11px;">{{ $prod->loai }} · {{ number_format($prod->gia,0,',','.') }}đ</div>
+          <div class="text-muted uix-e48b05836a">{{ $prod->loai }} · {{ number_format($prod->gia,0,',','.') }}đ</div>
         </div>
       </label>
       @endforeach

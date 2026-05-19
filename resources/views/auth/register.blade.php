@@ -8,16 +8,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/auth.css', 'resources/js/app.js'])
+    @vite(['resources/css/auth.css', 'resources/css/extracted-inline.css', 'resources/js/app.js'])
 </head>
 <body>
 
     <div class="login-wrapper">
         <div class="login-img">
-            <div style="position:relative; z-index:1;">
-                <div style="font-size:12px; letter-spacing:4px; font-weight:700; text-transform:uppercase; margin-bottom:15px; color:rgba(255,255,255,0.8);">THAM GIA NGAY</div>
+            <div class="uix-761c00d357">
+                <div class="uix-1295b2a563">THAM GIA NGAY</div>
                 <h2>JOIN<br>SÀN TÍM</h2>
-                <p style="font-size:14px; color:rgba(255,255,255,0.8); margin-top:10px;">Phong cách Việt — Sống đẹp mỗi ngày</p>
+                <p class="uix-d8c19c644b">Phong cách Việt — Sống đẹp mỗi ngày</p>
             </div>
         </div>
         
@@ -64,8 +64,8 @@
             
             <div class="divider"><span>HOẶC</span></div>
             
-            <div class="text-center" style="font-size: 14px;">
-                Đã có tài khoản? <a href="{{ route('login') }}" style="color: #7C3AED; font-weight: 700;">Đăng nhập tại đây</a>
+            <div class="text-center uix-df67104f3b">
+                Đã có tài khoản? <a class="uix-2b3997a8e4" href="{{ route('login') }}">Đăng nhập tại đây</a>
             </div>
         </div>
     </div>

@@ -3,35 +3,12 @@
 
 @push('styles')
     @vite(['resources/css/views/product_index.css'])
-    <style>
-    .wishlist-btn-float {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255,255,255,0.9);
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        transition: all 0.2s;
-        z-index: 10;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .wishlist-btn-float:hover, .wishlist-btn-float.active {
-        color: #e11d48;
-        background: #fff;
-    }
-    </style>
 @endpush
 
 @section('content')
 <div class="container py-2 pb-5">
     <div class="breadcrumb-st">
-        <a href="{{ route('home') }}">Trang chủ</a> &nbsp;/&nbsp; <a href="{{ route('profile.index') }}" style="color:#666; text-decoration:none;">Tài khoản</a> &nbsp;/&nbsp; <span style="font-weight:600; color:#111;">Yêu thích</span>
+        <a href="{{ route('home') }}">Trang chủ</a> &nbsp;/&nbsp; <a class="uix-1e32cae737" href="{{ route('profile.index') }}">Tài khoản</a> &nbsp;/&nbsp; <span class="uix-5a8b9549de">Yêu thích</span>
     </div>
 
     <div class="d-flex align-items-center mb-4 mt-3">
@@ -39,10 +16,10 @@
     </div>
 
     @if($wishlists->isEmpty())
-        <div class="text-center py-5" style="background:#f9fafb; border-radius:16px;">
+        <div class="text-center py-5 uix-e84bfd5299">
             <i class="far fa-heart fa-3x text-muted mb-3 d-block"></i>
             <h5 class="text-muted">Bạn chưa yêu thích sản phẩm nào.</h5>
-            <a href="{{ route('products.index') }}" class="btn-st-dark mt-3 d-inline-block px-4 py-2" style="border-radius:24px; text-decoration:none;">Khám phá sản phẩm</a>
+            <a href="{{ route('products.index') }}" class="btn-st-dark mt-3 d-inline-block px-4 py-2 uix-66bcd2106f">Khám phá sản phẩm</a>
         </div>
     @else
         <div class="row">
@@ -61,7 +38,7 @@
                                 @if($product->so_luong <= 0)
                                     <div class="product-badge badge-out">Hết hàng</div>
                                 @elseif($promo)
-                                    <div class="product-badge" style="background:#e11d48; color:#fff; border:none;">
+                                    <div class="product-badge uix-6263644e65">
                                         @if($promo->tag)
                                             {{ $promo->tag }}
                                         @else
@@ -91,7 +68,10 @@
 
                             <div class="product-actions">
                                 @if($product->so_luong > 0)
-                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full"
+                                          data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                                          data-product-name="{{ $product->ten_sp }}"
+                                          data-size-options='@json($product->sizes ?? [])'>
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                                         <input type="hidden" name="so_luong" value="1">

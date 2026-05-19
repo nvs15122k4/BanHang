@@ -145,3 +145,445 @@ body {
     .login-img { min-height: 200px; display: none; }
     .login-form { padding: 40px 20px; }
 }
+
+/* Extracted from resources/views/auth/forgot-password.blade.php */
+:root {
+            --text-main: #1A1A1A;
+            --text-light: #666666;
+            --bg-main: #FFFFFF;
+            --accent: #000000;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        /* Decorative Background Elements */
+        .bg-element {
+            position: fixed;
+            z-index: -1;
+            background: #F9F9F9;
+            border-radius: 50%;
+        }
+        .el-1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+        .el-2 { width: 300px; height: 300px; bottom: -50px; left: -50px; }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 50px;
+            background: #fff;
+            border: 1px solid #EEEEEE;
+            transition: transform 0.3s ease;
+        }
+        
+        .brand-logo {
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 4px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .form-control {
+            border-radius: 0;
+            border: 1px solid #E5E5E5;
+            padding: 14px 18px;
+            font-size: 15px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: none;
+            background-color: #FAFAFA;
+        }
+        
+        .btn-ava-dark {
+            background: var(--accent);
+            color: #FFFFFF;
+            border: 1px solid var(--accent);
+            padding: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn-ava-dark:hover {
+            background: #FFFFFF;
+            color: var(--accent);
+        }
+        
+        .back-to-login {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .back-to-login:hover {
+            color: var(--accent);
+        }
+
+        .alert-custom {
+            border-radius: 0;
+            border: none;
+            padding: 15px 20px;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+
+/* Extracted from resources/views/auth/verify-email.blade.php */
+:root {
+            --text-main: #1A1A1A;
+            --text-light: #666666;
+            --bg-main: #FFFFFF;
+            --accent: #000000;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: fixed;
+            z-index: -1;
+            background: #F9F9F9;
+            border-radius: 50%;
+        }
+        .el-1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+        .el-2 { width: 300px; height: 300px; bottom: -50px; left: -50px; }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 50px;
+            background: #fff;
+            border: 1px solid #EEEEEE;
+            text-align: center;
+        }
+        
+        .brand-logo {
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 4px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 40px;
+        }
+        
+        .auth-title {
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+        
+        .btn-ava-dark {
+            background: var(--accent);
+            color: #FFFFFF;
+            border: 1px solid var(--accent);
+            padding: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .btn-ava-dark:hover {
+            background: #FFFFFF;
+            color: var(--accent);
+        }
+        
+        .btn-logout {
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            margin-top: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+
+/* Extracted from resources/views/auth/reset-password.blade.php */
+:root {
+            --text-main: #1A1A1A;
+            --text-light: #666666;
+            --bg-main: #FFFFFF;
+            --accent: #000000;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: fixed;
+            z-index: -1;
+            background: #F9F9F9;
+            border-radius: 50%;
+        }
+        .el-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+        .el-2 { width: 300px; height: 300px; bottom: -50px; right: -50px; }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 50px;
+            background: #fff;
+            border: 1px solid #EEEEEE;
+        }
+        
+        .brand-logo {
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 4px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .form-control {
+            border-radius: 0;
+            border: 1px solid #E5E5E5;
+            padding: 14px 18px;
+            font-size: 15px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: none;
+            background-color: #FAFAFA;
+        }
+        
+        .btn-ava-dark {
+            background: var(--accent);
+            color: #FFFFFF;
+            border: 1px solid var(--accent);
+            padding: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn-ava-dark:hover {
+            background: #FFFFFF;
+            color: var(--accent);
+        }
+
+
+/* Extracted from resources/views/auth/confirm-password.blade.php */
+:root {
+            --text-main: #1A1A1A;
+            --text-light: #666666;
+            --bg-main: #FFFFFF;
+            --accent: #000000;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: fixed;
+            z-index: -1;
+            background: #F9F9F9;
+            border-radius: 50%;
+        }
+        .el-1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+        .el-2 { width: 300px; height: 300px; bottom: -50px; left: -50px; }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 50px;
+            background: #fff;
+            border: 1px solid #EEEEEE;
+        }
+        
+        .brand-logo {
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 4px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .form-control {
+            border-radius: 0;
+            border: 1px solid #E5E5E5;
+            padding: 14px 18px;
+            font-size: 15px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: none;
+            background-color: #FAFAFA;
+        }
+        
+        .btn-ava-dark {
+            background: var(--accent);
+            color: #FFFFFF;
+            border: 1px solid var(--accent);
+            padding: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn-ava-dark:hover {
+            background: #FFFFFF;
+            color: var(--accent);
+        }
+

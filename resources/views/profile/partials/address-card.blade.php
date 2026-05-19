@@ -1,11 +1,11 @@
 <div class="address-card-wrap">
     <div class="address-card {{ $address->is_default ? 'is-default' : '' }}">
         @if($address->is_default)
-            <span class="badge mb-2 rounded-0" style="background:var(--primary); font-size:11px; letter-spacing:0.5px;">MẶC ĐỊNH</span>
+            <span class="badge mb-2 rounded-0 uix-6eb55b3380">MẶC ĐỊNH</span>
         @endif
-        <h6 class="fw-bold mb-1" style="font-size:15px;">{{ $address->recipient_name }}</h6>
-        <p class="text-muted mb-1" style="font-size:13px;"><i class="fas fa-phone-alt me-2"></i>{{ $address->phone }}</p>
-        <p class="mb-3" style="font-size:13px; color:#555;">{{ $address->detail }}, {{ $address->ward }}, {{ $address->district }}, {{ $address->province }}</p>
+        <h6 class="fw-bold mb-1 uix-e63f1e231e">{{ $address->recipient_name }}</h6>
+        <p class="text-muted mb-1 uix-9e6595fb01"><i class="fas fa-phone-alt me-2"></i>{{ $address->phone }}</p>
+        <p class="mb-3 uix-bb8d4113a2">{{ $address->detail }}, {{ $address->ward }}, {{ $address->district }}, {{ $address->province }}</p>
 
         <div class="d-flex gap-3 pt-3 border-top align-items-center">
             <button class="btn-link-action" data-bs-toggle="modal" data-bs-target="#editAddressModal{{ $address->id }}">Sửa</button>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="form-check mt-2">
                         <input class="form-check-input" type="checkbox" name="is_default" id="edit_default_{{ $address->id }}" value="1" {{ $address->is_default ? 'checked' : '' }}>
-                        <label class="form-check-label" for="edit_default_{{ $address->id }}" style="font-size:14px;">Đặt làm địa chỉ mặc định</label>
+                        <label class="form-check-label inline-label-sm" for="edit_default_{{ $address->id }}">Đặt làm địa chỉ mặc định</label>
                     </div>
                     <div class="form-feedback edit-addr-feedback mt-3"></div>
                 </div>

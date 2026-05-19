@@ -71,6 +71,9 @@ class CartController extends Controller
         ]);
 
         $product = Product::findOrFail($request->product_id);
+        $availableSizes = array_values($product->sizes ?? []);
+        $requiresSize = count($availableSizes) > 0;
+        $requestedSize = $request->filled('size') ? strtoupper(trim($request->input('size'))) : null;
 
         if ($product->trang_thai !== 'con' || $product->so_luong <= 0) {
             if ($request->ajax()) {
@@ -79,8 +82,29 @@ class CartController extends Controller
             return back()->with('error', 'Sản phẩm này hiện không còn hàng!');
         }
 
+        if ($requiresSize && ! $requestedSize) {
+            $msg = 'Sản phẩm này bắt buộc chọn size. Vui lòng chọn size trước khi thêm vào giỏ hàng.';
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $msg,
+                    'size_required' => true,
+                    'sizes' => $availableSizes,
+                ], 422);
+            }
+            return back()->with('error', $msg);
+        }
+
+        if ($requiresSize && ! in_array($requestedSize, $availableSizes, true)) {
+            $msg = 'Size đã chọn không hợp lệ cho sản phẩm này.';
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $msg], 422);
+            }
+            return back()->with('error', $msg);
+        }
+
         $cart = $this->getCart();
-        $size = $request->size ?? 'default';
+        $size = $requiresSize ? $requestedSize : 'default';
         $cartKey = "{$product->id}_{$size}";
         $qty  = (int) $request->so_luong;
 

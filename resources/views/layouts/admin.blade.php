@@ -19,6 +19,7 @@
 
     @stack('styles')
     @vite(['resources/css/admin_layout.css', 'resources/js/app.js'])
+    @vite(['resources/css/extracted-inline.css'])
 </head>
 <body>
 
@@ -119,7 +120,7 @@
                     <div class="mt-5 px-3">
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-outline-danger w-100 rounded-12-px-custom py-2 fw-bold" style="font-size: 13px;">
+                            <button type="submit" class="btn btn-outline-danger w-100 rounded-12-px-custom py-2 fw-bold uix-eefff2f8dd">
                                 <i class="fas fa-sign-out-alt me-2"></i> ĐĂNG XUẤT
                             </button>
                         </form>
@@ -144,7 +145,7 @@
 
     <!-- ── PREMIUM DELETE MODAL ── -->
     <div class="modal fade premium-modal" id="stDeleteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-dialog modal-dialog-centered uix-af383d3ee2">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="premium-icon-wrap premium-icon-delete">
@@ -162,7 +163,7 @@
                         </button>
                     </div>
                     <div class="premium-footer-note">
-                        <i class="fas fa-exclamation-triangle" style="color:#F6AD55;"></i> Thao tác này không thể hoàn tác
+                        <i class="fas fa-exclamation-triangle uix-50bfccc846"></i> Thao tác này không thể hoàn tác
                     </div>
                 </div>
             </div>
@@ -171,7 +172,7 @@
 
     <!-- ── PREMIUM CANCEL ORDER MODAL ── -->
     <div class="modal fade premium-modal" id="stCancelOrderModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-dialog modal-dialog-centered uix-af383d3ee2">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="premium-icon-wrap premium-icon-cancel">
@@ -191,7 +192,7 @@
 
     <!-- ── PREMIUM SUCCESS MODAL ── -->
     <div class="modal fade premium-modal" id="stSuccessModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-dialog modal-dialog-centered uix-af383d3ee2">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="premium-icon-wrap premium-icon-success">

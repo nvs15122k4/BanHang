@@ -166,8 +166,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-    Route::patch('/cart/{productId}', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{productId}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+    Route::patch('/cart/{cartKey}', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{cartKey}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/cart', [App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
 });
 

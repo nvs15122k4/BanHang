@@ -33,11 +33,19 @@ class ProfileController extends Controller
             'email'  => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'phone'  => 'nullable|string|max:20',
             'gender' => 'nullable|in:male,female,other',
+            'height' => 'nullable|integer|min:100|max:300',
+            'weight' => 'nullable|numeric|min:20|max:300',
         ], [
             'name.required'  => 'Vui lòng nhập họ tên',
             'email.required' => 'Vui lòng nhập email',
             'email.email'    => 'Email phải đúng định dạng',
             'email.unique'   => 'Email này đã được sử dụng',
+            'height.integer' => 'Chiều cao phải là số nguyên (cm)',
+            'height.min'     => 'Chiều cao phải từ 100cm',
+            'height.max'     => 'Chiều cao phải dưới 300cm',
+            'weight.numeric' => 'Cân nặng phải là số (kg)',
+            'weight.min'     => 'Cân nặng phải từ 20kg',
+            'weight.max'     => 'Cân nặng phải dưới 300kg',
         ]);
 
         $user->update($validated);

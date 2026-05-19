@@ -26,7 +26,8 @@ class CheckoutController extends Controller
         $items = [];
         $total = 0;
 
-        foreach ($cart as $productId => $item) {
+        foreach ($cart as $cartKey => $item) {
+            $productId = $item['product_id'] ?? explode('_', $cartKey)[0];
             $product = Product::find($productId);
             if ($product) {
                 $promo = $product->getActivePromotion();
@@ -37,8 +38,10 @@ class CheckoutController extends Controller
                 $subtotal = $discountedPrice * $item['so_luong'];
                 $total   += $subtotal;
                 $items[]  = [
+                    'cart_key' => $cartKey,
                     'product'  => $product,
                     'so_luong' => $item['so_luong'],
+                    'size'     => $item['size'] ?? 'default',
                     'gia_goc'  => $product->gia,
                     'gia_ban'  => $discountedPrice,
                     'promo'    => $promo,
@@ -85,7 +88,8 @@ class CheckoutController extends Controller
             $tongTienGoc = 0;
 
             // Kiểm tra tồn kho và tính tổng tiền
-            foreach ($cart as $productId => $item) {
+            foreach ($cart as $cartKey => $item) {
+                $productId = $item['product_id'] ?? explode('_', $cartKey)[0];
                 $product = Product::lockForUpdate()->find($productId);
 
                 if (!$product) {
@@ -99,8 +103,7 @@ class CheckoutController extends Controller
                 $discountedPrice = $product->gia;
                 if ($promo) {
                     $discountedPrice = $promo->getDiscountedPrice($product);
-                    
-                    // Increment usage count for this promotion if it hasn't been used in this order yet
+
                     if ($promo && !in_array($promo->id, $usedPromotions)) {
                         $promo->incrementUsage();
                         $usedPromotions[] = $promo->id;
@@ -114,6 +117,7 @@ class CheckoutController extends Controller
                 $orderItems[] = [
                     'product'    => $product,
                     'so_luong'   => $item['so_luong'],
+                    'size'       => $item['size'] ?? 'default',
                     'gia'        => $discountedPrice,
                     'subtotal'   => $subtotal,
                 ];
@@ -148,6 +152,7 @@ class CheckoutController extends Controller
                     'ten_san_pham'=> $product->ten_sp,
                     'gia'         => $item['gia'],
                     'so_luong'    => $item['so_luong'],
+                    'size'        => $item['size'] ?? 'default',
                     'thanh_tien'  => $item['subtotal'],
                 ]);
 

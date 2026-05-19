@@ -17,6 +17,7 @@ class Product extends Model
         'trang_thai',
         'so_luong',
         'gia',
+        'sizes',
     ];
 
     // Category management has been moved to the Category model and categories table
@@ -38,6 +39,7 @@ class Product extends Model
 
     protected $casts = [
         'so_luong' => 'integer',
+        'sizes' => 'array',
     ];
 
     public function getTrangThaiStatusAttribute()

@@ -3,7 +3,7 @@
 @section('title', 'Tài khoản của tôi - Sàn Tím Vi En')
 
 @push('styles')
-    @vite(['resources/css/views/profile.css'])
+@vite(['resources/css/views/profile.css'])
 @endpush
 
 @section('content')
@@ -16,10 +16,10 @@
             <div class="profile-sidebar">
                 <div class="sidebar-title">Quản lý tài khoản</div>
                 <nav class="sidebar-nav nav flex-column">
-                    <a class="nav-link active" href="#profile"  data-bs-toggle="pill">Thông tin cá nhân</a>
-                    <a class="nav-link"        href="#password" data-bs-toggle="pill">Đổi mật khẩu</a>
-                    <a class="nav-link"        href="#addresses" data-bs-toggle="pill">Sổ địa chỉ</a>
-                    <a class="nav-link"        href="{{ route('orders.index') }}">Đơn hàng của tôi</a>
+                    <a class="nav-link active" href="#profile" data-bs-toggle="pill">Thông tin cá nhân</a>
+                    <a class="nav-link" href="#password" data-bs-toggle="pill">Đổi mật khẩu</a>
+                    <a class="nav-link" href="#addresses" data-bs-toggle="pill">Sổ địa chỉ</a>
+                    <a class="nav-link" href="{{ route('orders.index') }}">Đơn hàng của tôi</a>
                 </nav>
             </div>
         </div>
@@ -62,10 +62,36 @@
                                 <div class="col-md-9">
                                     <select name="gender" class="form-select">
                                         <option value="">Chọn giới tính</option>
-                                        <option value="male"   {{ $user->gender == 'male'   ? 'selected' : '' }}>Nam</option>
+                                        <option value="male" {{ $user->gender == 'male'   ? 'selected' : '' }}>Nam</option>
                                         <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Nữ</option>
-                                        <option value="other"  {{ $user->gender == 'other'  ? 'selected' : '' }}>Khác</option>
+                                        <option value="other" {{ $user->gender == 'other'  ? 'selected' : '' }}>Khác</option>
                                     </select>
+                                </div>
+                            </div>
+
+                            {{-- Height --}}
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label form-label">Chiều cao</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="number" name="height" class="form-control" value="{{ $user->height }}" placeholder="Nhập chiều cao" min="100" max="300">
+                                        <span class="input-group-text">cm</span>
+                                    </div>
+                                    <div class="form-text text-muted text-sm-custom">Chiều cao của bạn (từ 100-300cm) để gợi ý size sản phẩm phù hợp</div>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
+                                </div>
+                            </div>
+
+                            {{-- Weight --}}
+                            <div class="row mb-4">
+                                <label class="col-md-3 col-form-label form-label">Cân nặng</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="number" name="weight" step="0.1" class="form-control" value="{{ $user->weight }}" placeholder="Nhập cân nặng" min="20" max="300">
+                                        <span class="input-group-text">kg</span>
+                                    </div>
+                                    <div class="form-text text-muted text-sm-custom">Cân nặng của bạn (từ 20-300kg) để gợi ý size sản phẩm phù hợp</div>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -127,12 +153,12 @@
 
                         <div id="addressList">
                             @forelse($addresses as $address)
-                                @include('profile.partials.address-card', ['address' => $address])
+                            @include('profile.partials.address-card', ['address' => $address])
                             @empty
-                                <div class="text-center py-5 text-muted" id="emptyAddresses">
-                                    <i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-gray-light"></i>
-                                    <p>Bạn chưa lưu địa chỉ nào.</p>
-                                </div>
+                            <div class="text-center py-5 text-muted" id="emptyAddresses">
+                                <i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-gray-light"></i>
+                                <p>Bạn chưa lưu địa chỉ nào.</p>
+                            </div>
                             @endforelse
                         </div>
                     </div>
@@ -203,273 +229,331 @@
 
 @push('scripts')
 <script>
-const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+    const CSRF = document.querySelector('meta[name="csrf-token"]').content;
 
-/* ── HELPER: show inline feedback ── */
-function showFeedback(el, type, msg) {
-    el.className = 'form-feedback ' + type;
-    el.textContent = msg;
-    el.style.display = 'block';
-    setTimeout(() => { el.style.display = 'none'; }, 5000);
-}
-
-/* ── HELPER: clear field errors ── */
-function clearErrors(form) {
-    form.querySelectorAll('.invalid-feedback-field').forEach(el => el.textContent = '');
-    form.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
-}
-
-/* ── HELPER: show field errors ── */
-function showErrors(form, errors) {
-    Object.entries(errors).forEach(([field, msgs]) => {
-        const input = form.querySelector(`[name="${field}"]`);
-        if (input) {
-            input.classList.add('is-invalid');
-            const fb = input.closest('.col-md-8, .col-md-9, .mb-3, .col-md-4')?.querySelector('.invalid-feedback-field');
-            if (fb) fb.textContent = msgs[0];
-        }
-    });
-}
-
-/* ── HELPER: AJAX submit ── */
-async function ajaxSubmit(form, url, method, btnEl, feedbackEl) {
-    clearErrors(form);
-    const orig = btnEl.textContent;
-    btnEl.disabled = true;
-    btnEl.textContent = 'Đang lưu...';
-
-    const data = new FormData(form);
-    // FormData doesn't send unchecked checkboxes — handle is_default
-    if (form.querySelector('[name="is_default"]') && !form.querySelector('[name="is_default"]').checked) {
-        data.set('is_default', '0');
+    /* ── HELPER: show inline feedback ── */
+    function showFeedback(el, type, msg) {
+        el.className = 'form-feedback ' + type;
+        el.textContent = msg;
+        el.style.display = 'block';
+        setTimeout(() => {
+            el.style.display = 'none';
+        }, 5000);
     }
 
-    try {
-        const res = await fetch(url, {
-            method: method,
-            body: data,
-            headers: {
-                'X-CSRF-TOKEN': CSRF,
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
+    /* ── HELPER: clear field errors ── */
+    function clearErrors(form) {
+        form.querySelectorAll('.invalid-feedback-field').forEach(el => el.textContent = '');
+        form.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+    }
+
+    /* ── HELPER: show field errors ── */
+    function showErrors(form, errors) {
+        Object.entries(errors).forEach(([field, msgs]) => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                const fb = input.closest('.col-md-8, .col-md-9, .mb-3, .col-md-4')?.querySelector('.invalid-feedback-field');
+                if (fb) fb.textContent = msgs[0];
             }
         });
-        const json = await res.json();
-
-        if (res.ok && json.success) {
-            showFeedback(feedbackEl, 'success', json.message || 'Lưu thành công!');
-            return json;
-        } else {
-            if (json.errors) showErrors(form, json.errors);
-            showFeedback(feedbackEl, 'error', json.message || 'Có lỗi xảy ra!');
-            return null;
-        }
-    } catch (e) {
-        showFeedback(feedbackEl, 'error', 'Không thể kết nối máy chủ!');
-        return null;
-    } finally {
-        btnEl.disabled = false;
-        btnEl.textContent = orig;
     }
-}
 
-/* ── PROFILE FORM ── */
-document.getElementById('profileForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    clearErrors(this);
-    const btn = document.getElementById('profileBtn');
-    const fb  = document.getElementById('profileFeedback');
-    const orig = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Đang lưu...';
+    /* ── HELPER: AJAX submit ── */
+    async function ajaxSubmit(form, url, method, btnEl, feedbackEl) {
+        clearErrors(form);
+        const orig = btnEl.textContent;
+        btnEl.disabled = true;
+        btnEl.textContent = 'Đang lưu...';
 
-    const data = new FormData(this);
-    data.append('_method', 'PUT');
-
-    try {
-        const res  = await fetch('{{ route("profile.update") }}', {
-            method: 'POST',
-            body: data,
-            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-        });
-        const json = await res.json();
-        if (res.ok && json.success) {
-            showFeedback(fb, 'success', json.message);
-        } else {
-            if (json.errors) showErrors(this, json.errors);
-            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+        const data = new FormData(form);
+        // FormData doesn't send unchecked checkboxes — handle is_default
+        if (form.querySelector('[name="is_default"]') && !form.querySelector('[name="is_default"]').checked) {
+            data.set('is_default', '0');
         }
-    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
-    finally { btn.disabled = false; btn.textContent = orig; }
-});
 
-/* ── PASSWORD FORM ── */
-document.getElementById('passwordForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    clearErrors(this);
-    const btn = document.getElementById('passwordBtn');
-    const fb  = document.getElementById('passwordFeedback');
-    const orig = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Đang lưu...';
-
-    const data = new FormData(this);
-    data.append('_method', 'PUT');
-
-    try {
-        const res  = await fetch('{{ route("profile.password") }}', {
-            method: 'POST',
-            body: data,
-            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-        });
-        const json = await res.json();
-        if (res.ok && json.success) {
-            showFeedback(fb, 'success', json.message);
-            this.reset();
-        } else {
-            if (json.errors) showErrors(this, json.errors);
-            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
-        }
-    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
-    finally { btn.disabled = false; btn.textContent = orig; }
-});
-
-/* ── ADD ADDRESS FORM ── */
-document.getElementById('addAddressForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    clearErrors(this);
-    const btn = this.querySelector('[type="submit"]');
-    const fb  = document.getElementById('addAddressFeedback');
-    const orig = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Đang lưu...';
-
-    const data = new FormData(this);
-    if (!this.querySelector('[name="is_default"]').checked) data.set('is_default', '0');
-
-    try {
-        const res  = await fetch('{{ route("profile.addresses.store") }}', {
-            method: 'POST',
-            body: data,
-            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-        });
-        const json = await res.json();
-        if (res.ok && json.success) {
-            bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
-            this.reset();
-            // Reload address list
-            window.location.hash = '#addresses';
-            window.location.reload();
-        } else {
-            if (json.errors) showErrors(this, json.errors);
-            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
-        }
-    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
-    finally { btn.disabled = false; btn.textContent = orig; }
-});
-
-/* ── EDIT ADDRESS ── */
-document.addEventListener('submit', async function(e) {
-    const form = e.target;
-    if (!form.dataset.editAddress) return;
-    e.preventDefault();
-    clearErrors(form);
-    const btn  = form.querySelector('[type="submit"]');
-    const fb   = form.querySelector('.edit-addr-feedback');
-    const orig = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Đang lưu...';
-
-    const data = new FormData(form);
-    data.append('_method', 'PUT');
-    if (!form.querySelector('[name="is_default"]').checked) data.set('is_default', '0');
-
-    try {
-        const res  = await fetch(form.dataset.action, {
-            method: 'POST',
-            body: data,
-            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-        });
-        const json = await res.json();
-        if (res.ok && json.success) {
-            const modalEl = form.closest('.modal');
-            bootstrap.Modal.getInstance(modalEl).hide();
-            window.location.reload();
-        } else {
-            if (json.errors) showErrors(form, json.errors);
-            showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
-        }
-    } catch { showFeedback(fb, 'error', 'Không thể kết nối máy chủ!'); }
-    finally { btn.disabled = false; btn.textContent = orig; }
-});
-
-/* ── DELETE ADDRESS ── */
-document.addEventListener('click', async function(e) {
-    const btn = e.target.closest('[data-delete-address]');
-    if (!btn) return;
-    const addrCard = btn.closest('.address-card-wrap');
-    const addrName = addrCard.querySelector('.fw-bold')?.innerText || 'Địa chỉ này';
-    
-    stConfirmDelete({
-        title: 'XÓA ĐỊA CHỈ',
-        pill: addrName,
-        message: 'Địa chỉ này sẽ bị xóa khỏi sổ địa chỉ của bạn.',
-        onConfirm: async () => {
-            const url = btn.dataset.deleteAddress;
-            try {
-                const res  = await fetch(url, {
-                    method: 'POST',
-                    body: new URLSearchParams({ _method: 'DELETE' }),
-                    headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }
-                });
-                const json = await res.json();
-                if (json.success) {
-                    addrCard.remove();
-                    if (!document.querySelector('.address-card-wrap')) {
-                        document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-gray-light"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
-                    }
-                    window.showToast && window.showToast(json.message, 'success');
+        try {
+            const res = await fetch(url, {
+                method: method,
+                body: data,
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
                 }
-            } catch { window.showToast && window.showToast('Không thể xóa địa chỉ!', 'danger'); }
-        }
-    });
-});
+            });
+            const json = await res.json();
 
-/* ── SET DEFAULT ADDRESS ── */
-document.addEventListener('click', async function(e) {
-    const btn = e.target.closest('[data-set-default]');
-    if (!btn) return;
-
-    const url = btn.dataset.setDefault;
-    try {
-        const res  = await fetch(url, {
-            method: 'POST',
-            body: new URLSearchParams({ _method: 'PUT' }),
-            headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        const json = await res.json();
-        if (json.success) {
-            window.location.reload();
-        }
-    } catch {}
-});
-
-/* ── KEEP TAB ACTIVE after reload ── */
-document.addEventListener('DOMContentLoaded', function() {
-    const hash = window.location.hash;
-    if (hash) {
-        const tab = document.querySelector(`.sidebar-nav .nav-link[href="${hash}"]`);
-        if (tab) {
-            document.querySelectorAll('.sidebar-nav .nav-link').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-pane').forEach(p => { p.classList.remove('show','active'); });
-            tab.classList.add('active');
-            const pane = document.querySelector(hash);
-            if (pane) { pane.classList.add('show','active'); }
+            if (res.ok && json.success) {
+                showFeedback(feedbackEl, 'success', json.message || 'Lưu thành công!');
+                return json;
+            } else {
+                if (json.errors) showErrors(form, json.errors);
+                showFeedback(feedbackEl, 'error', json.message || 'Có lỗi xảy ra!');
+                return null;
+            }
+        } catch (e) {
+            showFeedback(feedbackEl, 'error', 'Không thể kết nối máy chủ!');
+            return null;
+        } finally {
+            btnEl.disabled = false;
+            btnEl.textContent = orig;
         }
     }
-    // Save tab on click
-    document.querySelectorAll('.sidebar-nav .nav-link[data-bs-toggle="pill"]').forEach(function(link) {
-        link.addEventListener('click', function() {
-            window.location.hash = this.getAttribute('href');
+
+    /* ── PROFILE FORM ── */
+    document.getElementById('profileForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        clearErrors(this);
+        const btn = document.getElementById('profileBtn');
+        const fb = document.getElementById('profileFeedback');
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu...';
+
+        const data = new FormData(this);
+        data.append('_method', 'PUT');
+
+        try {
+            const res = await fetch('{{ route("profile.update") }}', {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            const json = await res.json();
+            if (res.ok && json.success) {
+                showFeedback(fb, 'success', json.message);
+            } else {
+                if (json.errors) showErrors(this, json.errors);
+                showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+            }
+        } catch {
+            showFeedback(fb, 'error', 'Không thể kết nối máy chủ!');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = orig;
+        }
+    });
+
+    /* ── PASSWORD FORM ── */
+    document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        clearErrors(this);
+        const btn = document.getElementById('passwordBtn');
+        const fb = document.getElementById('passwordFeedback');
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu...';
+
+        const data = new FormData(this);
+        data.append('_method', 'PUT');
+
+        try {
+            const res = await fetch('{{ route("profile.password") }}', {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            const json = await res.json();
+            if (res.ok && json.success) {
+                showFeedback(fb, 'success', json.message);
+                this.reset();
+            } else {
+                if (json.errors) showErrors(this, json.errors);
+                showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+            }
+        } catch {
+            showFeedback(fb, 'error', 'Không thể kết nối máy chủ!');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = orig;
+        }
+    });
+
+    /* ── ADD ADDRESS FORM ── */
+    document.getElementById('addAddressForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        clearErrors(this);
+        const btn = this.querySelector('[type="submit"]');
+        const fb = document.getElementById('addAddressFeedback');
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu...';
+
+        const data = new FormData(this);
+        if (!this.querySelector('[name="is_default"]').checked) data.set('is_default', '0');
+
+        try {
+            const res = await fetch('{{ route("profile.addresses.store") }}', {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            const json = await res.json();
+            if (res.ok && json.success) {
+                bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
+                this.reset();
+                // Reload address list
+                window.location.hash = '#addresses';
+                window.location.reload();
+            } else {
+                if (json.errors) showErrors(this, json.errors);
+                showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+            }
+        } catch {
+            showFeedback(fb, 'error', 'Không thể kết nối máy chủ!');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = orig;
+        }
+    });
+
+    /* ── EDIT ADDRESS ── */
+    document.addEventListener('submit', async function(e) {
+        const form = e.target;
+        if (!form.dataset.editAddress) return;
+        e.preventDefault();
+        clearErrors(form);
+        const btn = form.querySelector('[type="submit"]');
+        const fb = form.querySelector('.edit-addr-feedback');
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu...';
+
+        const data = new FormData(form);
+        data.append('_method', 'PUT');
+        if (!form.querySelector('[name="is_default"]').checked) data.set('is_default', '0');
+
+        try {
+            const res = await fetch(form.dataset.action, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            const json = await res.json();
+            if (res.ok && json.success) {
+                const modalEl = form.closest('.modal');
+                bootstrap.Modal.getInstance(modalEl).hide();
+                window.location.reload();
+            } else {
+                if (json.errors) showErrors(form, json.errors);
+                showFeedback(fb, 'error', json.message || 'Có lỗi xảy ra!');
+            }
+        } catch {
+            showFeedback(fb, 'error', 'Không thể kết nối máy chủ!');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = orig;
+        }
+    });
+
+    /* ── DELETE ADDRESS ── */
+    document.addEventListener('click', async function(e) {
+        const btn = e.target.closest('[data-delete-address]');
+        if (!btn) return;
+        const addrCard = btn.closest('.address-card-wrap');
+        const addrName = addrCard.querySelector('.fw-bold')?.innerText || 'Địa chỉ này';
+
+        stConfirmDelete({
+            title: 'XÓA ĐỊA CHỈ',
+            pill: addrName,
+            message: 'Địa chỉ này sẽ bị xóa khỏi sổ địa chỉ của bạn.',
+            onConfirm: async () => {
+                const url = btn.dataset.deleteAddress;
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            _method: 'DELETE'
+                        }),
+                        headers: {
+                            'X-CSRF-TOKEN': CSRF,
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    });
+                    const json = await res.json();
+                    if (json.success) {
+                        addrCard.remove();
+                        if (!document.querySelector('.address-card-wrap')) {
+                            document.getElementById('addressList').innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-gray-light"></i><p>Bạn chưa lưu địa chỉ nào.</p></div>';
+                        }
+                        window.showToast && window.showToast(json.message, 'success');
+                    }
+                } catch {
+                    window.showToast && window.showToast('Không thể xóa địa chỉ!', 'danger');
+                }
+            }
         });
     });
-});
+
+    /* ── SET DEFAULT ADDRESS ── */
+    document.addEventListener('click', async function(e) {
+        const btn = e.target.closest('[data-set-default]');
+        if (!btn) return;
+
+        const url = btn.dataset.setDefault;
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    _method: 'PUT'
+                }),
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            const json = await res.json();
+            if (json.success) {
+                window.location.reload();
+            }
+        } catch {}
+    });
+
+    /* ── KEEP TAB ACTIVE after reload ── */
+    document.addEventListener('DOMContentLoaded', function() {
+        const hash = window.location.hash;
+        if (hash) {
+            const tab = document.querySelector(`.sidebar-nav .nav-link[href="${hash}"]`);
+            if (tab) {
+                document.querySelectorAll('.sidebar-nav .nav-link').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => {
+                    p.classList.remove('show', 'active');
+                });
+                tab.classList.add('active');
+                const pane = document.querySelector(hash);
+                if (pane) {
+                    pane.classList.add('show', 'active');
+                }
+            }
+        }
+        // Save tab on click
+        document.querySelectorAll('.sidebar-nav .nav-link[data-bs-toggle="pill"]').forEach(function(link) {
+            link.addEventListener('click', function() {
+                window.location.hash = this.getAttribute('href');
+            });
+        });
+    });
 </script>
 @endpush
 @endsection

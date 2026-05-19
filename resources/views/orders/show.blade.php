@@ -233,7 +233,11 @@
                                         Sản phẩm đã xóa
                                     @endif
                                 </div>
-                                <div class="item-meta">{{ number_format($detail->gia) }}đ × {{ $detail->so_luong }}</div>
+                                <div class="item-meta">{{ number_format($detail->gia) }}đ × {{ $detail->so_luong }}
+                                    @if($detail->size && $detail->size !== 'default')
+                                        <span class="ms-2 badge bg-secondary">{{ $detail->size }}</span>
+                                    @endif
+                                </div>
 
                                 {{-- Nút đánh giá — chỉ hiện khi đơn hoàn thành và còn sản phẩm --}}
                                 @if($order->trang_thai === 'completed' && $detail->product)

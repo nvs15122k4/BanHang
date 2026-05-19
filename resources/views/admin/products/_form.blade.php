@@ -129,6 +129,37 @@
   </div>
 </div>
 
+<hr>
+
+<div class="mb-4">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <span class="step-badge">4</span>
+    <span class="fw-semibold text-dark">Kích cỡ (Size)</span>
+  </div>
+  <div class="row g-3">
+    <div class="col-12">
+      <label class="form-label fw-semibold small">Chọn các size có sẵn cho sản phẩm này</label>
+      <div class="d-flex flex-wrap gap-3">
+        @php
+          $allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+          $selectedSizes = old('sizes', $product->sizes ?? []);
+        @endphp
+        @foreach($allSizes as $size)
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="sizes[]" value="{{ $size }}" id="size_{{ $size }}"
+              {{ in_array($size, $selectedSizes) ? 'checked' : '' }}>
+            <label class="form-check-label" for="size_{{ $size }}">
+              {{ $size }}
+            </label>
+          </div>
+        @endforeach
+      </div>
+      @error('sizes')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+      <div class="form-text mt-2">Để trống nếu sản phẩm không có size cụ thể</div>
+    </div>
+  </div>
+</div>
+
 @push('scripts')
 <script>
 function handleLoaiChange(sel) {

@@ -11,8 +11,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index']);
     Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add']);
-    Route::patch('/cart/{productId}', [App\Http\Controllers\CartController::class, 'update']);
-    Route::delete('/cart/{productId}', [App\Http\Controllers\CartController::class, 'remove']);
+    Route::patch('/cart/{cartKey}', [App\Http\Controllers\CartController::class, 'update']);
+    Route::delete('/cart/{cartKey}', [App\Http\Controllers\CartController::class, 'remove']);
     Route::delete('/cart', [App\Http\Controllers\CartController::class, 'clear']);
 });
 

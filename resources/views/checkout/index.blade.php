@@ -118,6 +118,9 @@
                                 @endif
                                 <div class="item-info">
                                     <div class="item-title">{{ $product->ten_sp }}</div>
+                                    @if(isset($item['size']) && $item['size'] !== 'default')
+                                        <div class="text-muted small">Size: <span class="badge bg-secondary">{{ $item['size'] }}</span></div>
+                                    @endif
                                     <div class="d-flex justify-content-between align-items-end mt-1">
                                         <span class="item-qty">Số lượng: {{ $item['so_luong'] }}</span>
                                         <div class="text-end">

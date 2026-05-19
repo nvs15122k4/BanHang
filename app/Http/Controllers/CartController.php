@@ -32,7 +32,8 @@ class CartController extends Controller
         $items = [];
         $total = 0;
 
-        foreach ($cart as $productId => $item) {
+        foreach ($cart as $cartKey => $item) {
+            $productId = $item['product_id'] ?? explode('_', $cartKey)[0];
             $product = Product::find($productId);
             if ($product) {
                 $promo = $product->getActivePromotion();
@@ -43,8 +44,10 @@ class CartController extends Controller
                 $subtotal = $discountedPrice * $item['so_luong'];
                 $total += $subtotal;
                 $items[] = [
+                    'cart_key'  => $cartKey,
                     'product'   => $product,
                     'so_luong'  => $item['so_luong'],
+                    'size'      => $item['size'] ?? 'default',
                     'gia_goc'   => $product->gia,
                     'gia_ban'   => $discountedPrice,
                     'promo'     => $promo,
@@ -64,6 +67,7 @@ class CartController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'so_luong'   => 'required|integer|min:1',
+            'size'       => 'nullable|string|max:10',
         ]);
 
         $product = Product::findOrFail($request->product_id);
@@ -76,10 +80,11 @@ class CartController extends Controller
         }
 
         $cart = $this->getCart();
-        $id   = $product->id;
+        $size = $request->size ?? 'default';
+        $cartKey = "{$product->id}_{$size}";
         $qty  = (int) $request->so_luong;
 
-        $currentQty = isset($cart[$id]) ? $cart[$id]['so_luong'] : 0;
+        $currentQty = isset($cart[$cartKey]) ? $cart[$cartKey]['so_luong'] : 0;
         $newQty     = $currentQty + $qty;
 
         if ($newQty > $product->so_luong) {
@@ -90,7 +95,11 @@ class CartController extends Controller
             return back()->with('error', $msg);
         }
 
-        $cart[$id] = ['so_luong' => $newQty];
+        $cart[$cartKey] = [
+            'product_id' => $product->id,
+            'so_luong'   => $newQty,
+            'size'       => $size,
+        ];
         $this->saveCart($cart);
 
         if ($request->ajax()) {
@@ -107,22 +116,26 @@ class CartController extends Controller
     /**
      * Cập nhật số lượng
      */
-    public function update(Request $request, int $productId)
+    public function update(Request $request, string $cartKey)
     {
         $request->validate(['so_luong' => 'required|integer|min:1']);
 
+        $cart = $this->getCart();
+
+        if (!isset($cart[$cartKey])) {
+            return back()->with('error', 'Sản phẩm không tồn tại trong giỏ hàng!');
+        }
+
+        $productId = $cart[$cartKey]['product_id'];
         $product = Product::findOrFail($productId);
-        $qty     = (int) $request->so_luong;
+        $qty = (int) $request->so_luong;
 
         if ($qty > $product->so_luong) {
             return back()->with('error', "Chỉ còn {$product->so_luong} sản phẩm trong kho!");
         }
 
-        $cart = $this->getCart();
-        if (isset($cart[$productId])) {
-            $cart[$productId]['so_luong'] = $qty;
-            $this->saveCart($cart);
-        }
+        $cart[$cartKey]['so_luong'] = $qty;
+        $this->saveCart($cart);
 
         return back()->with('success', 'Đã cập nhật giỏ hàng!');
     }
@@ -130,10 +143,10 @@ class CartController extends Controller
     /**
      * Xóa sản phẩm khỏi giỏ
      */
-    public function remove(int $productId)
+    public function remove(string $cartKey)
     {
         $cart = $this->getCart();
-        unset($cart[$productId]);
+        unset($cart[$cartKey]);
         $this->saveCart($cart);
 
         return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng!');

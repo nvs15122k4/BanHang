@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Services\ProductService;
+use App\Services\SizeRecommendationService;
 use App\Exports\SanPhamExport;
 use App\Exports\ThongKeExport;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class ProductController extends Controller
         $totalProducts = Product::count();
         $inStockProducts = Product::where('trang_thai', 'con')->count();
         $outOfStockProducts = Product::where('trang_thai', 'het')->count();
-        
+
         // Sử dụng raw SQL để tránh cast issue
         $totalValue = \DB::table('products')->sum('gia');
 
@@ -41,7 +42,7 @@ class ProductController extends Controller
         // Lấy danh sách sản phẩm có khuyến mãi
         $activePromotions = \App\Models\Promotion::currentlyActive()->with('items')->get();
         $allProducts = Product::where('trang_thai', 'con')->with(['wishlists'])->limit(1000)->get();
-        
+
         $promoProducts = collect();
         foreach ($allProducts as $product) {
             $bestPromo = null;
@@ -62,7 +63,7 @@ class ProductController extends Controller
                 $promoProducts->push($product);
             }
         }
-        
+
         // Sắp xếp giảm nhiều nhất và lấy 8 sản phẩm
         $promoProducts = $promoProducts->sortByDesc(fn($p) => $p->gia - $p->promo_price)->take(8);
 
@@ -92,13 +93,15 @@ class ProductController extends Controller
             'mo_ta'     => 'nullable|string',
             'gia'       => 'required|integer|min:1',
             'so_luong'  => 'required|integer|min:0',
-            'trang_thai'=> 'required|in:con,het',
+            'trang_thai' => 'required|in:con,het',
             'anh_file'  => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'anh'       => 'nullable|url|max:2048',
+            'sizes'     => 'nullable|array',
+            'sizes.*'   => 'string|in:XS,S,M,L,XL,XXL',
         ]);
 
         try {
-            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
+            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai', 'sizes']);
             $image    = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
@@ -123,7 +126,7 @@ class ProductController extends Controller
         $loaiList = Product::getLoaiList();
         return view('admin.products.create', compact('loaiList'));
     }
-    
+
     public function show(Product $product)
     {
         if (request()->ajax() || request()->expectsJson()) {
@@ -189,9 +192,25 @@ class ProductController extends Controller
             }
         }
 
+        // Lấy size recommendation nếu user đã login và có height/weight
+        $sizeRecommendation = null;
+        if (auth()->check()) {
+            $user = auth()->user();
+            if ($user->height && $user->weight) {
+                $sizeService = new SizeRecommendationService();
+                $sizeRecommendation = $sizeService->recommendSize($user->height, $user->weight);
+            }
+        }
+
         return view('products.show', compact(
-            'product', 'relatedProducts', 'reviews', 'userReview',
-            'hasPurchased', 'paymentPaid', 'canReview'
+            'product',
+            'relatedProducts',
+            'reviews',
+            'userReview',
+            'hasPurchased',
+            'paymentPaid',
+            'canReview',
+            'sizeRecommendation'
         ));
     }
 
@@ -226,10 +245,12 @@ class ProductController extends Controller
             'trang_thai' => 'required|in:con,het',
             'anh_file'   => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'anh'        => 'nullable|url|max:2048',
+            'sizes'      => 'nullable|array',
+            'sizes.*'    => 'string|in:XS,S,M,L,XL,XXL',
         ]);
 
         try {
-            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
+            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai', 'sizes']);
             $image    = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
@@ -253,7 +274,7 @@ class ProductController extends Controller
     {
         try {
             $this->productService->deleteProduct($product);
-            
+
             if (request()->expectsJson()) {
                 return response()->json([
                     'success' => true,
@@ -270,7 +291,7 @@ class ProductController extends Controller
                     'message' => 'Không thể xóa sản phẩm: ' . $e->getMessage()
                 ], 422);
             }
-            
+
             return back()->withErrors(['error' => 'Không thể xóa sản phẩm: ' . $e->getMessage()]);
         }
     }
@@ -294,7 +315,7 @@ class ProductController extends Controller
     {
         try {
             $filename = 'danh_sach_san_pham_' . date('Y-m-d_H-i-s') . '.xlsx';
-            
+
             return Excel::download(new SanPhamExport, $filename);
         } catch (\Exception $e) {
             return back()->with('error', 'Không thể xuất file: ' . $e->getMessage());
@@ -308,7 +329,7 @@ class ProductController extends Controller
     {
         try {
             $filename = 'thong_ke_san_pham_' . date('Y-m-d_H-i-s') . '.xlsx';
-            
+
             return Excel::download(new ThongKeExport, $filename);
         } catch (\Exception $e) {
             return back()->with('error', 'Không thể xuất file thống kê: ' . $e->getMessage());

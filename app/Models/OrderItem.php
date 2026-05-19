@@ -16,6 +16,7 @@ class OrderItem extends Model
         'gia',
         'so_luong',
         'thanh_tien',
+        'size',
     ];
 
     protected $casts = [

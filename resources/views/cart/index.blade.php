@@ -28,6 +28,7 @@
                     <thead>
                         <tr>
                             <th>Sản phẩm</th>
+                            <th class="text-center">Kích cỡ</th>
                             <th class="text-center">Giá</th>
                             <th class="text-center">Số lượng</th>
                             <th class="text-end">Tổng cộng</th>
@@ -54,6 +55,13 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="text-center" data-label="Kích cỡ">
+                                    @if(isset($item['size']) && $item['size'] !== 'default')
+                                        <span class="badge bg-secondary">{{ $item['size'] }}</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
                                 <td class="text-center" data-label="Giá">
                                     @if(isset($item['promo']) && $item['promo'])
                                         <div class="cart-item-price text-danger fw-bold mb-1">{{ number_format($item['gia_ban']) }}đ</div>
@@ -65,7 +73,7 @@
                                 </td>
                                 <td data-label="Số lượng">
                                     <div class="d-flex justify-content-lg-center">
-                                        <form action="{{ route('cart.update', $product->id) }}" method="POST" class="qty-input-wrap">
+                                        <form action="{{ route('cart.update', $item['cart_key']) }}" method="POST" class="qty-input-wrap">
                                             @csrf
                                             @method('PATCH')
                                             <input type="number" name="so_luong" value="{{ $item['so_luong'] }}" min="1" onchange="this.form.submit()">
@@ -76,7 +84,7 @@
                                     <span class="cart-item-subtotal">{{ number_format($item['subtotal']) }}đ</span>
                                 </td>
                                 <td class="text-end" data-label="Hành động">
-                                    <form action="{{ route('cart.remove', $product->id) }}" method="POST" data-item-name="{{ $product->ten_sp }}" onsubmit="return confirmForm(this, 'Sản phẩm sẽ bị xóa vĩnh viễn khỏi giỏ hàng và không thể khôi phục.', 'XÓA SẢN PHẨM')">
+                                    <form action="{{ route('cart.remove', $item['cart_key']) }}" method="POST" data-item-name="{{ $product->ten_sp }}" onsubmit="return confirmForm(this, 'Sản phẩm sẽ bị xóa vĩnh viễn khỏi giỏ hàng và không thể khôi phục.', 'XÓA SẢN PHẨM')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn-remove" title="Xóa sản phẩm"><i class="fas fa-times"></i></button>

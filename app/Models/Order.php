@@ -179,7 +179,7 @@ class Order extends Model
         $labels = [
             'cod' => 'Thanh toán khi nhận hàng',
             'vietqr' => 'Chuyển khoản VietQR',
-            'bank_transfer' => 'Chuyển khoản ngân hàng',
+            'bank_transfer' => 'Thanh toán khi nhận hàng',
             'vnpay' => 'VNPay',
         ];
 

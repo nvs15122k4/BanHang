@@ -430,3 +430,72 @@ a:hover { color: var(--text-light); }
     border-color: #F6AD55;
     background: #FFF9F0;
 }
+/* Extracted from resources/views/layouts/app.blade.php */
+.star-rating-input { display: flex; flex-direction: row-reverse; }
+        .star-rating-input input { display: none; }
+        .star-rating-input label { font-size: 30px; color: #DDD; cursor: pointer; transition: color 0.2s; }
+        .star-rating-input input:checked ~ label,
+        .star-rating-input label:hover,
+        .star-rating-input label:hover ~ label { color: #7C3AED; }
+        
+        .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+        
+        .preview-item { width: 60px; height: 60px; object-fit: cover; border: 1px solid #EEE; position: relative; }
+        .preview-remove { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 15px; height: 15px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Size picker modal */
+.size-picker-modal {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 24px 60px rgba(17, 24, 39, 0.28);
+}
+
+.size-picker-modal .modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 20px 24px;
+}
+
+.size-picker-modal .modal-title {
+    font-weight: 800;
+    letter-spacing: 0;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.size-picker-subtitle {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.size-picker-alert {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    font-size: 14px;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+}
+
+.size-picker-options {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+}
+
+.size-picker-option {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #111827;
+    font-weight: 800;
+    min-height: 46px;
+    transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+
+.size-picker-option:hover,
+.size-picker-option:focus {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}

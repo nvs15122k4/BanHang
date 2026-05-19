@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/css/admin_common.css',
                 'resources/css/admin_layout.css',
                 'resources/css/auth.css',
+                'resources/css/extracted-inline.css',
                 'resources/css/products.css',
                 'resources/css/views/home.css',
                 'resources/css/views/product_index.css',

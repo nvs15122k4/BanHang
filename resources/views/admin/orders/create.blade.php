@@ -18,7 +18,7 @@
         <!-- Left: Customer & Shipping Info -->
         <div class="col-md-7">
             <div class="card admin-table mb-4">
-                <div class="card-header" style="background-color: var(--text); color: #FFFFFF; font-weight: 500;">
+                <div class="card-header uix-c8adee58db">
                     <i class="fas fa-user me-2"></i>THÔNG TIN KHÁCH HÀNG
                 </div>
                 <div class="card-body">
@@ -59,7 +59,7 @@
                             <label class="form-label">Phương thức thanh toán <span class="text-danger">*</span></label>
                             <select name="phuong_thuc_thanh_toan" class="form-select" required>
                                 <option value="vietqr" {{ old('phuong_thuc_thanh_toan') === 'vietqr' ? 'selected' : '' }}>Chuyển khoản VietQR</option>
-                                <option value="bank_transfer" {{ old('phuong_thuc_thanh_toan') === 'bank_transfer' ? 'selected' : '' }}>Chuyển khoản ngân hàng</option>
+                                <option value="cod" {{ old('phuong_thuc_thanh_toan') === 'cod' ? 'selected' : '' }}>Thanh toán COD</option>
                                 <option value="vnpay" {{ old('phuong_thuc_thanh_toan') === 'vnpay' ? 'selected' : '' }}>VNPay</option>
                             </select>
                         </div>
@@ -73,7 +73,7 @@
 
             <!-- Products -->
             <div class="card admin-table mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: var(--text); color: #FFFFFF; font-weight: 500;">
+                <div class="card-header d-flex justify-content-between align-items-center uix-c8adee58db">
                     <span><i class="fas fa-box me-2"></i>SẢN PHẨM</span>
                     <button type="button" class="btn btn-light btn-sm" onclick="addItem()">
                         <i class="fas fa-plus me-1"></i>Thêm sản phẩm
@@ -114,8 +114,8 @@
 
         <!-- Right: Summary -->
         <div class="col-md-5">
-            <div class="card admin-table mb-4" style="position: sticky; top: 20px;">
-                <div class="card-header" style="background-color: var(--text); color: #FFFFFF; font-weight: 500;">
+            <div class="card admin-table mb-4 uix-a965cd6f27">
+                <div class="card-header uix-c8adee58db">
                     <i class="fas fa-receipt me-2"></i>TỔNG KẾT ĐƠN HÀNG
                 </div>
                 <div class="card-body">

@@ -3,29 +3,6 @@
 
 @push('styles')
     @vite(['resources/css/views/product_index.css'])
-    <style>
-    .wishlist-btn-float {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255,255,255,0.9);
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        transition: all 0.2s;
-        z-index: 10;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .wishlist-btn-float:hover, .wishlist-btn-float.active {
-        color: #e11d48;
-        background: #fff;
-    }
-    </style>
 @endpush
 
 @section('content')
@@ -41,12 +18,12 @@
         <!-- SIDEBAR FILTERS -->
         <aside class="col-lg-3 d-none d-lg-block">
             <div class="sidebar-filter">
-                <h1 style="font-weight:800; font-size:20px; text-transform:uppercase; letter-spacing:1px; margin-bottom:24px;">Lọc Khuyến Mãi</h1>
+                <h1 class="uix-b69612cfda">Lọc Khuyến Mãi</h1>
 
                 <form method="GET" action="{{ route('promotions.index') }}" id="filterForm">
                     <!-- Danh mục -->
                     <div class="filter-section">
-                        <div class="filter-title">Danh mục <i class="fas fa-chevron-down" style="font-size:9px;"></i></div>
+                        <div class="filter-title">Danh mục <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
                         <ul class="filter-list">
                             <li class="filter-item">
                                 <a href="{{ route('promotions.index', request()->except('loai')) }}"
@@ -65,7 +42,7 @@
 
                     <!-- Mức giảm -->
                     <div class="filter-section">
-                        <div class="filter-title">Mức giảm tối thiểu <i class="fas fa-chevron-down" style="font-size:9px;"></i></div>
+                        <div class="filter-title">Mức giảm tối thiểu <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
                         <ul class="filter-list">
                             <li class="filter-item">
                                 <a href="{{ route('promotions.index', request()->except('min_discount')) }}"
@@ -96,7 +73,7 @@
                     Hiển thị {{ $paginated->count() }} / {{ $paginated->total() }} sản phẩm
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <span class="text-muted d-none d-md-block" style="font-size:11px; font-weight:700; letter-spacing:1px;">SẮP XẾP:</span>
+                    <span class="text-muted d-none d-md-block uix-3aa7552479">SẮP XẾP:</span>
                     <select class="sort-select" onchange="window.location.href=this.value">
                         <option value="{{ request()->fullUrlWithQuery(['sort' => 'discount_desc']) }}" {{ request('sort', 'discount_desc') == 'discount_desc' ? 'selected' : '' }}>Giảm nhiều nhất</option>
                         <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá thấp → cao</option>
@@ -128,7 +105,7 @@
                                         @if($product->so_luong <= 0)
                                             <div class="product-badge badge-out">Hết hàng</div>
                                         @else
-                                            <div class="product-badge" style="background:#e11d48; color:#fff; border:none;">
+                                            <div class="product-badge uix-6263644e65">
                                                 @if($promo && $promo->tag)
                                                     {{ $promo->tag }}
                                                 @else
@@ -162,7 +139,10 @@
 
                                     <div class="product-actions">
                                         @if($product->so_luong > 0)
-                                            <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                            <form action="{{ route('cart.add') }}" method="POST" class="w-full"
+                                                  data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                                                  data-product-name="{{ $product->ten_sp }}"
+                                                  data-size-options='@json($product->sizes ?? [])'>
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                 <input type="hidden" name="so_luong" value="1">

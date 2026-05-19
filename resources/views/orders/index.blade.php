@@ -46,7 +46,7 @@
                     <div class="d-flex align-items-center gap-3">
                         @if($review->product)
                             <img src="{{ $review->product->image_path }}" class="item-img w-60-px-custom h-60-px-custom" alt="Product">
-                            <div style="flex:1;">
+                            <div class="uix-7623f05545">
                                 <div class="item-title mb-1">{{ $review->product->ten_sp }}</div>
                                 <div class="star-rating text-yellow-custom text-xs-custom">
                                     @for($i=1; $i<=5; $i++)
@@ -75,7 +75,7 @@
             @empty
                 <div class="empty-state">
                     <i class="fas fa-comment-slash fa-4x text-muted mb-4"></i>
-                    <h3 style="font-weight: 700;">Chưa có đánh giá nào</h3>
+                    <h3 class="uix-42acb60ee2">Chưa có đánh giá nào</h3>
                     <p class="text-muted mb-4">Bạn chưa đánh giá bất kỳ sản phẩm nào.</p>
                 </div>
             @endforelse
@@ -117,7 +117,7 @@
                                         <i class="fas fa-image text-muted"></i>
                                     </div>
                                 @endif
-                                <div style="flex:1;">
+                                <div class="uix-7623f05545">
                                     <div class="item-title">{{ $detail->product ? $detail->product->ten_sp : 'Sản phẩm đã xóa' }}</div>
                                     <div class="item-qty">Số lượng: {{ $detail->so_luong }}</div>
 
@@ -176,7 +176,7 @@
             @empty
                 <div class="empty-state">
                     <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
-                    <h3 style="font-weight: 700;">Không tìm thấy đơn hàng</h3>
+                    <h3 class="uix-42acb60ee2">Không tìm thấy đơn hàng</h3>
                     <p class="text-muted mb-4">Bạn chưa có đơn hàng nào với trạng thái này.</p>
                     <a href="{{ route('products.index') }}" class="btn btn-ava-dark px-4 py-2">BẮT ĐẦU MUA SẮM</a>
                 </div>

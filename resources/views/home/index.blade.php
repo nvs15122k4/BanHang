@@ -4,29 +4,6 @@
 
 @push('styles')
     @vite(['resources/css/views/home.css'])
-    <style>
-    .wishlist-btn-float {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255,255,255,0.9);
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        transition: all 0.2s;
-        z-index: 10;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .wishlist-btn-float:hover, .wishlist-btn-float.active {
-        color: #e11d48;
-        background: #fff;
-    }
-    </style>
 @endpush
 
 @section('content')
@@ -35,9 +12,9 @@
 <section class="hero-section">
     <div class="hero-bg" id="heroSlider">
         <!-- Bạn có thể thêm 2-3 ảnh tùy ý tại đây -->
-        <div class="hero-bg-item active" style="background-image: url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634216/wug2aeesprt4ghjksljq.png')"></div>
-        <div class="hero-bg-item" style="background-image: url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634214/hzbqlxybgcc2ftcbvvep.jpg')"></div>
-        <div class="hero-bg-item" style="background-image: url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634215/dpyubaok2bjzmzayhqm8.jpg')"></div>
+        <div class="hero-bg-item active uix-920b296261"></div>
+        <div class="hero-bg-item uix-2452cd6dde"></div>
+        <div class="hero-bg-item uix-e9a5c72b17"></div>
     </div>
     <div class="container">
         <div class="hero-content">
@@ -134,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="category-card">
-                    <div class="category-img" style="background-image:url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634213/moetvw8jk5czsz9um7xh.jpg')"></div>
+                    <div class="category-img uix-0746f10362"></div>
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nữ</h3>
@@ -144,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="col-md-4">
                 <div class="category-card">
-                    <div class="category-img" style="background-image:url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634215/s6e4glwbkp5umuyfsvny.jpg')"></div>
+                    <div class="category-img uix-21e6820b00"></div>
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nam</h3>
@@ -154,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="col-md-4">
                 <div class="category-card">
-                    <div class="category-img" style="background-image:url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634213/tz3nx2t8vq1yrjejw7cv.jpg')"></div>
+                    <div class="category-img uix-77f8847808"></div>
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Trẻ em & Thể thao</h3>
@@ -187,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 @if($product->so_luong <= 0)
                                     <div class="product-badge badge-out">Hết hàng</div>
                                 @else
-                                    <div class="product-badge" style="background:#e11d48; color:#fff; border:none;">
+                                    <div class="product-badge uix-6263644e65">
                                         @if($promo && $promo->tag)
                                             {{ $promo->tag }}
                                         @else
@@ -220,7 +197,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             <div class="product-actions">
                                 @if($product->so_luong > 0)
-                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full"
+                                          data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                                          data-product-name="{{ $product->ten_sp }}"
+                                          data-size-options='@json($product->sizes ?? [])'>
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                                         <input type="hidden" name="so_luong" value="1">
@@ -252,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="container position-relative">
         <div class="promo-eyebrow">Ưu đãi đặc biệt</div>
         <div class="promo-title">BỘ SƯU TẬP<br>NĂM <span>2026</span></div>
-        <div class="promo-title text-primary-custom" style="font-size:36px;">GIẢM ĐẾN 50%</div>
+        <div class="promo-title text-primary-custom uix-c3a0a563bb">GIẢM ĐẾN 50%</div>
         <p class="promo-desc">Chương trình khuyến mãi có thời hạn — Đừng bỏ lỡ!</p>
         <a href="{{ route('products.index') }}" class="btn-st-dark px-5 py-3 bg-white text-dark display-inline-block">MUA NGAY</a>
     </div>
@@ -301,7 +281,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             <div class="product-actions">
                                 @if($product->so_luong > 0)
-                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full"
+                                          data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                                          data-product-name="{{ $product->ten_sp }}"
+                                          data-size-options='@json($product->sizes ?? [])'>
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                                         <input type="hidden" name="so_luong" value="1">
@@ -328,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <section class="newsletter-section">
     <div class="container">
         <h2 class="newsletter-title">Tham gia cùng chúng tôi</h2>
-        <p class="tracking-wide-custom" style="font-size:16px; color:rgba(255,255,255,0.5);">Nhận ưu đãi 20% cho đơn hàng đầu tiên của bạn</p>
+        <p class="tracking-wide-custom uix-3a4643dee9">Nhận ưu đãi 20% cho đơn hàng đầu tiên của bạn</p>
         <div class="newsletter-group">
             <input type="email" class="newsletter-input" placeholder="Địa chỉ email của bạn">
             <button class="btn-nl">Đăng ký</button>

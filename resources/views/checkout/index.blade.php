@@ -37,12 +37,12 @@
                                         data-phone="{{ $address->phone }}"
                                         data-address="{{ $address->full_address }}"
                                         onchange="populateFromRadio(this)">
-                                    <div style="flex: 1;">
+                                    <div class="uix-ee3d55bf99">
                                         <div class="fw-bold mb-1">{{ $address->recipient_name }} <span class="text-muted fw-normal">| {{ $address->phone }}</span></div>
-                                        <div class="text-muted" style="font-size: 14px;">{{ $address->full_address }}</div>
+                                        <div class="text-muted uix-df67104f3b">{{ $address->full_address }}</div>
                                     </div>
                                     @if($address->is_default)
-                                        <span class="badge bg-dark" style="height: fit-content;">Mặc định</span>
+                                        <span class="badge bg-dark uix-ecbc02f2ae">Mặc định</span>
                                     @endif
                                 </label>
                             @endforeach
@@ -80,23 +80,23 @@
                     <h2 class="section-title"><i class="fas fa-credit-card"></i> Phương thức thanh toán</h2>
                     
                     <label class="payment-option w-100 selected" onclick="selectPayment(this)">
-                        <input type="radio" name="phuong_thuc_thanh_toan" value="vietqr" class="address-radio" checked style="display:none;">
+                        <input type="radio" name="phuong_thuc_thanh_toan" value="vietqr" class="address-radio uix-c8be1ccba6" checked>
                         <i class="fas fa-qrcode payment-icon"></i>
                         <div>
                             <div class="fw-bold">Chuyển khoản VietQR</div>
-                            <div class="text-muted" style="font-size: 13px;">Quét mã QR bằng ứng dụng ngân hàng. Nhanh chóng và tiện lợi.</div>
+                            <div class="text-muted uix-eefff2f8dd">Quét mã QR bằng ứng dụng ngân hàng. Nhanh chóng và tiện lợi.</div>
                         </div>
-                        <i class="fas fa-check-circle ms-auto text-success" style="font-size: 20px;"></i>
+                        <i class="fas fa-check-circle ms-auto text-success uix-4ef9d2a6df"></i>
                     </label>
                     
                     <label class="payment-option w-100" onclick="selectPayment(this)">
-                        <input type="radio" name="phuong_thuc_thanh_toan" value="bank_transfer" class="address-radio" style="display:none;">
+                        <input type="radio" name="phuong_thuc_thanh_toan" value="cod" class="address-radio uix-c8be1ccba6">
                         <i class="fas fa-money-bill-wave payment-icon"></i>
                         <div>
-                            <div class="fw-bold">Tiền mặt (COD)</div>
-                            <div class="text-muted" style="font-size: 13px;">Thanh toán bằng tiền mặt sau khi nhận hàng</div>
+                            <div class="fw-bold">Thanh toán COD</div>
+                            <div class="text-muted uix-eefff2f8dd">Thanh toán bằng tiền mặt sau khi nhận hàng</div>
                         </div>
-                        <i class="fas fa-check-circle ms-auto text-success check-icon" style="font-size: 20px; display: none;"></i>
+                        <i class="fas fa-check-circle ms-auto text-success check-icon uix-6e7d8ba72f"></i>
                     </label>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                 <div class="summary-panel">
                     <h2 class="section-title">Đơn hàng của bạn</h2>
                     
-                    <div style="max-height: 350px; overflow-y: auto; padding-right: 10px; margin-bottom: 20px;">
+                    <div class="uix-e18ee3f224">
                         @foreach($items as $item)
                             @php $product = $item['product']; @endphp
                             <div class="order-item">
@@ -125,7 +125,7 @@
                                         <span class="item-qty">Số lượng: {{ $item['so_luong'] }}</span>
                                         <div class="text-end">
                                             @if(isset($item['promo']) && $item['promo'])
-                                                <div class="text-muted text-decoration-line-through" style="font-size: 0.8em;">{{ number_format($item['gia_goc'] * $item['so_luong']) }}đ</div>
+                                                <div class="text-muted text-decoration-line-through uix-18fdbe7d39">{{ number_format($item['gia_goc'] * $item['so_luong']) }}đ</div>
                                             @endif
                                             <div class="item-price">{{ number_format($item['subtotal']) }}đ</div>
                                         </div>

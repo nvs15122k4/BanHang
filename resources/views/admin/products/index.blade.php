@@ -2,15 +2,7 @@
 @section('title', 'Quản lý Sản phẩm')
 
 @push('styles')
-<style>
-.product-img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid #eee; }
-.product-img-placeholder { width: 48px; height: 48px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-.table-product td { vertical-align: middle; }
-.badge-status-con { background: #d1fae5; color: #065f46; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: none; }
-.badge-status-het { background: #fee2e2; color: #b91c1c; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: none; }
-.price-val { font-size: 15px; font-weight: 700; color: #111; }
-.loai-pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #e0e7ff; color: #3730a3; font-weight: 600; }
-</style>
+@vite(['resources/css/admin_common.css'])
 @endpush
 
 @section('content')
@@ -127,7 +119,7 @@
                     @endif
                     <div>
                         <div class="fw-semibold text-dark">{{ $product->ten_sp }}</div>
-                        <div class="text-muted" style="font-size:12px;">ID: #{{ $product->id }}</div>
+                        <div class="text-muted uix-e71ae94b55">ID: #{{ $product->id }}</div>
                     </div>
                 </div>
               </td>
@@ -192,8 +184,8 @@
 
 <!-- Update Stock Modal -->
 <div class="modal fade" id="updateStockModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
-        <div class="modal-content" style="border:none; border-radius:16px;">
+    <div class="modal-dialog modal-dialog-centered uix-2c8110d4ee">
+        <div class="modal-content uix-5702bb2a37">
             <div class="modal-header border-bottom-0 pb-0">
                 <h5 class="modal-title fw-bold">Cập nhật Tồn kho</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

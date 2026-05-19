@@ -85,13 +85,13 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th style="width:60px;">ID</th>
-                    <th style="width:70px;">Ảnh</th>
+                    <th class="uix-2b12d8628e">ID</th>
+                    <th class="uix-d26d79f4c2">Ảnh</th>
                     <th>Tên sản phẩm</th>
-                    <th style="width:120px;">Giá</th>
-                    <th style="width:120px;">Tồn kho</th>
-                    <th style="width:120px;">Trạng thái</th>
-                    <th style="width:200px;">Thao tác</th>
+                    <th class="uix-9fe45cd88c">Giá</th>
+                    <th class="uix-9fe45cd88c">Tồn kho</th>
+                    <th class="uix-9fe45cd88c">Trạng thái</th>
+                    <th class="uix-d4a09a0d6e">Thao tác</th>
                 </tr>
             </thead>
             <tbody>

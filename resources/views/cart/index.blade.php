@@ -65,8 +65,8 @@
                                 <td class="text-center" data-label="Giá">
                                     @if(isset($item['promo']) && $item['promo'])
                                         <div class="cart-item-price text-danger fw-bold mb-1">{{ number_format($item['gia_ban']) }}đ</div>
-                                        <div class="cart-item-price text-muted text-decoration-line-through" style="font-size:0.85em;">{{ number_format($item['gia_goc']) }}đ</div>
-                                        <div class="badge bg-danger mt-1" style="font-size: 0.7em;">-{{ number_format($item['gia_goc'] - $item['gia_ban']) }}đ</div>
+                                        <div class="cart-item-price text-muted text-decoration-line-through uix-46c1af49ee">{{ number_format($item['gia_goc']) }}đ</div>
+                                        <div class="badge bg-danger mt-1 uix-c1bee9e2b2">-{{ number_format($item['gia_goc'] - $item['gia_ban']) }}đ</div>
                                     @else
                                         <span class="cart-item-price">{{ number_format($item['gia_goc']) }}đ</span>
                                     @endif

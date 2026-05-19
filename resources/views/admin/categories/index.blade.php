@@ -35,7 +35,7 @@
                     <tr>
                         <td>{{ $category->id }}</td>
                         <td>
-                            <i class="{{ $category->icon }} fa-lg" style="color:var(--primary);"></i>
+                            <i class="{{ $category->icon }} fa-lg inline-color-primary"></i>
                         </td>
                         <td class="font-medium-custom">{{ $category->name }}</td>
                         <td><code>{{ $category->slug }}</code></td>

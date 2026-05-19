@@ -8,16 +8,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/auth.css', 'resources/js/app.js'])
+    @vite(['resources/css/auth.css', 'resources/css/extracted-inline.css', 'resources/js/app.js'])
 </head>
 <body>
 
     <div class="login-wrapper">
         <div class="login-img">
-            <div style="position:relative; z-index:1;">
-                <div style="font-size:12px; letter-spacing:4px; font-weight:700; text-transform:uppercase; margin-bottom:15px; color:rgba(255,255,255,0.8);">ƯU ĐÃI ĐẶC BIỆT</div>
+            <div class="uix-761c00d357">
+                <div class="uix-1295b2a563">ƯU ĐÃI ĐẶC BIỆT</div>
                 <h2>Giảm đến<br>50% OFF</h2>
-                <p style="font-size:14px; color:rgba(255,255,255,0.8); margin-top:10px;">Sàn Tím Vi En — Phong cách Việt</p>
+                <p class="uix-d8c19c644b">Sàn Tím Vi En — Phong cách Việt</p>
             </div>
         </div>
         
@@ -28,7 +28,7 @@
             <p class="text-muted mb-4">Chào mừng đến Sàn Tím Vi En! Vui lòng nhập thông tin của bạn.</p>
             
             @if(session('status'))
-                <div class="alert alert-success rounded-0" style="background:#E8F5E9; color:#2E7D32; border:none;">
+                <div class="alert alert-success rounded-0 uix-9b2859607a">
                     {{ session('status') }}
                 </div>
             @endif
@@ -40,7 +40,7 @@
                     <label class="form-label">Địa chỉ Email</label>
                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autofocus>
                     @error('email')
-                        <div class="invalid-feedback mb-3" style="margin-top:-15px;">{{ $message }}</div>
+                        <div class="invalid-feedback mb-3 uix-dd7c389abd">{{ $message }}</div>
                     @enderror
                 </div>
                 
@@ -48,18 +48,18 @@
                     <div class="d-flex justify-content-between">
                         <label class="form-label">Mật khẩu</label>
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" style="color: var(--text-main); font-size: 13px;">Quên mật khẩu?</a>
+                            <a class="uix-e2cf23cc81" href="{{ route('password.request') }}">Quên mật khẩu?</a>
                         @endif
                     </div>
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
                     @error('password')
-                        <div class="invalid-feedback mb-3" style="margin-top:-15px;">{{ $message }}</div>
+                        <div class="invalid-feedback mb-3 uix-dd7c389abd">{{ $message }}</div>
                     @enderror
                 </div>
                 
                 <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="remember" id="remember" style="border-radius:0; accent-color:var(--text-main);">
-                    <label class="form-check-label text-muted" for="remember" style="font-size:14px;">
+                    <input class="form-check-input uix-6b2862890a" type="checkbox" name="remember" id="remember">
+                    <label class="form-check-label text-muted uix-ba62946b0e" for="remember">
                         Ghi nhớ đăng nhập
                     </label>
                 </div>
@@ -69,8 +69,8 @@
             
             <div class="divider"><span>HOẶC</span></div>
             
-            <div class="text-center" style="font-size: 14px;">
-                Mới đến Sàn Tím? <a href="{{ route('register') }}" style="color: #7C3AED; font-weight: 700;">Đăng ký ngay</a>
+            <div class="text-center uix-df67104f3b">
+                Mới đến Sàn Tím? <a class="uix-2b3997a8e4" href="{{ route('register') }}">Đăng ký ngay</a>
             </div>
         </div>
     </div>

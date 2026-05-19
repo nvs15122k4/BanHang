@@ -87,6 +87,8 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $this->normalizePriceInput($request);
+
         $request->validate([
             'ten_sp'    => 'required|string|max:255',
             'loai'      => 'nullable|string|max:50',
@@ -101,7 +103,8 @@ class ProductController extends Controller
         ]);
 
         try {
-            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai', 'sizes']);
+            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
+            $data['sizes'] = array_values($request->input('sizes', []));
             $image    = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
@@ -139,6 +142,8 @@ class ProductController extends Controller
                 'gia'        => $product->gia,
                 'so_luong'   => $product->so_luong,
                 'trang_thai' => $product->trang_thai,
+                'sizes'      => $product->sizes ?? [],
+                'requires_size' => count($product->sizes ?? []) > 0,
                 'image_path' => $product->image_path,
                 'created_at' => $product->created_at,
                 'updated_at' => $product->updated_at,
@@ -236,6 +241,8 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        $this->normalizePriceInput($request);
+
         $request->validate([
             'ten_sp'     => 'required|string|max:255',
             'loai'       => 'nullable|string|max:50',
@@ -250,7 +257,8 @@ class ProductController extends Controller
         ]);
 
         try {
-            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai', 'sizes']);
+            $data     = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
+            $data['sizes'] = array_values($request->input('sizes', []));
             $image    = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
@@ -306,6 +314,16 @@ class ProductController extends Controller
             return route('admin.products');
         }
         return route('admin.products'); // Mặc định luôn về admin khi admin thao tác
+    }
+
+    private function normalizePriceInput(Request $request): void
+    {
+        if (! $request->has('gia')) {
+            return;
+        }
+
+        $price = preg_replace('/\D+/', '', (string) $request->input('gia'));
+        $request->merge(['gia' => $price]);
     }
 
     /**

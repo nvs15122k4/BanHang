@@ -2,15 +2,7 @@
 @section('title', 'Chỉnh Sửa Khuyến Mãi')
 
 @push('styles')
-<style>
-.pham-vi-card { border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px; cursor: pointer; transition: all .2s; }
-.pham-vi-card:hover, .pham-vi-card.selected { border-color: #6366f1; background: #eef2ff; }
-.pham-vi-card input[type=radio] { accent-color: #6366f1; }
-.step-badge { width:28px; height:28px; border-radius:50%; background:#6366f1; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
-.product-checkbox-item { border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; margin-bottom:6px; display:flex; align-items:center; gap:10px; cursor:pointer; }
-.product-checkbox-item:hover { background:#f9fafb; }
-.product-checkbox-item input { accent-color:#6366f1; }
-</style>
+@vite(['resources/css/admin_common.css'])
 @endpush
 
 @section('content')

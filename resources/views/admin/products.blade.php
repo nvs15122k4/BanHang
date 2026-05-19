@@ -60,14 +60,14 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th style="width: 80px;">Ảnh</th>
+                    <th class="uix-d4260d2a3e">ID</th>
+                    <th class="uix-1b3b307987">Ảnh</th>
                     <th>Tên sản phẩm</th>
-                    <th style="width: 110px;">Loại</th>
-                    <th style="width: 120px;">Giá</th>
-                    <th style="width: 100px;">Số lượng</th>
-                    <th style="width: 110px;">Tồn kho</th>
-                    <th style="width: 200px;">Hành động</th>
+                    <th class="uix-9ed99d3bca">Loại</th>
+                    <th class="uix-3b33845933">Giá</th>
+                    <th class="uix-807e51198d">Số lượng</th>
+                    <th class="uix-9ed99d3bca">Tồn kho</th>
+                    <th class="uix-ec060bac5e">Hành động</th>
                 </tr>
             </thead>
             <tbody>

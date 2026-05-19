@@ -4,36 +4,6 @@
 
 @push('styles')
     @vite(['resources/css/admin_common.css'])
-    <style>
-        .chart-container {
-            position: relative;
-            height: 350px;
-            width: 100%;
-        }
-        .chart-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: var(--glass-border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            margin-bottom: 2rem;
-        }
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        .chart-title {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-main);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
-        }
-    </style>
 @endpush
 
 @section('content')
@@ -52,7 +22,7 @@
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(124, 58, 237, 0.1); color: #7c3aed;">
+            <div class="stat-icon uix-4ab3c9f677">
                 <i class="fas fa-wallet"></i>
             </div>
             <div class="mt-3">
@@ -63,7 +33,7 @@
     </div>
     <div class="col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+            <div class="stat-icon uix-1b8f34875f">
                 <i class="fas fa-shopping-bag"></i>
             </div>
             <div class="mt-3">
@@ -74,7 +44,7 @@
     </div>
     <div class="col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+            <div class="stat-icon uix-790a3823c9">
                 <i class="fas fa-box"></i>
             </div>
             <div class="mt-3">
@@ -85,7 +55,7 @@
     </div>
     <div class="col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+            <div class="stat-icon uix-0bc5cea11c">
                 <i class="fas fa-users"></i>
             </div>
             <div class="mt-3">

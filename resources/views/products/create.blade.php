@@ -10,13 +10,13 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card" style="border: none; background-color: #FFFFFF;">
-                <div class="card-header" style="background-color: var(--bg); border: none; padding: 24px;">
-                    <h4 style="margin-bottom: 0; font-weight: 500; color: var(--text); font-size: 24px;">
+            <div class="card uix-29147033cb">
+                <div class="card-header uix-0151773bcf">
+                    <h4 class="uix-08f6e3acc8">
                         THÊM SẢN PHẨM MỚI
                     </h4>
                 </div>
-                <div class="card-body" style="padding: 32px;">
+                <div class="card-body uix-cee304f894">
                     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         {{-- Lưu lại trang gốc để redirect đúng sau khi lưu --}}
@@ -46,11 +46,11 @@
                                         <option value="__new__">+ Thêm loại mới...</option>
                                     </select>
                                     <input type="text" name="loai" id="loai_new"
-                                           class="form-control mt-2 @error('loai') is-invalid @enderror"
+                                           class="form-control mt-2 @error('loai') is-invalid @enderror uix-c8be1ccba6"
                                            placeholder="Nhập tên loại mới (vd: do_choi)"
-                                           style="display:none;"
+                                          
                                            value="{{ old('loai') && !array_key_exists(old('loai'), $loaiList) ? old('loai') : '' }}">
-                                    <div class="form-text" id="loai_new_hint" style="display:none;">
+                                    <div class="form-text uix-c8be1ccba6" id="loai_new_hint">
                                         Tên loại sẽ được lưu vào DB và tự động xuất hiện trong danh sách.
                                         <a href="#" onclick="cancelNewLoai(); return false;">Hủy</a>
                                     </div>
@@ -129,14 +129,14 @@
                                 @error('anh_file')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
-                                <div id="preview-file" class="mt-2" style="display:none;">
-                                    <img id="preview-file-img" src="" alt="Preview"
-                                         style="max-height:120px; border-radius:8px; border:1px solid var(--border);">
+                                <div id="preview-file" class="mt-2 uix-c8be1ccba6">
+                                    <img class="uix-e1fc704f82" id="preview-file-img" src="" alt="Preview"
+                                        >
                                 </div>
                             </div>
 
                             {{-- Tab: Nhập URL --}}
-                            <div id="tab-url" style="display:none;">
+                            <div class="uix-c8be1ccba6" id="tab-url">
                                 <input type="text" name="anh" id="anh_url"
                                        class="form-control @error('anh') is-invalid @enderror"
                                        placeholder="https://example.com/image.jpg"
@@ -146,9 +146,9 @@
                                 @error('anh')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <div id="preview-url" class="mt-2" style="display:none;">
-                                    <img id="preview-url-img" src="" alt="Preview"
-                                         style="max-height:120px; border-radius:8px; border:1px solid var(--border);"
+                                <div id="preview-url" class="mt-2 uix-c8be1ccba6">
+                                    <img class="uix-e1fc704f82" id="preview-url-img" src="" alt="Preview"
+                                        
                                          onerror="this.parentElement.style.display='none'">
                                 </div>
                             </div>

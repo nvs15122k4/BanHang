@@ -88,11 +88,11 @@
                 <tr>
                     <th>Người dùng</th>
                     <th>Sản phẩm</th>
-                    <th style="width: 120px;">Đánh giá</th>
+                    <th class="uix-3b33845933">Đánh giá</th>
                     <th>Nhận xét</th>
-                    <th style="width: 120px;">Trạng thái</th>
-                    <th style="width: 120px;">Ngày gửi</th>
-                    <th style="width: 160px;">Hành động</th>
+                    <th class="uix-3b33845933">Trạng thái</th>
+                    <th class="uix-3b33845933">Ngày gửi</th>
+                    <th class="uix-611bf920db">Hành động</th>
                 </tr>
             </thead>
             <tbody>

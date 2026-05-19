@@ -2,13 +2,7 @@
 @section('title', 'Quản lý Khuyến Mãi')
 
 @push('styles')
-<style>
-.promo-status-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
-.promo-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background:#f59e0b; color:#fff; font-weight:700; letter-spacing:1px; }
-.scope-pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; background:#e0e7ff; color:#3730a3; font-weight:600; }
-.discount-val { font-size: 22px; font-weight: 800; color:#e11d48; }
-.table-promo td { vertical-align: middle; }
-</style>
+@vite(['resources/css/admin_common.css'])
 @endpush
 
 @section('content')
@@ -124,12 +118,12 @@
               </td>
               <td>
                 @if($promo->pham_vi === 'all')
-                  <span class="scope-pill" style="background:#d1fae5;color:#065f46;">🌐 Toàn bộ</span>
+                  <span class="scope-pill uix-0947da2265">🌐 Toàn bộ</span>
                 @elseif($promo->pham_vi === 'category')
                   <span class="scope-pill">📂 Danh mục</span>
                   <div class="text-muted small">{{ $promo->items->pluck('gia_tri')->join(', ') }}</div>
                 @else
-                  <span class="scope-pill" style="background:#fef3c7;color:#92400e;">📦 {{ $promo->items->count() }} sản phẩm</span>
+                  <span class="scope-pill uix-ea3ce52629">📦 {{ $promo->items->count() }} sản phẩm</span>
                 @endif
               </td>
               <td>

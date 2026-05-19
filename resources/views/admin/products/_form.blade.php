@@ -48,7 +48,7 @@
   <div class="row g-3">
     <div class="col-md-4">
       <label class="form-label fw-semibold small">Giá bán (VNĐ) <span class="text-danger">*</span></label>
-      <input type="number" name="gia" class="form-control @error('gia') is-invalid @enderror" min="0" value="{{ old('gia', $product->gia ?? '') }}" required>
+      <input type="text" name="gia" class="form-control js-price-input @error('gia') is-invalid @enderror" inputmode="numeric" pattern="[0-9.,\s]*" value="{{ old('gia', isset($product->gia) ? (int) $product->gia : '') }}" required>
       @error('gia')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-4">
@@ -83,10 +83,10 @@
 
   @if($currentImg)
     <div class="mb-3 d-flex align-items-center gap-3 p-3 bg-light rounded">
-      <img src="{{ $product->image_path }}" alt="Ảnh hiện tại" style="width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid #ddd;" onerror="this.src='{{ asset('images/default-product.svg') }}'">
+      <img src="{{ $product->image_path }}" alt="Ảnh hiện tại" class="inline-product-image-sm" onerror="this.src='{{ asset('images/default-product.svg') }}'">
       <div>
         <div class="fw-semibold text-dark">Ảnh hiện tại</div>
-        <div class="small text-muted" style="word-break:break-all;">
+        <div class="small text-muted uix-29ee55a0c6">
           @if($isUrl)
             <a href="{{ $currentImg }}" target="_blank" class="text-primary">{{ Str::limit($currentImg, 60) }}</a>
           @else
@@ -112,8 +112,8 @@
         <input type="file" name="anh_file" id="anh_file" class="form-control @error('anh_file') is-invalid @enderror" accept="image/*" onchange="previewFile(this)">
         <div class="form-text mt-2">Chấp nhận: JPG, PNG, WEBP. Tối đa 2MB. Để trống nếu không muốn thay đổi.</div>
         @error('anh_file')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
-        <div id="preview-file" class="mt-3" style="display:none;">
-          <img id="preview-file-img" src="" alt="Preview" style="max-height:120px; border-radius:8px; border:1px solid #ddd;">
+        <div id="preview-file" class="mt-3 uix-c8be1ccba6">
+          <img class="uix-b917c0d0bb" id="preview-file-img" src="" alt="Preview">
         </div>
       </div>
 
@@ -122,7 +122,7 @@
         <div class="form-text mt-2">Nhập đường dẫn trực tiếp tới ảnh (http:// hoặc https://)</div>
         @error('anh')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
         <div id="preview-url" class="mt-3" style="{{ ($isUrl && $currentImg) ? '' : 'display:none;' }}">
-          <img id="preview-url-img" src="{{ $isUrl ? $currentImg : '' }}" alt="Preview" style="max-height:120px; border-radius:8px; border:1px solid #ddd;" onerror="this.parentElement.style.display='none'">
+          <img class="uix-b917c0d0bb" id="preview-url-img" src="{{ $isUrl ? $currentImg : '' }}" alt="Preview" onerror="this.parentElement.style.display='none'">
         </div>
       </div>
     </div>
@@ -155,7 +155,7 @@
         @endforeach
       </div>
       @error('sizes')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
-      <div class="form-text mt-2">Để trống nếu sản phẩm không có size cụ thể</div>
+      <div class="form-text mt-2">Nếu tích size, khách hàng bắt buộc chọn một size trong popup trước khi thêm sản phẩm vào giỏ. Để trống nếu sản phẩm không cần chọn size.</div>
     </div>
   </div>
 </div>
@@ -229,5 +229,17 @@ function previewUrl(input) {
     preview.style.display = 'none';
   }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.js-price-input').forEach(input => {
+    input.addEventListener('input', function () {
+      this.value = this.value.replace(/[^\d.,\s]/g, '');
+    });
+
+    input.form?.addEventListener('submit', function () {
+      input.value = input.value.replace(/[^\d]/g, '');
+    });
+  });
+});
 </script>
 @endpush

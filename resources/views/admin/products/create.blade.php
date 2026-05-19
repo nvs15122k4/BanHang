@@ -2,9 +2,7 @@
 @section('title', 'Thêm Sản phẩm mới')
 
 @push('styles')
-<style>
-.step-badge { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e0e7ff; color:#3730a3; border-radius:50%; font-size:12px; font-weight:bold; }
-</style>
+@vite(['resources/css/admin_common.css'])
 @endpush
 
 @section('content')

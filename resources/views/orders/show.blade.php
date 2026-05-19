@@ -51,7 +51,7 @@
                     @if($order->trang_thai === 'cancelled')
                         <div class="cancelled-state">
                             <i class="fas fa-times-circle fa-4x text-danger mb-3"></i>
-                            <h4 class="font-bold" style="color: #EB5757;">Đơn hàng đã hủy</h4>
+                            <h4 class="font-bold uix-352917a2be">Đơn hàng đã hủy</h4>
                             <p class="text-muted">Đơn hàng này đã bị hủy và sẽ không được xử lý.</p>
                         </div>
                     @else
@@ -84,38 +84,38 @@
 
                         {{-- Banner trạng thái đặc biệt --}}
                         @if($order->trang_thai === 'disputing')
-                            <div class="text-center mt-3 py-3" style="background:#FFF5F5; border:1px solid #FFCCCC;">
-                                <i class="fas fa-exclamation-circle fa-2x mb-2" style="color:#EB5757;"></i>
-                                <p class="mb-0 font-bold" style="color:#EB5757;">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
+                            <div class="text-center mt-3 py-3 uix-d8da30a21b">
+                                <i class="fas fa-exclamation-circle fa-2x mb-2 uix-ad41fddcc4"></i>
+                                <p class="mb-0 font-bold uix-ad41fddcc4">Đang xử lý khiếu nại — chúng tôi sẽ liên hệ bạn sớm nhất</p>
                             </div>
                         @elseif($order->trang_thai === 'cancelling')
-                            <div class="text-center mt-3 py-3" style="background:#FFF5F5; border:1px solid #FFCCCC;">
-                                <i class="fas fa-clock fa-2x mb-2" style="color:#EB5757;"></i>
-                                <p class="mb-0 font-bold" style="color:#EB5757;">Yêu cầu hủy đơn hàng đang được xử lý — chúng tôi sẽ phản hồi sớm nhất</p>
+                            <div class="text-center mt-3 py-3 uix-d8da30a21b">
+                                <i class="fas fa-clock fa-2x mb-2 uix-ad41fddcc4"></i>
+                                <p class="mb-0 font-bold uix-ad41fddcc4">Yêu cầu hủy đơn hàng đang được xử lý — chúng tôi sẽ phản hồi sớm nhất</p>
                             </div>
                         @endif
                         {{-- Nút hành động của user khi đơn đang giao --}}
                         @php $userNext = \App\Models\Order::userNextStatuses($order->trang_thai); @endphp
                         @if(count($userNext) > 0)
-                            <div class="mt-4 p-3" style="background:#F9F9F9; border:1px solid #EEE;">
+                            <div class="mt-4 p-3 uix-fa8f0cdd6a">
                                 <p class="font-bold mb-3 text-sm-custom">Bạn đã nhận được hàng chưa?</p>
                                 <div class="d-flex gap-2 flex-wrap">
                                     {{-- Đã nhận --}}
-                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;" data-item-name="#{{ $order->ma_don_hang }}">
+                                    <form class="uix-0cd28ce9ba" method="POST" action="{{ route('orders.updateStatus', $order) }}" data-item-name="#{{ $order->ma_don_hang }}">
                                         @csrf
                                         <input type="hidden" name="trang_thai" value="completed">
-                                        <button type="submit" class="btn btn-success rounded-0 font-bold tracking-wide-custom"
-                                            style="text-transform:uppercase; font-size:13px;"
+                                        <button type="submit" class="btn btn-success rounded-0 font-bold tracking-wide-custom uix-d83ad4db53"
+                                           
                                             onclick="return confirmForm(this.form, 'Xác nhận bạn đã nhận được hàng? Trạng thái đơn hàng sẽ chuyển thành Hoàn thành.', 'Xác nhận đã nhận được hàng', 'success', 'Xác nhận đã nhận')">
                                             <i class="fas fa-check-circle me-2"></i>ĐÃ NHẬN ĐƯỢC HÀNG
                                         </button>
                                     </form>
                                     {{-- Chưa nhận / Khiếu nại --}}
-                                    <form method="POST" action="{{ route('orders.updateStatus', $order) }}" style="display:inline;" data-item-name="#{{ $order->ma_don_hang }}">
+                                    <form class="uix-0cd28ce9ba" method="POST" action="{{ route('orders.updateStatus', $order) }}" data-item-name="#{{ $order->ma_don_hang }}">
                                         @csrf
                                         <input type="hidden" name="trang_thai" value="disputing">
-                                        <button type="submit" class="btn btn-outline-danger rounded-0 font-bold tracking-wide-custom"
-                                            style="text-transform:uppercase; font-size:13px;"
+                                        <button type="submit" class="btn btn-outline-danger rounded-0 font-bold tracking-wide-custom uix-d83ad4db53"
+                                           
                                             onclick="return confirmForm(this.form, 'Xác nhận bạn chưa nhận được hàng và muốn khiếu nại? Chúng tôi sẽ tiếp nhận và xử lý sớm nhất.', 'Xác nhận gửi khiếu nại', 'danger', 'Gửi khiếu nại')">
                                             <i class="fas fa-exclamation-circle me-2"></i>CHƯA NHẬN ĐƯỢC HÀNG
                                         </button>
@@ -127,11 +127,11 @@
 
                     {{-- Banner thông tin hoàn tiền --}}
                     @if($order->refund_status !== 'none')
-                        <div class="mt-4 p-4" style="background:#F0F7FF; border:1px solid #BEE3F8;">
+                        <div class="mt-4 p-4 uix-b42cc52776">
                             <div class="d-flex align-items-center gap-3 mb-4">
-                                <i class="fas fa-info-circle fa-2x" style="color:#2B6CB0;"></i>
-                                <div style="flex:1;">
-                                    <h6 class="mb-1 fw-bold" style="color:#2B6CB0; text-transform:uppercase; letter-spacing:1px;">Thông tin hoàn tiền</h6>
+                                <i class="fas fa-info-circle fa-2x uix-b062634876"></i>
+                                <div class="uix-7623f05545">
+                                    <h6 class="mb-1 fw-bold uix-e5984d47c6">Thông tin hoàn tiền</h6>
                                     <p class="mb-0 text-muted small">Đơn hàng này đủ điều kiện hoàn tiền. Vui lòng kiểm tra và cung cấp thông tin bên dưới.</p>
                                 </div>
                                 @if($order->refund_status === 'completed')
@@ -223,10 +223,10 @@
                                 </div>
                             @endif
                             
-                            <div style="flex:1;">
+                            <div class="uix-7623f05545">
                                 <div class="item-title">
                                     @if($detail->product)
-                                        <a href="{{ route('products.show', $detail->product->id) }}" style="color:inherit; text-decoration:none;">
+                                        <a href="{{ route('products.show', $detail->product->id) }}" class="inline-link-inherit">
                                             {{ $detail->product->ten_sp }}
                                         </a>
                                     @else
@@ -248,8 +248,8 @@
                                     @endphp
                                     @if($reviewed)
                                         <button type="button"
-                                           class="btn mt-2"
-                                           style="background:#27AE60; color:#fff; border:none; padding:6px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:0;"
+                                           class="btn mt-2 uix-390926d2bb"
+                                          
                                            data-bs-toggle="modal"
                                            data-bs-target="#globalReviewModal"
                                            data-product-id="{{ $detail->product->id }}"
@@ -261,8 +261,8 @@
                                         </button>
                                     @else
                                         <button type="button"
-                                           class="btn mt-2"
-                                           style="background:var(--primary); color:#fff; border:none; padding:6px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:0;"
+                                           class="btn mt-2 uix-2175ed6068"
+                                          
                                            data-bs-toggle="modal"
                                            data-bs-target="#globalReviewModal"
                                            data-product-id="{{ $detail->product->id }}"
@@ -275,7 +275,7 @@
                                 @endif
                             </div>
                             
-                            <div class="fw-bold" style="font-size: 16px;">
+                            <div class="fw-bold uix-b87efa5bc3">
                                 {{ number_format($detail->thanh_tien) }}đ
                             </div>
                         </div>
@@ -284,7 +284,7 @@
                     <div class="mt-4 pt-3 border-top">
                         <div class="summary-row">
                             <span>Tạm tính:</span>
-                            <span class="fw-bold" style="color: var(--text-main);">{{ number_format($order->tong_tien) }}đ</span>
+                            <span class="fw-bold uix-83b020b78b">{{ number_format($order->tong_tien) }}đ</span>
                         </div>
                         @if($order->giam_gia > 0)
                         <div class="summary-row text-danger">
@@ -294,7 +294,7 @@
                         @endif
                         <div class="summary-row">
                             <span>Vận chuyển:</span>
-                            <span class="fw-bold" style="color: #27AE60;">Miễn phí</span>
+                            <span class="fw-bold uix-5fc6ab3c76">Miễn phí</span>
                         </div>
                         <div class="summary-total">
                             <span>Tổng tiền:</span>
@@ -304,12 +304,12 @@
                 </div>
             </div>
             @if($order->trang_thai === 'pending')
-            <div class="mt-4 p-3 text-center" style="background:#FFF5F5; border:1px dashed #EB5757;">
-                <p class="mb-3" style="font-size:14px; color:#EB5757; font-weight:600;">Bạn muốn hủy đơn hàng này?</p>
+            <div class="mt-4 p-3 text-center uix-d877e28199">
+                <p class="mb-3 uix-b0973446ac">Bạn muốn hủy đơn hàng này?</p>
                 <form method="POST" action="{{ route('orders.cancel', $order) }}" data-order-code="{{ $order->ma_don_hang }}" data-confirm-text="Xác nhận hủy" onsubmit="return confirmForm(this, 'Xác nhận hủy đơn hàng này?', 'HỦY ĐƠN HÀNG')">
                 @csrf
-                <button type="submit" class="btn btn-danger rounded-0 font-bold tracking-wide-custom" 
-                style="text-transform:uppercase; font-size:13px;">
+                <button type="submit" class="btn btn-danger rounded-0 font-bold tracking-wide-custom uix-d83ad4db53" 
+               >
                 <i class="fas fa-times-circle me-2"></i>Hủy đơn hàng
                 </button>
                 </form>
@@ -327,11 +327,7 @@
                 <div class="section-body">
                     <div class="info-label">Phương thức</div>
                     <div class="info-value">
-                        @if($order->phuong_thuc_thanh_toan === 'vietqr')
-                            Chuyển khoản VietQR
-                        @else
-                            Chuyển khoản ngân hàng
-                        @endif
+                        {{ $order->payment_method_label }}
                     </div>
                     
                     <div class="info-label">Trạng thái thanh toán</div>
@@ -346,7 +342,7 @@
                     @if($order->phuong_thuc_thanh_toan === 'vietqr' && $order->trang_thai_thanh_toan === 'unpaid')
                         <div class="mt-4 pt-4 border-top text-center">
                             <div class="info-label mb-3 text-center">Quét mã QR để thanh toán</div>
-                            <img src="{{ $order->vietqr_url }}" alt="VietQR Code" class="img-fluid border p-2 bg-white mb-2" style="max-width: 340px; border-radius: 8px;">
+                            <img src="{{ $order->vietqr_url }}" alt="VietQR Code" class="img-fluid border p-2 bg-white mb-2 inline-vietqr-image">
                             <p class="text-muted small mt-2">Sử dụng App ngân hàng của bạn để quét mã này.<br>Nội dung chuyển khoản: <strong>{{ $order->ma_don_hang }}</strong></p>
                         </div>
                     @endif
@@ -366,7 +362,7 @@
                     <div class="info-label">Số tiền</div>
                     <div class="info-value" id="amount" onclick="copyToClipboard(document.getElementById('amount').innerText.replace(/\D/g, ''))">{{ number_format($order->thanh_tien) }}đ  <i class="fas fa-copy"></i></div>
                     <div class="info-label">Nội dung</div>
-                    <div class="info-value" style="text-transform:uppercase;" id="content" onclick="copyToClipboard(document.getElementById('content').innerText)">{{ $order->ma_don_hang }} <i class="fas fa-copy"></i></div>
+                    <div class="info-value uix-d3612f07e0" id="content" onclick="copyToClipboard(document.getElementById('content').innerText)">{{ $order->ma_don_hang }} <i class="fas fa-copy"></i></div>
                 </div>
             </div>
         </div>

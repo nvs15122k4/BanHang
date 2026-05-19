@@ -16,6 +16,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    @vite(['resources/css/extracted-inline.css'])
 </head>
 <body>
 
@@ -55,7 +56,7 @@
         </ul>
 
         <!-- Mobile Toggle -->
-        <button class="btn d-lg-none p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" style="font-size:20px; color:var(--text-main);">
+        <button class="btn d-lg-none p-0 uix-dafa9f4e6e" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
             <i class="fas fa-bars"></i>
         </button>
 
@@ -64,7 +65,7 @@
             <div class="search-bar d-none d-md-flex">
                 <form action="{{ route('products.index') }}" method="GET" class="d-flex w-100 align-items-center">
                     <input type="text" name="search" placeholder="Tìm sản phẩm..." value="{{ request('search') }}">
-                    <button type="submit"><i class="fas fa-search" style="font-size:13px;"></i></button>
+                    <button type="submit"><i class="fas fa-search uix-9e6595fb01"></i></button>
                 </form>
             </div>
 
@@ -72,28 +73,28 @@
                 @auth
                     {{-- Notification Bell --}}
                     <div class="dropdown" id="notifDropdownWrap">
-                        <a href="#" class="position-relative" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="color:var(--text-main);" id="notifToggle">
-                            <i class="fas fa-bell" style="font-size:18px;"></i>
+                        <a href="#" class="position-relative uix-9cd4420129" data-bs-toggle="dropdown" data-bs-auto-close="outside" id="notifToggle">
+                            <i class="fas fa-bell uix-4f1925a8a6"></i>
                             <span class="cart-badge d-none" id="notif-badge">0</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end shadow border-0 p-0" id="notifDropdown" style="border-radius:0; min-width:340px;">
-                            <div style="max-height:460px; display:flex; flex-direction:column;">
+                        <div class="dropdown-menu dropdown-menu-end shadow border-0 p-0 uix-c9d6241e98" id="notifDropdown">
+                            <div class="uix-daf1f03179">
                                 {{-- Header --}}
                                 <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom flex-shrink-0">
-                                    <span style="font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:1px;">Thông báo</span>
-                                    <a href="#" id="markAllRead" style="font-size:12px; color:#888; display:none;">Đánh dấu đã đọc</a>
+                                    <span class="uix-95ce444e5f">Thông báo</span>
+                                    <a class="uix-ad6bef653f" href="#" id="markAllRead">Đánh dấu đã đọc</a>
                                 </div>
                                 {{-- List --}}
-                                <div id="notifList" style="overflow-y:auto; flex:1;">
-                                    <div class="text-center py-4 text-muted" id="notifEmpty" style="font-size:13px;">
-                                        <i class="far fa-bell fa-2x mb-2 d-block" style="color:#ddd;"></i>
+                                <div class="uix-441b1b7425" id="notifList">
+                                    <div class="text-center py-4 text-muted uix-9e6595fb01" id="notifEmpty">
+                                        <i class="far fa-bell fa-2x mb-2 d-block uix-30261166ec"></i>
                                         Không có thông báo
                                     </div>
                                 </div>
                                 {{-- Footer --}}
                                 <a href="{{ route('notifications.index') }}"
-                                   class="d-block text-center py-2 border-top flex-shrink-0"
-                                   style="font-size:12px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:1px; text-decoration:none; background:#FAFAFA;">
+                                   class="d-block text-center py-2 border-top flex-shrink-0 uix-6c2fda0f21"
+                                  >
                                     Xem tất cả thông báo
                                 </a>
                             </div>
@@ -101,8 +102,8 @@
                     </div>
 
                     {{-- Wishlist --}}
-                    <a href="{{ route('wishlist.index') }}" class="position-relative mx-2" style="color:var(--text-main);" title="Yêu thích">
-                        <i class="fas fa-heart" style="font-size:18px;"></i>
+                    <a href="{{ route('wishlist.index') }}" class="position-relative mx-2 uix-9cd4420129" title="Yêu thích">
+                        <i class="fas fa-heart uix-4f1925a8a6"></i>
                         @php $wishlistCount = auth()->user()->wishlists()->count(); @endphp
                         @if($wishlistCount > 0)
                             <span class="cart-badge">{{ $wishlistCount }}</span>
@@ -111,7 +112,7 @@
                         @endif
                     </a>
 
-                <a href="{{ route('cart.index') }}" class="position-relative" style="color:var(--text-main);">
+                <a href="{{ route('cart.index') }}" class="position-relative uix-9cd4420129">
                     <i class="fas fa-shopping-bag"></i>
                     @php $cartCount = \App\Http\Controllers\CartController::cartCount(); @endphp
                     @if($cartCount > 0)
@@ -123,10 +124,10 @@
                 
                     {{-- User Menu --}}
                     <div class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="color:var(--text-main); text-decoration:none;">
+                        <a href="#" class="dropdown-toggle uix-becf5e5a9c" data-bs-toggle="dropdown">
                             <i class="far fa-user"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius:0; min-width:200px;">
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 uix-920e6abfc3">
                             @if(auth()->user()->role === 'admin')
                                 <li><a class="dropdown-item py-2 fw-bold" href="{{ route('admin.dashboard') }}"><i class="fas fa-cog me-2"></i>Quản trị</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -143,7 +144,7 @@
                         </ul>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" style="color:var(--text-main);"><i class="far fa-user"></i></a>
+                    <a class="uix-9cd4420129" href="{{ route('login') }}"><i class="far fa-user"></i></a>
                 @endauth
             </div>
         </div>
@@ -151,7 +152,7 @@
 </header>
 
 <!-- ── MOBILE MENU ── -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu" style="width:280px;">
+<div class="offcanvas offcanvas-start uix-eed5c25912" tabindex="-1" id="mobileMenu">
     <div class="offcanvas-header border-bottom">
         <span class="brand-logo">SÀN <span>TÍM</span></span>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -168,8 +169,8 @@
         </div>
         <div class="p-3 mt-3">
             <form action="{{ route('products.index') }}" method="GET" class="d-flex align-items-center bg-light p-2 rounded-pill">
-                <input type="text" name="search" placeholder="Tìm kiếm..." style="border:none;background:transparent;width:100%;outline:none;padding-left:10px;font-size:14px;">
-                <button type="submit" style="background:none;border:none;"><i class="fas fa-search text-muted"></i></button>
+                <input class="uix-187b00e9e7" type="text" name="search" placeholder="Tìm kiếm...">
+                <button class="uix-6c6053b117" type="submit"><i class="fas fa-search text-muted"></i></button>
             </form>
         </div>
     </div>
@@ -187,11 +188,11 @@
             <!-- Brand -->
             <div class="col-lg-3 col-md-6">
                 <div class="footer-brand mb-3">SÀN <span>TÍM</span> VI EN</div>
-                <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7;">
+                <p class="uix-8e5dc3393d">
                     Phong cách Việt — Sống đẹp mỗi ngày.<br>
                     Lorem Ipsum, 235 Simply, Quận 1, TP.HCM
                 </p>
-                <p style="font-size:13px; color:rgba(255,255,255,0.5);">
+                <p class="uix-28dfc8b539">
                     santimvien@gmail.com<br>
                     +84 (28) 3822-4242
                 </p>
@@ -240,7 +241,7 @@
             <!-- Hỗ trợ + Newsletter -->
             <div class="col-lg-3 col-md-6 col-6">
                 <div class="footer-title">Đăng ký nhận tin</div>
-                <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:15px;">Nhận ưu đãi & cập nhật mới nhất</p>
+                <p class="uix-0135655ae3">Nhận ưu đãi & cập nhật mới nhất</p>
                 <div class="newsletter-inline">
                     <input type="email" placeholder="Email của bạn">
                     <button type="button">GỬI</button>
@@ -260,15 +261,15 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center footer-bottom">
             <span>© 2026 Sàn Tím Vi En. All Rights Reserved.</span>
             <div class="d-flex gap-3 mt-2 mt-md-0">
-                <a href="#" style="color:rgba(255,255,255,0.4);">Chính sách bảo mật</a>
-                <a href="#" style="color:rgba(255,255,255,0.4);">Điều khoản & Điều kiện</a>
+                <a class="uix-477a93d71b" href="#">Chính sách bảo mật</a>
+                <a class="uix-477a93d71b" href="#">Điều khoản & Điều kiện</a>
             </div>
         </div>
     </div>
 </footer>
 
 <!-- ── TOAST NOTIFICATIONS ── -->
-<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index:1060;">
+<div id="toast-container" class="position-fixed bottom-0 end-0 p-3 uix-385992d49e">
     @if(session('success'))
         <div class="toast align-items-center text-bg-success border-0 show" role="alert">
             <div class="d-flex">
@@ -287,11 +288,33 @@
     @endif
 </div>
 
+<!-- ── SIZE PICKER MODAL ── -->
+<div class="modal fade" id="sizePickerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content size-picker-modal">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title">Chọn size</h5>
+                    <div class="size-picker-subtitle" id="sizePickerProductName">Sản phẩm này bắt buộc chọn size</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="size-picker-alert">
+                    Vui lòng chọn size trước khi thêm sản phẩm vào giỏ hàng.
+                </div>
+                <div class="size-picker-options" id="sizePickerOptions"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+    let pendingSizeForm = null;
 
     /* ── TOAST ── */
     window.showToast = function(message, type = 'success') {
@@ -314,11 +337,90 @@ document.addEventListener('DOMContentLoaded', function() {
         el.addEventListener('hidden.bs.toast', () => el.remove());
     });
 
+    function getFormSize(form) {
+        const sizeInput = form.querySelector('[name="size"]');
+        return sizeInput ? sizeInput.value.trim() : '';
+    }
+
+    function setFormSize(form, size) {
+        let sizeInput = form.querySelector('[name="size"]');
+        if (!sizeInput) {
+            sizeInput = document.createElement('input');
+            sizeInput.type = 'hidden';
+            sizeInput.name = 'size';
+            form.appendChild(sizeInput);
+        }
+        sizeInput.value = size;
+    }
+
+    function getSizeOptions(form, fallbackSizes = null) {
+        if (Array.isArray(fallbackSizes) && fallbackSizes.length) {
+            return fallbackSizes;
+        }
+
+        try {
+            const parsed = JSON.parse(form.dataset.sizeOptions || '[]');
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    }
+
+    function openSizePicker(form, fallbackSizes = null) {
+        const sizes = getSizeOptions(form, fallbackSizes);
+        if (!sizes.length) {
+            showToast('Sản phẩm này chưa được cấu hình size.', 'danger');
+            return;
+        }
+
+        pendingSizeForm = form;
+        const modalEl = document.getElementById('sizePickerModal');
+        const nameEl = document.getElementById('sizePickerProductName');
+        const optionsEl = document.getElementById('sizePickerOptions');
+        if (!modalEl || !nameEl || !optionsEl) return;
+
+        nameEl.textContent = form.dataset.productName
+            ? `${form.dataset.productName} bắt buộc chọn size`
+            : 'Sản phẩm này bắt buộc chọn size';
+
+        optionsEl.innerHTML = sizes.map(size => (
+            `<button type="button" class="size-picker-option" data-size="${String(size).replace(/"/g, '&quot;')}">${size}</button>`
+        )).join('');
+
+        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+    }
+
+    document.getElementById('sizePickerOptions')?.addEventListener('click', function(e) {
+        const btn = e.target.closest('[data-size]');
+        if (!btn || !pendingSizeForm) return;
+
+        setFormSize(pendingSizeForm, btn.dataset.size);
+
+        const form = pendingSizeForm;
+        const detailSizeButton = form.id === 'addToCartForm'
+            ? document.querySelector(`#sizeOptions [data-size="${CSS.escape(btn.dataset.size)}"]`)
+            : null;
+        if (detailSizeButton) {
+            detailSizeButton.click();
+        }
+
+        const modalEl = document.getElementById('sizePickerModal');
+        bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+
+        pendingSizeForm = null;
+        form.requestSubmit();
+    });
+
     /* ── AJAX ADD TO CART ── */
     document.addEventListener('submit', function(e) {
         const form = e.target;
         if (form.action && form.action.includes('cart/add')) {
             e.preventDefault();
+            if (form.dataset.requiresSize === '1' && !getFormSize(form)) {
+                openSizePicker(form);
+                return;
+            }
+
             const formData = new FormData(form);
             const btn = form.querySelector('button[type="submit"]');
             const orig = btn ? btn.innerHTML : '';
@@ -335,6 +437,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return r.json();
             })
             .then(data => {
+                if (data.size_required) {
+                    openSizePicker(form, data.sizes || []);
+                    return;
+                }
                 showToast(data.message || (data.success ? 'Đã thêm vào giỏ!' : 'Có lỗi!'), data.success ? 'success' : 'danger');
                 if (data.success) {
                     const badge = document.getElementById('cart-badge-count');
@@ -392,9 +498,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="flex-grow-1">
                 <div style="font-weight:${isRead ? '500' : '700'}; font-size:13px; color:#1A1A1A;">${data.title || 'Thông báo'}</div>
                 <div style="font-size:12px; color:${isRead ? '#999' : '#555'}; line-height:1.4;">${data.message || ''}</div>
-                <div style="font-size:11px; color:#BBB; margin-top:3px;">${n.time || ''}</div>
+                <div class="uix-36c680eb9d">${n.time || ''}</div>
             </div>
-            ${!isRead ? '<div style="width:8px;height:8px;background:#7C3AED;border-radius:50%;flex-shrink:0;margin-top:6px;"></div>' : ''}
+            ${!isRead ? '<div class="uix-74fb9e9252"></div>' : ''}
         </a>`;
     }
 
@@ -420,8 +526,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (!notifications || notifications.length === 0) {
-            list.innerHTML = `<div class="text-center py-4 text-muted" style="font-size:13px;">
-                <i class="far fa-bell fa-2x mb-2 d-block" style="color:#ddd;"></i>Không có thông báo
+            list.innerHTML = `<div class="text-center py-4 text-muted uix-9e6595fb01">
+                <i class="far fa-bell fa-2x mb-2 d-block uix-30261166ec"></i>Không có thông báo
             </div>`;
             return;
         }
@@ -497,15 +603,15 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Global Review Modal (Dual Mode: Add & View) -->
     <div class="modal fade" id="globalReviewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content" style="border-radius:20px; border:none; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+            <div class="modal-content uix-f327d18487">
                 <div class="modal-body p-0">
                     <div class="row g-0">
                         <!-- Left: Product Info -->
-                        <div class="col-md-5 d-none d-md-block" style="background:#F9F9F9; border-radius:20px; solid #EEE;">
+                        <div class="col-md-5 d-none d-md-block uix-daaca79a61">
                             <div class="p-4 text-center h-100 d-flex flex-column justify-content-center">
-                                <img id="reviewModalProductImg" src="" class="img-fluid mb-3 mx-auto" style="max-height:200px; object-fit:contain;" alt="Product">
-                                <h5 id="reviewModalProductName" style="font-weight:700; margin-bottom:10px; color:#111;"></h5>
-                                <div id="reviewModalProductPrice" style="color:#666; font-size:16px;"></div>
+                                <img id="reviewModalProductImg" src="" class="img-fluid mb-3 mx-auto uix-609b27b1f8" alt="Product">
+                                <h5 class="uix-08d718445d" id="reviewModalProductName"></h5>
+                                <div class="uix-7286d32c47" id="reviewModalProductPrice"></div>
                             </div>
                         </div>
                         
@@ -513,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-md-7">
                             <div class="p-4 p-md-5">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h4 id="reviewModalTitle" style="font-weight:900; letter-spacing:1px; margin:0;">Đánh giá sản phẩm</h4>
+                                    <h4 class="uix-b45f49dd17" id="reviewModalTitle">Đánh giá sản phẩm</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
 
@@ -533,23 +639,23 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
 
                                     <div class="mb-4">
-                                        <textarea name="comment" class="form-control" rows="4" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." style="border-radius:20px; border:1px solid #DDD; padding:15px; font-size:14px;"></textarea>
+                                        <textarea name="comment" class="form-control uix-504125c268" rows="4" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
                                     </div>
 
-                                    <div class="mb-4" style="border-radius:20px;">
+                                    <div class="mb-4 uix-23a21395da">
                                         <label class="d-block mb-2 text-muted small fw-bold text-uppercase" " >Hình ảnh & Video</label>
                                         <div class="row g-2">
                                             <div class="col-6">
                                                 <div class="upload-btn-wrapper w-100">
-                                                    <button class="btn btn-outline-secondary w-100 py-2" type="button" style="font-size:12px; border-style:dashed;">
+                                                    <button class="btn btn-outline-secondary w-100 py-2 uix-e95b25e990" type="button">
                                                         <i class="fas fa-camera me-2"></i>Thêm ảnh (Max 10)
                                                     </button>
                                                     <input type="file" name="images[]" multiple accept="image/*" id="reviewImagesInput">
                                                 </div>
                                             </div>
-                                            <div class="col-6" style="border-radius:20px;">
+                                            <div class="col-6 uix-23a21395da">
                                                 <div class="upload-btn-wrapper w-100">
-                                                    <button class="btn btn-outline-secondary w-100 py-2" type="button" style="font-size:12px; border-style:dashed;">
+                                                    <button class="btn btn-outline-secondary w-100 py-2 uix-e95b25e990" type="button">
                                                         <i class="fas fa-video me-2"></i>Thêm Video
                                                     </button>
                                                     <input type="file" name="video" accept="video/*" id="reviewVideoInput">
@@ -559,17 +665,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div id="mediaPreviews" class="mt-3 d-flex flex-wrap gap-2"></div>
                                     </div>
 
-                                    <button type="submit" class="btn btn-dark w-100 py-3" style="border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Gửi đánh giá</button>
+                                    <button type="submit" class="btn btn-dark w-100 py-3 uix-d75dfe9f13">Gửi đánh giá</button>
                                 </form>
 
                                 <!-- View Review Details -->
                                 <div id="viewReviewContent" class="d-none">
                                     <div class="mb-4 text-center">
-                                        <div id="viewRatingStars" class="star-rating fs-4" style="color: #7C3AED;"></div>
+                                        <div id="viewRatingStars" class="star-rating fs-4 uix-e7d1077d40"></div>
                                         <div id="viewReviewDate" class="text-muted small mt-1"></div>
                                     </div>
                                     
-                                    <div id="viewReviewComment" class="mb-4 p-3 border-start border-4 border-dark italic" style="background:#F9F9F9; font-style:italic; color:#444;"></div>
+                                    <div id="viewReviewComment" class="mb-4 p-3 border-start border-4 border-dark italic uix-6f6f97abd8"></div>
 
                                     <div id="viewReviewMedia" class="mb-4">
                                         <div id="viewReviewImages" class="d-flex flex-wrap gap-2 mb-3"></div>
@@ -580,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <form id="deleteReviewForm" action="" method="POST" onsubmit="return confirmForm(this, 'Đánh giá này sẽ bị xóa vĩnh viễn và không thể khôi phục.', 'XÓA ĐÁNH GIÁ')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger w-100 py-3" style="border-radius:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; font-size:13px;">
+                                            <button type="submit" class="btn btn-outline-danger w-100 py-3 uix-31dd6d940c">
                                                 <i class="fas fa-trash-alt me-2"></i>XÓA ĐÁNH GIÁ
                                             </button>
                                         </form>
@@ -593,21 +699,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     </div>
-
-    <style>
-        .star-rating-input { display: flex; flex-direction: row-reverse; }
-        .star-rating-input input { display: none; }
-        .star-rating-input label { font-size: 30px; color: #DDD; cursor: pointer; transition: color 0.2s; }
-        .star-rating-input input:checked ~ label,
-        .star-rating-input label:hover,
-        .star-rating-input label:hover ~ label { color: #7C3AED; }
-        
-        .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
-        .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
-        
-        .preview-item { width: 60px; height: 60px; object-fit: cover; border: 1px solid #EEE; position: relative; }
-        .preview-remove { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 15px; height: 15px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    </style>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -652,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 imgContainer.innerHTML = '';
                 if (review.images && review.images.length > 0) {
                     review.images.forEach(img => {
-                        imgContainer.innerHTML += `<img src="/storage/${img}" class="img-thumbnail" style="width:100px; height:100px; object-fit:cover; cursor:pointer;" onclick="window.open(this.src)">`;
+                        imgContainer.innerHTML += `<img src="/storage/${img}" class="img-thumbnail uix-6c62354c48" onclick="window.open(this.src)">`;
                     });
                 }
 
@@ -660,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 videoContainer.innerHTML = '';
                 if (review.video) {
                     videoContainer.innerHTML = `
-                        <video controls class="w-100" style="max-height:300px; background:#000;">
+                        <video controls class="w-100 uix-f0dc170ba3">
                             <source src="/storage/${review.video}" type="video/mp4">
                         </video>`;
                 }
@@ -725,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @stack('scripts')
 <!-- ── PREMIUM DELETE MODAL ── -->
 <div class="modal fade premium-modal" id="stDeleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-dialog modal-dialog-centered uix-af383d3ee2">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="premium-icon-wrap premium-icon-delete">
@@ -743,7 +834,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </button>
                 </div>
                 <div class="premium-footer-note">
-                    <i class="fas fa-exclamation-triangle" style="color:#F6AD55;"></i> Thao tác này không thể hoàn tác
+                    <i class="fas fa-exclamation-triangle uix-50bfccc846"></i> Thao tác này không thể hoàn tác
                 </div>
             </div>
         </div>
@@ -752,7 +843,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- ── PREMIUM CANCEL ORDER MODAL ── -->
 <div class="modal fade premium-modal" id="stCancelOrderModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-dialog modal-dialog-centered uix-af383d3ee2">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="premium-icon-wrap premium-icon-cancel">
@@ -775,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- ── PREMIUM SUCCESS MODAL ── -->
 <div class="modal fade premium-modal" id="stSuccessModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-dialog modal-dialog-centered uix-af383d3ee2">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="premium-icon-wrap premium-icon-success">

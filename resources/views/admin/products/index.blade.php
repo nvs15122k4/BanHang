@@ -14,9 +14,20 @@
       <h4 class="fw-bold mb-0"><i class="fas fa-box text-primary me-2"></i>Quản lý Sản phẩm</h4>
       <p class="text-muted small mb-0">Xem và cập nhật trạng thái, tồn kho, giá bán của sản phẩm</p>
     </div>
-    <a href="{{ route('products.create') }}" class="btn btn-primary">
-      <i class="fas fa-plus me-2"></i>Thêm Sản phẩm
-    </a>
+    <div class="d-flex gap-2">
+      @if(request('trash') === 'only')
+        <a href="{{ route('admin.products') }}" class="btn btn-outline-secondary">
+          <i class="fas fa-list me-2"></i>Danh sách
+        </a>
+      @else
+        <a href="{{ route('admin.products', ['trash' => 'only']) }}" class="btn btn-outline-danger">
+          <i class="fas fa-trash-restore me-2"></i>Thùng rác
+        </a>
+        <a href="{{ route('products.create') }}" class="btn btn-primary">
+          <i class="fas fa-plus me-2"></i>Thêm Sản phẩm
+        </a>
+      @endif
+    </div>
   </div>
 
   {{-- Stats Cards --}}
@@ -57,6 +68,9 @@
   <div class="card border-0 shadow-sm mb-4">
     <div class="card-body">
       <form method="GET" action="{{ route('admin.products') }}" class="row g-2 align-items-end">
+        @if(request('trash') === 'only')
+          <input type="hidden" name="trash" value="only">
+        @endif
         <div class="col-md-3">
           <input type="text" name="search" class="form-control" placeholder="Tìm tên sản phẩm..." value="{{ request('search') }}">
         </div>
@@ -107,7 +121,7 @@
           </thead>
           <tbody>
             @forelse($products as $product)
-            <tr>
+            <tr class="{{ $product->trashed() ? 'table-secondary' : '' }}">
               <td class="ps-4">
                 <div class="d-flex align-items-center gap-3">
                     @if($product->anh)
@@ -120,6 +134,9 @@
                     <div>
                         <div class="fw-semibold text-dark">{{ $product->ten_sp }}</div>
                         <div class="text-muted uix-e71ae94b55">ID: #{{ $product->id }}</div>
+                        @if($product->trashed())
+                          <div class="text-danger small">Trong thùng rác - chờ xóa vĩnh viễn sau 60 ngày</div>
+                        @endif
                     </div>
                 </div>
               </td>
@@ -146,6 +163,14 @@
               </td>
               <td class="text-end pe-4">
                 <div class="d-flex gap-2 justify-content-end">
+                  @if($product->trashed())
+                    <form method="POST" action="{{ route('admin.products.restore', $product->id) }}">
+                      @csrf @method('PATCH')
+                      <button type="submit" class="btn btn-sm btn-outline-success" title="Khôi phục">
+                        <i class="fas fa-trash-restore"></i>
+                      </button>
+                    </form>
+                  @else
                     <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-info" title="Xem" target="_blank">
                         <i class="fas fa-eye"></i>
                     </a>
@@ -154,10 +179,11 @@
                     </a>
                     <form method="POST" action="{{ route('products.destroy', $product) }}" id="del-{{ $product->id }}">
                         @csrf @method('DELETE')
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="stConfirmDelete({title:'Xóa sản phẩm',pill:'{{ addslashes($product->ten_sp) }}',message:'Sản phẩm này sẽ bị xóa vĩnh viễn khỏi hệ thống.',onConfirm:()=>document.getElementById('del-{{ $product->id }}').submit()})">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="stConfirmDelete({title:'Chuyển sản phẩm vào thùng rác',pill:'{{ addslashes($product->ten_sp) }}',message:'Sản phẩm sẽ được lưu lại và có thể khôi phục trong 60 ngày.',onConfirm:()=>document.getElementById('del-{{ $product->id }}').submit()})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </form>
+                  @endif
                 </div>
               </td>
             </tr>

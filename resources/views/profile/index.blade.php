@@ -461,6 +461,7 @@
                 bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
                 this.reset();
                 // Reload address list
+                window.ST_SAVE_SCROLL && window.ST_SAVE_SCROLL();
                 window.location.hash = '#addresses';
                 window.location.reload();
             } else {
@@ -505,6 +506,7 @@
             if (res.ok && json.success) {
                 const modalEl = form.closest('.modal');
                 bootstrap.Modal.getInstance(modalEl).hide();
+                window.ST_SAVE_SCROLL && window.ST_SAVE_SCROLL();
                 window.location.reload();
             } else {
                 if (json.errors) showErrors(form, json.errors);
@@ -580,6 +582,7 @@
             });
             const json = await res.json();
             if (json.success) {
+                window.ST_SAVE_SCROLL && window.ST_SAVE_SCROLL();
                 window.location.reload();
             }
         } catch {}
@@ -605,7 +608,7 @@
         // Save tab on click
         document.querySelectorAll('.sidebar-nav .nav-link[data-bs-toggle="pill"]').forEach(function(link) {
             link.addEventListener('click', function() {
-                window.location.hash = this.getAttribute('href');
+                history.replaceState(null, '', this.getAttribute('href'));
             });
         });
     });

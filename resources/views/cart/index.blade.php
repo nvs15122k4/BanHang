@@ -76,7 +76,7 @@
                                         <form action="{{ route('cart.update', $item['cart_key']) }}" method="POST" class="qty-input-wrap">
                                             @csrf
                                             @method('PATCH')
-                                            <input type="number" name="so_luong" value="{{ $item['so_luong'] }}" min="1" onchange="this.form.submit()">
+                                            <input type="number" name="so_luong" value="{{ $item['so_luong'] }}" min="1" onchange="window.ST_SAVE_SCROLL && window.ST_SAVE_SCROLL(); this.form.submit()">
                                         </form>
                                     </div>
                                 </td>

@@ -718,24 +718,65 @@ footer {
     background: linear-gradient(135deg, #fff5f7 0%, #ffffff 60%);
     padding: 56px 0 48px;
     border-bottom: 1px solid #ebebeb;
+    position: relative;
+    overflow: hidden;
 }
+
+/* Animated gradient orbs behind hero */
+.ab-hero::before,
+.ab-hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.35;
+    pointer-events: none;
+    animation: heroOrb 8s ease-in-out infinite alternate;
+}
+.ab-hero::before {
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, #ff385c 0%, transparent 70%);
+    top: -120px; left: -80px;
+}
+.ab-hero::after {
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, #ff8fa3 0%, transparent 70%);
+    bottom: -100px; right: -60px;
+    animation-delay: -4s;
+}
+@keyframes heroOrb {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, 20px) scale(1.08); }
+}
+
 .ab-hero-inner {
     max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 .ab-hero-title {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 700;
     color: #222222;
     margin-bottom: 8px;
-    line-height: 1.43;
+    line-height: 1.3;
+    animation: heroFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
 }
 .ab-hero-sub {
     font-size: 16px;
     color: #6a6a6a;
     margin-bottom: 28px;
+    animation: heroFadeUp 0.7s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+}
+.ab-search-bar {
+    animation: heroFadeUp 0.7s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Search bar pill */
@@ -831,11 +872,19 @@ footer {
     font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
-    transition: color 150ms ease, background 150ms ease;
+    transition: color 200ms ease, background 200ms ease, transform 200ms ease;
     border-bottom: 2px solid transparent;
 }
-.ab-category-item i { font-size: 20px; }
-.ab-category-item:hover { color: #222222; background: #f7f7f7; }
+.ab-category-item i {
+    font-size: 20px;
+    transition: transform 250ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.ab-category-item:hover {
+    color: #222222;
+    background: #f7f7f7;
+    transform: translateY(-2px);
+}
+.ab-category-item:hover i { transform: scale(1.2) rotate(-5deg); }
 .ab-category-item.active {
     color: #222222;
     font-weight: 600;
@@ -852,6 +901,19 @@ footer {
     border: 1px solid #ebebeb;
     border-radius: 14px;
     padding: 18px 20px;
+    transition: transform 250ms cubic-bezier(0.22,1,0.36,1), box-shadow 250ms ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+.ab-stat-mini.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.ab-stat-mini:hover {
+    transform: translateY(-4px);
+    box-shadow: rgba(0,0,0,0.02) 0 0 0 1px,
+                rgba(0,0,0,0.06) 0 4px 12px 0,
+                rgba(0,0,0,0.12) 0 8px 20px 0;
 }
 .ab-stat-mini-icon {
     width: 44px;
@@ -862,7 +924,9 @@ footer {
     justify-content: center;
     font-size: 18px;
     flex-shrink: 0;
+    transition: transform 250ms cubic-bezier(0.34,1.56,0.64,1);
 }
+.ab-stat-mini:hover .ab-stat-mini-icon { transform: scale(1.15) rotate(-8deg); }
 .ab-stat-mini-val {
     font-size: 22px;
     font-weight: 700;
@@ -918,6 +982,13 @@ footer {
     display: flex;
     flex-direction: column;
     cursor: pointer;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 500ms ease, transform 500ms cubic-bezier(0.22,1,0.36,1);
+}
+.ab-product-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 .ab-card-photo-wrap {
     position: relative;
@@ -926,14 +997,19 @@ footer {
     aspect-ratio: 1 / 1;
     background: #f7f7f7;
     margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 300ms ease;
+}
+.ab-product-card:hover .ab-card-photo-wrap {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
 }
 .ab-card-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 300ms ease;
+    transition: transform 400ms cubic-bezier(0.22,1,0.36,1);
 }
-.ab-product-card:hover .ab-card-photo { transform: scale(1.03); }
+.ab-product-card:hover .ab-card-photo { transform: scale(1.06); }
 
 /* Guest favorite badge */
 .ab-card-badge {
@@ -972,9 +1048,15 @@ footer {
     color: #6a6a6a;
     font-size: 14px;
     text-decoration: none;
-    transition: color 150ms ease, background 150ms ease;
+    transition: color 150ms ease, background 150ms ease, transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+    opacity: 0;
+    transform: scale(0.8);
 }
-.ab-card-heart:hover { color: #ff385c; background: #ffffff; }
+.ab-product-card:hover .ab-card-heart {
+    opacity: 1;
+    transform: scale(1);
+}
+.ab-card-heart:hover { color: #ff385c; background: #ffffff; transform: scale(1.15) !important; }
 
 /* Card meta */
 .ab-card-meta {
@@ -1096,4 +1178,139 @@ footer {
     .ab-search-divider { width: 100%; height: 1px; }
     .ab-search-seg { padding: 8px 12px; }
     .ab-search-orb { width: 100%; border-radius: 8px; height: 44px; }
+}
+
+/* ============================================================
+   ANIMATION ENHANCEMENTS
+   ============================================================ */
+
+/* Search bar focus glow */
+.ab-search-bar {
+    transition: box-shadow 250ms ease;
+}
+.ab-search-bar:focus-within {
+    box-shadow: 0 0 0 3px rgba(255,56,92,0.15),
+                rgba(0,0,0,0.02) 0 0 0 1px,
+                rgba(0,0,0,0.08) 0 4px 16px 0;
+    border-color: #ff385c;
+}
+
+/* Search orb pulse on hover */
+.ab-search-orb {
+    transition: background 150ms ease, transform 200ms cubic-bezier(0.34,1.56,0.64,1), box-shadow 200ms ease;
+}
+.ab-search-orb:hover {
+    background: #e00b41;
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(255,56,92,0.4);
+}
+
+/* Card badge pop-in */
+.ab-card-badge {
+    animation: badgePop 400ms 300ms cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes badgePop {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Section header slide-in */
+.ab-section-header {
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 500ms ease, transform 500ms cubic-bezier(0.22,1,0.36,1);
+}
+.ab-section-header.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Staggered card delay helpers (set via JS) */
+.ab-product-card { transition-delay: 0ms; }
+
+/* Shimmer skeleton for images loading */
+.ab-card-photo-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,255,255,0.4) 50%,
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+}
+.ab-card-photo-wrap.loading::after { opacity: 1; }
+@keyframes shimmer {
+    from { background-position: -200% 0; }
+    to   { background-position: 200% 0; }
+}
+
+/* Stat counter number animation */
+.ab-stat-mini-val {
+    transition: transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.ab-stat-mini:hover .ab-stat-mini-val { transform: scale(1.1); }
+
+/* Smooth page entrance */
+@keyframes pageIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.ab-products-section { animation: pageIn 400ms ease both; }
+
+/* Ripple effect on buttons */
+.btn { position: relative; overflow: hidden; }
+.btn .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    transform: scale(0);
+    animation: rippleAnim 500ms linear;
+    pointer-events: none;
+}
+@keyframes rippleAnim {
+    to { transform: scale(4); opacity: 0; }
+}
+
+/* Floating scroll-to-top button */
+#scroll-top-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #222222;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(16px) scale(0.8);
+    transition: opacity 300ms ease, transform 300ms cubic-bezier(0.34,1.56,0.64,1), background 150ms ease;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+#scroll-top-btn.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+#scroll-top-btn:hover {
+    background: #ff385c;
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* Navbar scroll shadow */
+.ab-header.scrolled {
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    transition: box-shadow 300ms ease;
 }

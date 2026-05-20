@@ -128,7 +128,7 @@
                             $navbarAvatar = auth()->user()->avatar ?: \App\Models\User::DEFAULT_AVATAR_URL;
                         @endphp
                         <a href="#" class="dropdown-toggle uix-becf5e5a9c navbar-avatar-toggle" data-bs-toggle="dropdown">
-                            <img src="{{ $navbarAvatar }}" alt="{{ auth()->user()->name }}" class="navbar-user-avatar" style="width: 50px; height: 50px; min-width: 50px; max-width: 50px; min-height: 50px; max-height: 50px; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: 50%;">
+                            <img src="{{ $navbarAvatar }}" alt="{{ auth()->user()->name }}" class="navbar-user-avatar" style="width: 40px; height: 40px; min-width: 40px; max-width: 40px; min-height: 40px; max-height: 40px; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: 50%;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 uix-920e6abfc3">
                             @if(auth()->user()->role === 'admin')
@@ -317,7 +317,18 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+    const SCROLL_KEY = 'st:preserve-scroll:' + window.location.pathname;
     let pendingSizeForm = null;
+
+    window.ST_SAVE_SCROLL = function() {
+        sessionStorage.setItem(SCROLL_KEY, String(window.scrollY || window.pageYOffset || 0));
+    };
+
+    const savedScroll = sessionStorage.getItem(SCROLL_KEY);
+    if (savedScroll !== null) {
+        sessionStorage.removeItem(SCROLL_KEY);
+        requestAnimationFrame(() => window.scrollTo(0, Number(savedScroll) || 0));
+    }
 
     /* ── TOAST ── */
     window.showToast = function(message, type = 'success') {
@@ -456,6 +467,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .finally(() => { if (btn) { btn.disabled = false; btn.innerHTML = orig; } });
+        }
+    });
+
+    /* ── AJAX WISHLIST TOGGLE ── */
+    document.addEventListener('submit', function(e) {
+        const form = e.target;
+        if (!form.action || !form.action.includes('/wishlist/')) return;
+
+        e.preventDefault();
+        const btn = form.querySelector('button[type="submit"]');
+        const orig = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        }
+
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': CSRF,
+                'Accept': 'application/json'
+            }
+        })
+        .then(r => {
+            if (r.status === 401) {
+                window.location.href = '/login';
+                throw new Error('Unauthenticated');
+            }
+            return r.json();
+        })
+        .then(data => {
+            showToast(data.message || 'Đã cập nhật yêu thích!', data.success ? 'success' : 'danger');
+            if (data.success && btn) {
+                btn.classList.toggle('active', !!data.in_wishlist);
+                btn.title = data.in_wishlist ? 'Bỏ yêu thích' : 'Yêu thích';
+                btn.innerHTML = '<i class="' + (data.in_wishlist ? 'fas' : 'far') + ' fa-heart"></i>';
+            }
+        })
+        .catch((err) => {
+            if (err.message !== 'Unauthenticated') {
+                showToast('Không thể kết nối máy chủ!', 'danger');
+            }
+        })
+        .finally(() => {
+            if (btn && btn.innerHTML.includes('fa-spinner')) {
+                btn.innerHTML = orig;
+            }
+            if (btn) btn.disabled = false;
+        });
+    });
+
+    document.addEventListener('submit', function(e) {
+        const form = e.target;
+        if (!e.defaultPrevented && form.method && form.method.toLowerCase() !== 'get') {
+            window.ST_SAVE_SCROLL();
         }
     });
 
@@ -983,6 +1051,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 orderCode: form.dataset.orderCode || 'Đơn hàng',
                 confirmText: finalConfirmText,
                 onConfirm: () => {
+                    window.ST_SAVE_SCROLL();
                     form.onsubmit = null;
                     form.submit();
                 }
@@ -994,6 +1063,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message: message,
                 confirmText: finalConfirmText,
                 onConfirm: () => {
+                    window.ST_SAVE_SCROLL();
                     form.onsubmit = null;
                     form.submit();
                 }
@@ -1005,6 +1075,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message: message,
                 confirmText: finalConfirmText,
                 onConfirm: () => {
+                    window.ST_SAVE_SCROLL();
                     form.onsubmit = null;
                     form.submit();
                 }

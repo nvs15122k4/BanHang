@@ -102,6 +102,23 @@ a:hover { color: var(--text-light); }
 .action-icons { display: flex; gap: 18px; align-items: center; }
 .action-icons i { font-size: 18px; color: var(--text-main); }
 
+.navbar-avatar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.navbar-avatar-toggle::after {
+    display: none;
+}
+
+.navbar-user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
 /* ── CART BADGE ── */
 .cart-badge {
     position: absolute;

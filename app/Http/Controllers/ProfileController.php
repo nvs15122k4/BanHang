@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,10 +16,11 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $user      = Auth::user();
-        $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
+        $user          = Auth::user();
+        $addresses     = $user->addresses()->orderBy('is_default', 'desc')->get();
+        $avatarOptions = User::avatarOptions();
 
-        return view('profile.index', compact('user', 'addresses'));
+        return view('profile.index', compact('user', 'addresses', 'avatarOptions'));
     }
 
     /**
@@ -35,6 +37,7 @@ class ProfileController extends Controller
             'gender' => 'nullable|in:male,female,other',
             'height' => 'nullable|integer|min:100|max:300',
             'weight' => 'nullable|numeric|min:20|max:300',
+            'avatar' => ['nullable', 'string', Rule::in(array_merge([User::DEFAULT_AVATAR_URL], User::avatarOptions()))],
         ], [
             'name.required'  => 'Vui lòng nhập họ tên',
             'email.required' => 'Vui lòng nhập email',

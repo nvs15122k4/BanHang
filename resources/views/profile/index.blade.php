@@ -33,8 +33,23 @@
                     <div class="profile-card">
                         <h4 class="card-section-title">Thông tin cá nhân</h4>
 
+                        @php
+                            $selectedAvatar = $user->avatar ?: \App\Models\User::DEFAULT_AVATAR_URL;
+                        @endphp
+
                         <form id="profileForm">
                             @csrf
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label form-label">Avatar</label>
+                                <div class="col-md-9 avatar-field">
+                                    <input type="hidden" name="avatar" id="userAvatar" value="{{ $selectedAvatar }}">
+                                    <div class="avatar-compact">
+                                        <img src="{{ $selectedAvatar }}" alt="Avatar hiện tại" id="avatarPreview" style="width: 60px;border-radius: 50%;">
+                                        <button type="button" class="btn-link-action" data-bs-toggle="modal" data-bs-target="#avatarModal">Chọn avatar</button>
+                                    </div>
+                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <label class="col-md-3 col-form-label form-label">Họ và tên <span class="text-danger">*</span></label>
                                 <div class="col-md-9">
@@ -169,6 +184,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered avatar-modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chọn avatar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="avatar-picker" id="avatarPicker">
+                    @foreach($avatarOptions as $index => $avatar)
+                        <button type="button" class="avatar-option {{ $selectedAvatar === $avatar ? 'active' : '' }}" data-avatar="{{ $avatar }}" aria-label="Avatar {{ $index + 1 }}">
+                            <img src="{{ $avatar }}" alt="Avatar {{ $index + 1 }}" style="width: 100px; height: 100px; border-radius: 50%;">
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- ── MODAL: THÊM ĐỊA CHỈ ── --}}
 <div class="modal fade" id="addAddressModal" tabindex="-1">
     <div class="modal-dialog">
@@ -230,6 +265,26 @@
 @push('scripts')
 <script>
     const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+
+    const avatarPicker = document.getElementById('avatarPicker');
+    const avatarInput = document.getElementById('userAvatar');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarModal = document.getElementById('avatarModal');
+
+    if (avatarPicker && avatarInput && avatarPreview) {
+        avatarPicker.querySelectorAll('.avatar-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                const avatar = this.dataset.avatar;
+                avatarInput.value = avatar;
+                avatarPreview.src = avatar;
+                avatarPicker.querySelectorAll('.avatar-option').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                if (avatarModal) {
+                    bootstrap.Modal.getInstance(avatarModal)?.hide();
+                }
+            });
+        });
+    }
 
     /* ── HELPER: show inline feedback ── */
     function showFeedback(el, type, msg) {

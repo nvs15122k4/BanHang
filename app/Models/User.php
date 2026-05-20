@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -15,7 +16,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     public const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt0.jpg';
     public const AVATAR_BASE_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt';

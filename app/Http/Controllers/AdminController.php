@@ -127,6 +127,10 @@ class AdminController extends Controller
     {
         $query = Product::query();
 
+        if ($request->get('trash') === 'only') {
+            $query->onlyTrashed();
+        }
+
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
@@ -213,6 +217,17 @@ class AdminController extends Controller
         }
 
         return back()->with('success', 'Cập nhật số lượng thành công!');
+    }
+
+    /**
+     * Restore a soft-deleted product.
+     */
+    public function restoreProduct(int $productId)
+    {
+        $product = Product::onlyTrashed()->findOrFail($productId);
+        $product->restore();
+
+        return back()->with('success', "Đã khôi phục sản phẩm \"{$product->ten_sp}\".");
     }
 
     /**

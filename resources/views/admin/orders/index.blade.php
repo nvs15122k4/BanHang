@@ -7,14 +7,14 @@
 @endpush
 
 @section('content')
-<div class="page-header">
+{{-- <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-shopping-cart me-3"></i>QUẢN LÝ ĐƠN HÀNG</h1>
         <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>TẠO ĐƠN HÀNG MỚI
         </a>
     </div>
-</div>
+</div> --}}
 
 <!-- Statistics -->
 <div class="row g-4 mb-4">

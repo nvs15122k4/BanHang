@@ -121,6 +121,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/products', [App\Http\Controllers\AdminController::class, 'products'])->name('products');
     Route::put('/products/{product}/status', [App\Http\Controllers\AdminController::class, 'updateProductStatus'])->name('products.status');
     Route::put('/products/{product}/stock', [App\Http\Controllers\AdminController::class, 'updateProductStock'])->name('products.stock');
+    Route::patch('/products/{productId}/restore', [App\Http\Controllers\AdminController::class, 'restoreProduct'])->name('products.restore');
     
     // Statistics
     Route::get('/statistics', [App\Http\Controllers\AdminController::class, 'statistics'])->name('statistics');
@@ -205,6 +206,3 @@ Route::middleware('auth')->group(function () {
 
 // Payment Webhook (Simulation)
 Route::post('/payment/webhook', [App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');
-
-
-

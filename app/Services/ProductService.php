@@ -81,15 +81,7 @@ class ProductService
 
     public function deleteProduct(Product $product): bool
     {
-        $oldAnh = $product->anh;
-
-        $deleted = $product->delete();
-
-        if ($deleted) {
-            $this->deleteOldImage($oldAnh);
-        }
-
-        return (bool) $deleted;
+        return (bool) $product->delete();
     }
 
     /**

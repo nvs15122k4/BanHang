@@ -286,12 +286,12 @@ class ProductController extends Controller
             if (request()->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Sản phẩm đã được xóa thành công!'
+                    'message' => 'Sản phẩm đã được chuyển vào thùng rác. Có thể khôi phục trong 60 ngày.'
                 ]);
             }
 
             $redirect = $this->resolveRedirect(request()->headers->get('referer'));
-            return redirect($redirect)->with('success', 'Sản phẩm đã được xóa thành công!');
+            return redirect($redirect)->with('success', 'Sản phẩm đã được chuyển vào thùng rác. Có thể khôi phục trong 60 ngày.');
         } catch (\Exception $e) {
             if (request()->expectsJson()) {
                 return response()->json([

@@ -44,7 +44,7 @@
                                 <div class="col-md-9 avatar-field">
                                     <input type="hidden" name="avatar" id="userAvatar" value="{{ $selectedAvatar }}">
                                     <div class="avatar-compact">
-                                        <img src="{{ $selectedAvatar }}" alt="Avatar hiện tại" id="avatarPreview" style="width: 60px;border-radius: 50%;">
+                                        <img src="{{ $selectedAvatar }}" alt="Avatar hiện tại" id="avatarPreview" style="width: 80px; height: 80px; border-radius: 50%;">
                                         <button type="button" class="btn-link-action" data-bs-toggle="modal" data-bs-target="#avatarModal">Chọn avatar</button>
                                     </div>
                                     <div class="invalid-feedback-field text-danger small mt-1"></div>

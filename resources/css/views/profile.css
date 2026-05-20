@@ -81,6 +81,66 @@
 .btn-save:hover { background: var(--primary); color: #fff; }
 .btn-save:disabled { background: #AAA; cursor: not-allowed; }
 
+.avatar-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 80px;
+}
+
+.avatar-compact img {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 80px;
+    max-height: 80px;
+    flex: 0 0 50px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid #DDD;
+    display: block;
+}
+
+.avatar-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    justify-content: center;
+    gap: 12px;
+    padding: 4px 0;
+}
+
+.avatar-option {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.avatar-option:hover,
+.avatar-option.active {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.avatar-option img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+.avatar-modal-dialog {
+    max-width: 460px;
+}
+
 /* Address cards */
 .address-card {
     border: 1px solid #EEE;

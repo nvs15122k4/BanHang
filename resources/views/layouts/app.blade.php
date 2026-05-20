@@ -112,20 +112,23 @@
                         @endif
                     </a>
 
-                <a href="{{ route('cart.index') }}" class="position-relative uix-9cd4420129">
-                    <i class="fas fa-shopping-bag"></i>
-                    @php $cartCount = \App\Http\Controllers\CartController::cartCount(); @endphp
-                    @if($cartCount > 0)
-                        <span id="cart-badge-count" class="cart-badge">{{ $cartCount }}</span>
-                    @else
-                        <span id="cart-badge-count" class="cart-badge d-none">0</span>
-                    @endif
-                </a>
-                
+                    <a href="{{ route('cart.index') }}" class="position-relative uix-9cd4420129">
+                        <i class="fas fa-shopping-bag"></i>
+                        @php $cartCount = \App\Http\Controllers\CartController::cartCount(); @endphp
+                        @if($cartCount > 0)
+                            <span id="cart-badge-count" class="cart-badge">{{ $cartCount }}</span>
+                        @else
+                            <span id="cart-badge-count" class="cart-badge d-none">0</span>
+                        @endif
+                    </a>
+
                     {{-- User Menu --}}
                     <div class="dropdown">
-                        <a href="#" class="dropdown-toggle uix-becf5e5a9c" data-bs-toggle="dropdown">
-                            <i class="far fa-user"></i>
+                        @php
+                            $navbarAvatar = auth()->user()->avatar ?: \App\Models\User::DEFAULT_AVATAR_URL;
+                        @endphp
+                        <a href="#" class="dropdown-toggle uix-becf5e5a9c navbar-avatar-toggle" data-bs-toggle="dropdown">
+                            <img src="{{ $navbarAvatar }}" alt="{{ auth()->user()->name }}" class="navbar-user-avatar" style="width: 50px; height: 50px; min-width: 50px; max-width: 50px; min-height: 50px; max-height: 50px; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: 50%;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 uix-920e6abfc3">
                             @if(auth()->user()->role === 'admin')

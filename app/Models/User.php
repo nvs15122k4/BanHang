@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'phone', 'gender', 'birthday', 'is_active', 'height', 'weight'])]
+#[Fillable(['name', 'email', 'password', 'role', 'phone', 'gender', 'birthday', 'is_active', 'height', 'weight', 'avatar'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt0.jpg';
+    public const AVATAR_BASE_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt';
 
     /**
      * Get the attributes that should be cast.
@@ -47,6 +50,13 @@ class User extends Authenticatable
     public function isActive(): bool
     {
         return (bool) $this->is_active;
+    }
+
+    public static function avatarOptions(): array
+    {
+        return collect(range(2, 12))
+            ->map(fn (int $id) => self::AVATAR_BASE_URL . $id . '.jpg')
+            ->all();
     }
 
     /**

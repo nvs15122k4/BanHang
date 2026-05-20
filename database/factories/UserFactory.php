@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'gender' => $this->faker->randomElement(['male', 'female', 'other']),
             // User model casts birthday to date, so store as Y-m-d string
             'birthday' => $this->faker->date('Y-m-d'),
+            'avatar' => User::DEFAULT_AVATAR_URL,
             'is_active' => true,
             'remember_token' => Str::random(10),
             // Support email verification tests
@@ -45,5 +46,4 @@ class UserFactory extends Factory
         return $this->state(fn () => ['email_verified_at' => null]);
     }
 }
-
 

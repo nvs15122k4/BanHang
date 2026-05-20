@@ -1,4 +1,22 @@
-FROM php:8.3-fpm
+ARG NODE_VERSION=22.12.0
+
+FROM node:${NODE_VERSION}-bookworm AS node-deps
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY scripts ./scripts
+
+FROM node-deps AS assets
+
+COPY resources ./resources
+COPY public ./public
+COPY postcss.config.js tailwind.config.js vite.config.js ./
+RUN npm run build
+
+FROM php:8.3-fpm AS app
 
 WORKDIR /var/www/html
 
@@ -31,9 +49,15 @@ COPY composer.json composer.lock ./
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 COPY . .
+COPY --from=assets /app/public/build ./public/build
 
 RUN composer dump-autoload --optimize \
     && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
 CMD ["php-fpm"]
+
+FROM nginx:1.27-alpine AS web
+
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=app /var/www/html/public /var/www/html/public

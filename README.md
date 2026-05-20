@@ -240,6 +240,14 @@ Tạo file môi trường Docker:
 cp .env.docker.example .env.docker
 ```
 
+Kiem tra env bang Zod truoc khi chay:
+
+```bash
+docker compose --env-file .env.docker run --rm env-check
+```
+
+Khi deploy production, dat `APP_ENV=production`, `APP_DEBUG=false`, tao `APP_KEY` that va doi toan bo mat khau database mac dinh. Container se dung som neu env khong hop le.
+
 Khởi động project:
 
 ```bash
@@ -259,6 +267,10 @@ http://localhost:8080
 ```
 
 Vite dev server:
+
+```bash
+docker compose --env-file .env.docker --profile dev up vite
+```
 
 ```text
 http://localhost:5173

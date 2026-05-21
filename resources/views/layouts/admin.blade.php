@@ -115,6 +115,11 @@
                                 <i class="fas fa-chart-bar me-2"></i> Thống kê
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.audit-logs*') ? 'active' : '' }}" href="{{ route('admin.audit-logs.index') }}">
+                                <i class="fas fa-clipboard-list me-2"></i> Audit log
+                            </a>
+                        </li>
                     </ul>
 
                     <div class="mt-5 px-3">

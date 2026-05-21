@@ -138,7 +138,7 @@ class CheckoutController extends Controller
                 'thanh_tien'             => $tongTien,
                 'trang_thai'             => Order::STATUS_PENDING,
                 'phuong_thuc_thanh_toan' => $validated['phuong_thuc_thanh_toan'],
-                'trang_thai_thanh_toan'  => Order::PAYMENT_PENDING,
+                'trang_thai_thanh_toan'  => Order::PAYMENT_UNPAID,
                 'ghi_chu'                => $validated['ghi_chu'] ?? null,
             ]);
 

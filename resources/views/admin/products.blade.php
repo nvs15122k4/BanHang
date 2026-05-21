@@ -10,7 +10,7 @@
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-box me-3"></i>QUẢN LÝ SẢN PHẨM</h1>
-        <a href="{{ route('products.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>THÊM SẢN PHẨM MỚI
         </a>
     </div>

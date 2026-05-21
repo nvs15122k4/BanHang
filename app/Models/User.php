@@ -100,6 +100,11 @@ class User extends Authenticatable
         return $this->hasMany(Wishlist::class);
     }
 
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
     /**
      * Kiểm tra sản phẩm có trong wishlist không
      */

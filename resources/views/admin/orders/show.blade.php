@@ -122,6 +122,7 @@
 
                 @php
                     $statusLabels  = \App\Models\Order::adminStatusLabels();
+                    $paymentStatusLabels = \App\Models\Order::paymentStatusLabels();
                 @endphp
 
                 <form method="POST" action="{{ route('admin.orders.status', $order) }}" class="mb-3">
@@ -202,7 +203,7 @@
 
                 <div class="mb-3">
                     <strong>Trạng thái thanh toán:</strong><br>
-                    <span class="badge bg-{{ $order->trang_thai_thanh_toan === 'paid' ? 'success' : 'secondary' }} fs-6 mt-2">
+                    <span class="badge bg-{{ $order->payment_status_color }} fs-6 mt-2">
                         {{ $order->payment_status_label }}
                     </span>
                 </div>
@@ -212,8 +213,9 @@
                     @method('PUT')
                     <label class="form-label"><strong>Cập nhật thanh toán:</strong></label>
                     <select name="trang_thai_thanh_toan" class="form-select mb-2" required>
-                        <option value="unpaid" {{ $order->trang_thai_thanh_toan === 'unpaid' ? 'selected' : '' }}>Chưa thanh toán</option>
-                        <option value="paid" {{ $order->trang_thai_thanh_toan === 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
+                        @foreach($paymentStatusLabels as $val => $label)
+                            <option value="{{ $val }}" {{ $order->trang_thai_thanh_toan === $val ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
                     </select>
                     <button type="submit" class="btn btn-success w-100">
                         <i class="fas fa-money-bill me-2"></i>Cập nhật

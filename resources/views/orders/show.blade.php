@@ -332,14 +332,14 @@
                     
                     <div class="info-label">Trạng thái thanh toán</div>
                     <div>
-                        @if($order->trang_thai_thanh_toan === 'paid')
-                            <span class="badge-paid">ĐÃ THANH TOÁN</span>
+                        @if($order->trang_thai_thanh_toan === \App\Models\Order::PAYMENT_PAID)
+                            <span class="badge-paid">{{ $order->payment_status_label }}</span>
                         @else
-                            <span class="badge-unpaid">CHƯA THANH TOÁN</span>
+                            <span class="badge-unpaid">{{ $order->payment_status_label }}</span>
                         @endif
                     </div>
 
-                    @if($order->phuong_thuc_thanh_toan === 'vietqr' && $order->trang_thai_thanh_toan === 'unpaid')
+                    @if($order->phuong_thuc_thanh_toan === 'vietqr' && in_array($order->trang_thai_thanh_toan, [\App\Models\Order::PAYMENT_PENDING, \App\Models\Order::PAYMENT_UNPAID], true))
                         <div class="mt-4 pt-4 border-top text-center">
                             <div class="info-label mb-3 text-center">Quét mã QR để thanh toán</div>
                             <img src="{{ $order->vietqr_url }}" alt="VietQR Code" class="img-fluid border p-2 bg-white mb-2 inline-vietqr-image">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\AuditLog;
 use App\Services\ProductService;
 use App\Services\SizeRecommendationService;
 use App\Exports\SanPhamExport;
@@ -109,6 +110,11 @@ class ProductController extends Controller
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
             $product = $this->productService->createProduct($data, $image, $imageUrl);
+            AuditLog::record('product_created', $product, "Created product {$product->ten_sp}", null, [
+                'ten_sp' => $product->ten_sp,
+                'gia' => $product->gia,
+                'so_luong' => $product->so_luong,
+            ]);
 
             if ($request->expectsJson()) {
                 return response()->json(['success' => true, 'message' => 'Sản phẩm đã được tạo thành công!', 'product' => $product]);
@@ -262,7 +268,15 @@ class ProductController extends Controller
             $image    = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
+            $oldValues = $product->only(['ten_sp', 'loai', 'gia', 'so_luong', 'trang_thai']);
             $updatedProduct = $this->productService->updateProduct($product, $data, $image, $imageUrl);
+            AuditLog::record('product_updated', $updatedProduct, "Updated product {$updatedProduct->ten_sp}", $oldValues, [
+                'ten_sp' => $updatedProduct->ten_sp,
+                'loai' => $updatedProduct->loai,
+                'gia' => $updatedProduct->gia,
+                'so_luong' => $updatedProduct->so_luong,
+                'trang_thai' => $updatedProduct->trang_thai,
+            ]);
 
             if ($request->expectsJson()) {
                 return response()->json(['success' => true, 'message' => 'Sản phẩm đã được cập nhật thành công!', 'product' => $updatedProduct]);
@@ -281,7 +295,9 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
+            $oldValues = $product->only(['ten_sp', 'loai', 'gia', 'so_luong', 'trang_thai']);
             $this->productService->deleteProduct($product);
+            AuditLog::record('product_deleted', $product, "Deleted product {$product->ten_sp}", $oldValues);
 
             if (request()->expectsJson()) {
                 return response()->json([

@@ -73,6 +73,62 @@
         <div class="stat-card">
             <div class="d-flex align-items-center">
                 <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="ms-3 flex-grow-1">
+                    <div class="stat-value">{{ $stats['total_orders'] }}</div>
+                    <div class="stat-label">Tong don hang</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="ms-3 flex-grow-1">
+                    <div class="stat-value">{{ $stats['pending_orders'] }}</div>
+                    <div class="stat-label">Cho xu ly</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="ms-3 flex-grow-1">
+                    <div class="stat-value">{{ number_format($stats['completed_revenue']) }}d</div>
+                    <div class="stat-label">Doanh thu hoan thanh</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="ms-3 flex-grow-1">
+                    <div class="stat-value">{{ $stats['today_orders'] }}</div>
+                    <div class="stat-label">Don hom nay</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="ms-3 flex-grow-1">
@@ -121,6 +177,84 @@
                     <div class="stat-value text-danger">{{ $stats['low_stock_products'] }}</div>
                     <div class="stat-label">SP Sắp hết</div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card admin-table">
+            <div class="card-header">
+                <i class="fas fa-shopping-bag me-2"></i>DON HANG MOI NHAT
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr class="bg-gray-light-custom">
+                            <th>Ma don</th>
+                            <th>Khach</th>
+                            <th>Trang thai</th>
+                            <th>Tong</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recentOrders as $order)
+                            <tr>
+                                <td><a href="{{ route('admin.orders.show', $order) }}">{{ $order->ma_don_hang }}</a></td>
+                                <td>{{ $order->user->name ?? 'N/A' }}</td>
+                                <td><span class="badge bg-{{ $order->status_color }}">{{ $order->status_label }}</span></td>
+                                <td>{{ number_format($order->thanh_tien) }}d</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Chua co don hang nao</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-center bg-gray-light-custom">
+                <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-primary">
+                    Xem tat ca <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card admin-table">
+            <div class="card-header">
+                <i class="fas fa-clipboard-list me-2"></i>NHAT KY GAN DAY
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr class="bg-gray-light-custom">
+                            <th>Thoi gian</th>
+                            <th>Nguoi dung</th>
+                            <th>Hanh dong</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recentAuditLogs as $log)
+                            <tr>
+                                <td>{{ $log->created_at->format('d/m H:i') }}</td>
+                                <td>{{ $log->user->name ?? 'System' }}</td>
+                                <td>{{ $log->action }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Chua co nhat ky</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-center bg-gray-light-custom">
+                <a href="{{ route('admin.audit-logs.index') }}" class="btn btn-sm btn-primary">
+                    Xem audit log <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -200,7 +334,7 @@
                                 </td>
                                 <td>
                                     <span class="badge-status-{{ $product->trang_thai }}">
-                                        {{ $product->trang_thai === 'active' ? 'ĐANG BÁN' : 'NGỪNG BÁN' }}
+                                        {{ $product->trang_thai === 'con' ? 'DANG BAN' : 'NGUNG BAN' }}
                                     </span>
                                 </td>
                             </tr>
@@ -250,7 +384,7 @@
                                 </td>
                                 <td>
                                     <span class="badge-status-{{ $product->trang_thai }}">
-                                        {{ $product->trang_thai === 'active' ? 'ĐANG BÁN' : 'NGỪNG BÁN' }}
+                                        {{ $product->trang_thai === 'con' ? 'DANG BAN' : 'NGUNG BAN' }}
                                     </span>
                                 </td>
                                 <td>

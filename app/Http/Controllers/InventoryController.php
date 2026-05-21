@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\InventoryLog;
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -115,7 +116,7 @@ class InventoryController extends Controller
             $product->update(['so_luong' => $newQuantity]);
             $this->syncProductStatus($product->fresh());
 
-            InventoryLog::create([
+            $log = InventoryLog::create([
                 'product_id'        => $product->id,
                 'loai'              => 'in',
                 'so_luong_truoc'    => $oldQuantity,
@@ -123,6 +124,12 @@ class InventoryController extends Controller
                 'so_luong_sau'      => $newQuantity,
                 'ly_do'             => $validated['ly_do'],
                 'user_id'           => Auth::id(),
+            ]);
+            AuditLog::record('inventory_imported', $log, "Imported stock for {$product->ten_sp}", [
+                'so_luong' => $oldQuantity,
+            ], [
+                'so_luong' => $newQuantity,
+                'change' => $validated['so_luong'],
             ]);
         });
 
@@ -152,7 +159,7 @@ class InventoryController extends Controller
             $product->update(['so_luong' => $newQuantity]);
             $this->syncProductStatus($product->fresh());
 
-            InventoryLog::create([
+            $log = InventoryLog::create([
                 'product_id'        => $product->id,
                 'loai'              => 'out',
                 'so_luong_truoc'    => $oldQuantity,
@@ -160,6 +167,12 @@ class InventoryController extends Controller
                 'so_luong_sau'      => $newQuantity,
                 'ly_do'             => $validated['ly_do'],
                 'user_id'           => Auth::id(),
+            ]);
+            AuditLog::record('inventory_exported', $log, "Exported stock for {$product->ten_sp}", [
+                'so_luong' => $oldQuantity,
+            ], [
+                'so_luong' => $newQuantity,
+                'change' => -$validated['so_luong'],
             ]);
         });
 
@@ -186,7 +199,7 @@ class InventoryController extends Controller
             $product->update(['so_luong' => $newQuantity]);
             $this->syncProductStatus($product->fresh());
 
-            InventoryLog::create([
+            $log = InventoryLog::create([
                 'product_id'        => $product->id,
                 'loai'              => 'adjust',
                 'so_luong_truoc'    => $oldQuantity,
@@ -194,6 +207,12 @@ class InventoryController extends Controller
                 'so_luong_sau'      => $newQuantity,
                 'ly_do'             => $validated['ly_do'],
                 'user_id'           => Auth::id(),
+            ]);
+            AuditLog::record('inventory_adjusted', $log, "Adjusted stock for {$product->ten_sp}", [
+                'so_luong' => $oldQuantity,
+            ], [
+                'so_luong' => $newQuantity,
+                'change' => $change,
             ]);
         });
 

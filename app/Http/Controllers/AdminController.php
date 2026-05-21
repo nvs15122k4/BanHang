@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Order;
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class AdminController extends Controller
 {
@@ -25,6 +28,15 @@ class AdminController extends Controller
             'inactive_products' => Product::where('trang_thai', 'het')->count(),
             'total_stock' => Product::sum('so_luong'),
             'low_stock_products' => Product::where('so_luong', '<', 10)->count(),
+            'total_orders' => Order::count(),
+            'pending_orders' => Order::where('trang_thai', Order::STATUS_PENDING)->count(),
+            'completed_orders' => Order::where('trang_thai', Order::STATUS_COMPLETED)->count(),
+            'cancelled_orders' => Order::where('trang_thai', Order::STATUS_CANCELLED)->count(),
+            'paid_orders' => Order::where('trang_thai_thanh_toan', Order::PAYMENT_PAID)->count(),
+            'pending_payment_orders' => Order::where('trang_thai_thanh_toan', Order::PAYMENT_PENDING)->count(),
+            'today_orders' => Order::whereDate('created_at', today())->count(),
+            'completed_revenue' => Order::where('trang_thai', Order::STATUS_COMPLETED)->sum('thanh_tien'),
+            'today_revenue' => Order::whereDate('created_at', today())->sum('thanh_tien'),
         ];
 
         // Recent users (last 5)
@@ -32,6 +44,11 @@ class AdminController extends Controller
 
         // Recent products (last 5)
         $recentProducts = Product::orderBy('created_at', 'desc')->take(5)->get();
+
+        $recentOrders = Order::with('user')->orderBy('created_at', 'desc')->take(5)->get();
+        $recentAuditLogs = Schema::hasTable('audit_logs')
+            ? AuditLog::with('user')->orderBy('created_at', 'desc')->take(8)->get()
+            : collect();
 
         // Low stock products
         $lowStockProducts = Product::where('so_luong', '<', 10)
@@ -48,6 +65,8 @@ class AdminController extends Controller
             'stats',
             'recentUsers',
             'recentProducts',
+            'recentOrders',
+            'recentAuditLogs',
             'lowStockProducts',
             'productsByStatus'
         ));
@@ -96,7 +115,13 @@ class AdminController extends Controller
     public function updateUserRole(Request $request, User $user)
     {
         $request->validate(['role' => 'required|in:admin,user']);
+        $oldRole = $user->role;
         $user->update(['role' => $request->role]);
+        AuditLog::record('user_role_updated', $user, "Updated role for {$user->email}", [
+            'role' => $oldRole,
+        ], [
+            'role' => $request->role,
+        ]);
         return back()->with('success', "Đã đổi vai trò của \"{$user->name}\" thành " . ($request->role === 'admin' ? 'Admin' : 'User') . '!');
     }
 
@@ -110,8 +135,14 @@ class AdminController extends Controller
             return back()->with('error', 'Không thể vô hiệu hóa tài khoản của chính bạn!');
         }
 
+        $oldStatus = $user->is_active;
         $newStatus = !$user->is_active;
         $user->update(['is_active' => $newStatus]);
+        AuditLog::record('user_status_updated', $user, "Updated status for {$user->email}", [
+            'is_active' => $oldStatus,
+        ], [
+            'is_active' => $newStatus,
+        ]);
 
         $msg = $newStatus
             ? "Đã mở lại tài khoản \"{$user->name}\"!"
@@ -184,7 +215,13 @@ class AdminController extends Controller
             'trang_thai' => 'required|in:con,het',
         ]);
 
+        $oldStatus = $product->trang_thai;
         $product->update(['trang_thai' => $request->trang_thai]);
+        AuditLog::record('product_status_updated', $product, "Updated status for {$product->ten_sp}", [
+            'trang_thai' => $oldStatus,
+        ], [
+            'trang_thai' => $request->trang_thai,
+        ]);
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -206,7 +243,13 @@ class AdminController extends Controller
             'so_luong' => 'required|integer|min:0',
         ]);
 
+        $oldQuantity = $product->so_luong;
         $product->update(['so_luong' => $request->so_luong]);
+        AuditLog::record('product_stock_updated', $product, "Updated stock for {$product->ten_sp}", [
+            'so_luong' => $oldQuantity,
+        ], [
+            'so_luong' => (int) $request->so_luong,
+        ]);
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -226,6 +269,7 @@ class AdminController extends Controller
     {
         $product = Product::onlyTrashed()->findOrFail($productId);
         $product->restore();
+        AuditLog::record('product_restored', $product, "Restored product {$product->ten_sp}");
 
         return back()->with('success', "Đã khôi phục sản phẩm \"{$product->ten_sp}\".");
     }
@@ -360,12 +404,16 @@ class AdminController extends Controller
             'role.required' => 'Vui lòng chọn vai trò',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
             'phone' => $validated['phone'] ?? null,
+        ]);
+        AuditLog::record('user_created', $user, "Created user {$user->email}", null, [
+            'email' => $user->email,
+            'role' => $user->role,
         ]);
 
         return back()->with('success', 'Tạo người dùng mới thành công!');

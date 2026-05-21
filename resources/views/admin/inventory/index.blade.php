@@ -127,17 +127,17 @@
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-outline-success"
-                                        onclick="openImport({{ $product->id }}, '{{ $product->ten_sp }}', {{ $product->so_luong }})"
+                                        onclick='openImport({{ $product->id }}, @json($product->ten_sp), {{ $product->so_luong }})'
                                         title="Nhập kho">
                                     <i class="fas fa-arrow-down"></i> Nhập
                                 </button>
                                 <button type="button" class="btn btn-outline-warning"
-                                        onclick="openExport({{ $product->id }}, '{{ $product->ten_sp }}', {{ $product->so_luong }})"
+                                        onclick='openExport({{ $product->id }}, @json($product->ten_sp), {{ $product->so_luong }})'
                                         title="Xuất kho">
                                     <i class="fas fa-arrow-up"></i> Xuất
                                 </button>
                                 <button type="button" class="btn btn-outline-info"
-                                        onclick="openAdjust({{ $product->id }}, '{{ $product->ten_sp }}', {{ $product->so_luong }})"
+                                        onclick='openAdjust({{ $product->id }}, @json($product->ten_sp), {{ $product->so_luong }})'
                                         title="Điều chỉnh">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -178,7 +178,10 @@
                     <p>Tồn kho hiện tại: <strong id="import_current_stock" class="text-primary"></strong></p>
                     <div class="mb-3">
                         <label class="form-label">Số lượng nhập <span class="text-danger">*</span></label>
-                        <input type="number" name="so_luong" class="form-control" min="1" required>
+                        <input type="number" name="so_luong" id="import_qty" class="form-control" min="1" required>
+                    </div>
+                    <div class="alert alert-info py-2 small" id="import_preview">
+                        Sau khi nhập kho: <strong id="import_after_stock">0</strong>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Lý do <span class="text-danger">*</span></label>
@@ -212,6 +215,9 @@
                         <label class="form-label">Số lượng xuất <span class="text-danger">*</span></label>
                         <input type="number" name="so_luong" id="export_qty" class="form-control" min="1" required>
                     </div>
+                    <div class="alert alert-info py-2 small" id="export_preview">
+                        Sau khi xuất kho: <strong id="export_after_stock">0</strong>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Lý do <span class="text-danger">*</span></label>
                         <input type="text" name="ly_do" class="form-control" placeholder="VD: Hàng hỏng, mất mát..." required>
@@ -244,6 +250,9 @@
                         <label class="form-label">Số lượng mới <span class="text-danger">*</span></label>
                         <input type="number" name="so_luong_moi" id="adjust_qty" class="form-control" min="0" required>
                     </div>
+                    <div class="alert alert-info py-2 small" id="adjust_preview">
+                        Chênh lệch: <strong id="adjust_change_stock">0</strong>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Lý do điều chỉnh <span class="text-danger">*</span></label>
                         <input type="text" name="ly_do" class="form-control" placeholder="VD: Kiểm kê thực tế..." required>
@@ -260,26 +269,62 @@
 
 @push('scripts')
 <script>
+let importCurrentStock = 0;
+let exportCurrentStock = 0;
+let adjustCurrentStock = 0;
+
+function updateImportPreview() {
+    const qty = parseInt(document.getElementById('import_qty').value || 0, 10);
+    document.getElementById('import_after_stock').textContent = importCurrentStock + Math.max(qty, 0);
+}
+
+function updateExportPreview() {
+    const qty = parseInt(document.getElementById('export_qty').value || 0, 10);
+    const afterStock = exportCurrentStock - Math.max(qty, 0);
+    const preview = document.getElementById('export_preview');
+    document.getElementById('export_after_stock').textContent = afterStock;
+    preview.classList.toggle('alert-danger', afterStock < 0);
+    preview.classList.toggle('alert-info', afterStock >= 0);
+}
+
+function updateAdjustPreview() {
+    const qty = parseInt(document.getElementById('adjust_qty').value || 0, 10);
+    const change = qty - adjustCurrentStock;
+    document.getElementById('adjust_change_stock').textContent = (change > 0 ? '+' : '') + change;
+}
+
 function openImport(id, name, stock) {
+    importCurrentStock = stock;
     document.getElementById('import_product_id').value = id;
     document.getElementById('import_product_name').textContent = name;
     document.getElementById('import_current_stock').textContent = stock;
+    document.getElementById('import_qty').value = '';
+    updateImportPreview();
     new bootstrap.Modal(document.getElementById('importModal')).show();
 }
 function openExport(id, name, stock) {
+    exportCurrentStock = stock;
     document.getElementById('export_product_id').value = id;
     document.getElementById('export_product_name').textContent = name;
     document.getElementById('export_current_stock').textContent = stock;
+    document.getElementById('export_qty').value = '';
     document.getElementById('export_qty').max = stock;
+    updateExportPreview();
     new bootstrap.Modal(document.getElementById('exportModal')).show();
 }
 function openAdjust(id, name, stock) {
+    adjustCurrentStock = stock;
     document.getElementById('adjust_product_id').value = id;
     document.getElementById('adjust_product_name').textContent = name;
     document.getElementById('adjust_current_stock').textContent = stock;
     document.getElementById('adjust_qty').value = stock;
+    updateAdjustPreview();
     new bootstrap.Modal(document.getElementById('adjustModal')).show();
 }
+
+document.getElementById('import_qty').addEventListener('input', updateImportPreview);
+document.getElementById('export_qty').addEventListener('input', updateExportPreview);
+document.getElementById('adjust_qty').addEventListener('input', updateAdjustPreview);
 </script>
 @endpush
 @endsection

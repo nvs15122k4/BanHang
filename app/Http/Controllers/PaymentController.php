@@ -18,7 +18,7 @@ class PaymentController extends Controller
         // 1. Lấy dữ liệu từ request
         $orderCode = $request->input('order_code'); // Mã đơn hàng (VD: ORD-12345)
         $amount    = $request->input('amount');
-        $status    = $request->input('status'); // success
+        $status    = $request->input('status'); // success / failed
         $signature = $request->header('X-Payment-Signature'); // Chữ ký bảo mật
 
         Log::info("Payment Webhook received", $request->all());
@@ -50,12 +50,12 @@ class PaymentController extends Controller
         if ($status === 'success') {
             // Cập nhật trạng thái thanh toán
             $order->update([
-                'trang_thai_thanh_toan' => 'paid'
+                'trang_thai_thanh_toan' => Order::PAYMENT_PAID,
             ]);
 
             // Gửi thông báo cho khách hàng
             try {
-                $order->user->notify(new PaymentStatusUpdated($order, 'paid'));
+                $order->user->notify(new PaymentStatusUpdated($order, Order::PAYMENT_PAID));
             } catch (\Exception $e) {
                 Log::warning('Payment notification failed: ' . $e->getMessage());
             }
@@ -63,6 +63,20 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Payment updated successfully']);
         }
 
-        return response()->json(['message' => 'Payment failed or invalid status'], 400);
+        if ($status === 'failed') {
+            $order->update([
+                'trang_thai_thanh_toan' => Order::PAYMENT_FAILED,
+            ]);
+
+            try {
+                $order->user->notify(new PaymentStatusUpdated($order, Order::PAYMENT_FAILED));
+            } catch (\Exception $e) {
+                Log::warning('Payment notification failed: ' . $e->getMessage());
+            }
+
+            return response()->json(['message' => 'Payment marked as failed']);
+        }
+
+        return response()->json(['message' => 'Payment status is invalid'], 400);
     }
 }

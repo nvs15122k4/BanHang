@@ -9,6 +9,25 @@ class Order extends Model
 {
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_SHIPPING = 'shipping';
+    public const STATUS_DELIVERED = 'delivered';
+    public const STATUS_DISPUTING = 'disputing';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLING = 'cancelling';
+    public const STATUS_CANCELLED = 'cancelled';
+
+    public const PAYMENT_PENDING = 'pending_payment';
+    public const PAYMENT_UNPAID = 'unpaid';
+    public const PAYMENT_PAID = 'paid';
+    public const PAYMENT_FAILED = 'failed';
+    public const PAYMENT_REFUNDED = 'refunded';
+
+    public const REFUND_STATUS_NONE = 'none';
+    public const REFUND_STATUS_PENDING = 'pending';
+    public const REFUND_STATUS_COMPLETED = 'completed';
+
     protected $fillable = [
         'ma_don_hang',
         'user_id',
@@ -33,11 +52,6 @@ class Order extends Model
         'reason_cancel',
     ];
 
-    const REFUND_STATUS_NONE = 'none';
-    const REFUND_STATUS_PENDING = 'pending';
-    const REFUND_STATUS_COMPLETED = 'completed';
-    
-
     protected $casts = [
         'tong_tien' => 'decimal:2',
         'phi_van_chuyen' => 'decimal:2',
@@ -45,136 +59,123 @@ class Order extends Model
         'thanh_tien' => 'decimal:2',
     ];
 
-    /**
-     * Get the user that owns the order
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the order items
-     */
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    /**
-     * Get the inventory logs
-     */
     public function inventoryLogs()
     {
         return $this->hasMany(InventoryLog::class);
     }
 
-    /**
-     * Nhãn trạng thái hiển thị cho ADMIN
-     */
     public static function adminStatusLabels(): array
     {
         return [
-            'pending'   => 'Chờ duyệt đơn',
-            'confirmed' => 'Đã duyệt đơn',
-            'shipping'  => 'Đang giao hàng',
-            'delivered' => 'Chờ KH xác nhận',
-            'disputing' => 'Đang khiếu nại',
-            'completed' => 'Hoàn thành',
-            'cancelling' => 'Chờ duyệt hủy',
-            'cancelled' => 'Đã hủy',
+            self::STATUS_PENDING => 'Chờ duyệt đơn',
+            self::STATUS_CONFIRMED => 'Đã duyệt đơn',
+            self::STATUS_SHIPPING => 'Đang giao hàng',
+            self::STATUS_DELIVERED => 'Chờ KH xác nhận',
+            self::STATUS_DISPUTING => 'Đang khiếu nại',
+            self::STATUS_COMPLETED => 'Hoàn thành',
+            self::STATUS_CANCELLING => 'Chờ duyệt hủy',
+            self::STATUS_CANCELLED => 'Đã hủy',
         ];
     }
 
-    /**
-     * Nhãn trạng thái hiển thị cho USER
-     * (mapping từ internal status → text user thấy)
-     */
     public static function userStatusLabels(): array
     {
         return [
-            'pending'   => 'Chờ duyệt đơn',
-            'confirmed' => 'Đang chuẩn bị hàng',
-            'shipping'  => 'Đang giao hàng',
-            'delivered' => 'Chờ xác nhận',
-            'disputing' => 'Đang xử lý khiếu nại',
-            'completed' => 'Hoàn thành',
-            'cancelling' => 'Đang xử lý đơn hàng hủy',
-            'cancelled' => 'Đã hủy',
+            self::STATUS_PENDING => 'Chờ duyệt đơn',
+            self::STATUS_CONFIRMED => 'Đang chuẩn bị hàng',
+            self::STATUS_SHIPPING => 'Đang giao hàng',
+            self::STATUS_DELIVERED => 'Chờ xác nhận',
+            self::STATUS_DISPUTING => 'Đang xử lý khiếu nại',
+            self::STATUS_COMPLETED => 'Hoàn thành',
+            self::STATUS_CANCELLING => 'Đang xử lý đơn hủy',
+            self::STATUS_CANCELLED => 'Đã hủy',
         ];
     }
 
-    /**
-     * Các bước admin được phép chuyển tiếp (theo thứ tự flow)
-     */
+    public static function paymentStatusLabels(): array
+    {
+        return [
+            self::PAYMENT_PENDING => 'Chờ thanh toán',
+            self::PAYMENT_UNPAID => 'Chưa thanh toán',
+            self::PAYMENT_PAID => 'Đã thanh toán',
+            self::PAYMENT_FAILED => 'Thanh toán thất bại',
+            self::PAYMENT_REFUNDED => 'Đã hoàn tiền',
+        ];
+    }
+
     public static function adminNextStatuses(string $current): array
     {
         $map = [
-            'pending'   => ['confirmed', 'cancelled', 'cancelling'],
-            'confirmed' => ['shipping', 'cancelled', 'cancelling'],
-            'shipping'  => ['delivered'],
-            'delivered' => ['completed'],
-            'disputing' => ['completed', 'shipping'],
-            'cancelling'=> ['cancelled', 'pending'], // pending để trả lại trạng thái cũ nếu từ chối
-            'completed' => [],
-            'cancelled' => [],
+            self::STATUS_PENDING => [self::STATUS_CONFIRMED, self::STATUS_CANCELLED, self::STATUS_CANCELLING],
+            self::STATUS_CONFIRMED => [self::STATUS_SHIPPING, self::STATUS_CANCELLED, self::STATUS_CANCELLING],
+            self::STATUS_SHIPPING => [self::STATUS_DELIVERED],
+            self::STATUS_DELIVERED => [self::STATUS_COMPLETED],
+            self::STATUS_DISPUTING => [self::STATUS_COMPLETED, self::STATUS_SHIPPING],
+            self::STATUS_CANCELLING => [self::STATUS_CANCELLED, self::STATUS_PENDING],
+            self::STATUS_COMPLETED => [],
+            self::STATUS_CANCELLED => [],
         ];
 
         return $map[$current] ?? [];
     }
 
-    /**
-     * Nhãn màu trạng thái (Bootstrap class)
-     */
+    public static function userNextStatuses(string $current): array
+    {
+        $map = [
+            self::STATUS_DELIVERED => [self::STATUS_COMPLETED, self::STATUS_DISPUTING],
+        ];
+
+        return $map[$current] ?? [];
+    }
+
+    public static function timelineSteps(): array
+    {
+        return [
+            ['key' => self::STATUS_PENDING, 'icon' => 'clipboard-list', 'label' => 'Đặt hàng'],
+            ['key' => self::STATUS_CONFIRMED, 'icon' => 'box', 'label' => 'Chuẩn bị'],
+            ['key' => self::STATUS_SHIPPING, 'icon' => 'shipping-fast', 'label' => 'Đang giao'],
+            ['key' => self::STATUS_DELIVERED, 'icon' => 'user-check', 'label' => 'Đã giao'],
+            ['key' => self::STATUS_COMPLETED, 'icon' => 'box-open', 'label' => 'Hoàn thành'],
+        ];
+    }
+
     public function getStatusColorAttribute(): string
     {
         $map = [
-            'pending'   => 'warning',
-            'confirmed' => 'info',
-            'shipping'  => 'primary',
-            'delivered' => 'warning',
-            'disputing' => 'danger',
-            'completed' => 'success',
-            'cancelling' => 'warning',
-            'cancelled' => 'danger',
+            self::STATUS_PENDING => 'warning',
+            self::STATUS_CONFIRMED => 'info',
+            self::STATUS_SHIPPING => 'primary',
+            self::STATUS_DELIVERED => 'warning',
+            self::STATUS_DISPUTING => 'danger',
+            self::STATUS_COMPLETED => 'success',
+            self::STATUS_CANCELLING => 'warning',
+            self::STATUS_CANCELLED => 'danger',
         ];
 
         return $map[$this->trang_thai] ?? 'secondary';
     }
 
-    /**
-     * Các hành động user được phép thực hiện khi đơn đang giao
-     * shipping → completed (đã nhận) hoặc disputing (chưa nhận / khiếu nại)
-     */
-    public static function userNextStatuses(string $current): array
-    {
-        $map = [
-            'delivered' => ['completed', 'disputing'],
-        ];
-
-        return $map[$current] ?? [];
-    }
-
-    /**
-     * Get status label (dùng nhãn admin làm mặc định)
-     */
     public function getStatusLabelAttribute(): string
     {
         return self::adminStatusLabels()[$this->trang_thai] ?? $this->trang_thai;
     }
 
-    /**
-     * Get status label hiển thị cho user
-     */
     public function getUserStatusLabelAttribute(): string
     {
         return self::userStatusLabels()[$this->trang_thai] ?? $this->trang_thai;
     }
 
-    /**
-     * Get payment method label
-     */
-    public function getPaymentMethodLabelAttribute()
+    public function getPaymentMethodLabelAttribute(): string
     {
         $labels = [
             'cod' => 'Thanh toán khi nhận hàng',
@@ -186,18 +187,34 @@ class Order extends Model
         return $labels[$this->phuong_thuc_thanh_toan] ?? $this->phuong_thuc_thanh_toan;
     }
 
-    /**
-     * Get payment status label
-     */
-    public function getPaymentStatusLabelAttribute()
+    public function getPaymentStatusLabelAttribute(): string
     {
-        return $this->trang_thai_thanh_toan === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán';
+        return self::paymentStatusLabels()[$this->trang_thai_thanh_toan] ?? $this->trang_thai_thanh_toan;
     }
 
-    /**
-     * Generate unique order code
-     */
-    public static function generateOrderCode()
+    public function getPaymentStatusColorAttribute(): string
+    {
+        $map = [
+            self::PAYMENT_PENDING => 'warning',
+            self::PAYMENT_UNPAID => 'secondary',
+            self::PAYMENT_PAID => 'success',
+            self::PAYMENT_FAILED => 'danger',
+            self::PAYMENT_REFUNDED => 'info',
+        ];
+
+        return $map[$this->trang_thai_thanh_toan] ?? 'secondary';
+    }
+
+    public function getTimelineIndexAttribute(): int
+    {
+        $trackKey = $this->trang_thai === self::STATUS_DISPUTING ? self::STATUS_DELIVERED : $this->trang_thai;
+        $keys = array_column(self::timelineSteps(), 'key');
+        $index = array_search($trackKey, $keys, true);
+
+        return $index === false ? 0 : $index;
+    }
+
+    public static function generateOrderCode(): string
     {
         do {
             $code = 'ORD-' . strtoupper(substr(uniqid(), -8));
@@ -206,10 +223,7 @@ class Order extends Model
         return $code;
     }
 
-    /**
-     * Get VietQR image URL
-     */
-    public function getVietqrUrlAttribute()
+    public function getVietqrUrlAttribute(): string
     {
         $bankId = env('VIETQR_BANK_ID', 'vietcombank');
         $accountNo = env('VIETQR_ACCOUNT_NO', '1014232408');

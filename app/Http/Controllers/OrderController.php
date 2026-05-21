@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\InventoryLog;
+use App\Models\AuditLog;
 use App\Notifications\OrderStatusUpdated;
 use App\Notifications\PaymentStatusUpdated;
 use Illuminate\Http\Request;
@@ -90,22 +91,26 @@ class OrderController extends Controller
         // }
 
         // Hoàn kho khi hủy (Chỉ hoàn nếu đã từng trừ kho - tức là đã confirmed, shipping, delivered)
-        $statusesWithDeductedInventory = ['confirmed', 'shipping', 'delivered', 'disputing'];
-        if (in_array($oldStatus, $statusesWithDeductedInventory) && $newStatus === 'cancelled') {
+        if ($newStatus === Order::STATUS_CANCELLED && $this->inventoryWasDeducted($order)) {
             $this->restoreInventory($order);
             
             // Nếu đã thanh toán, chuyển sang chờ hoàn tiền
-            if ($order->trang_thai_thanh_toan === 'paid' && $order->refund_status === 'none') {
-                $order->update(['refund_status' => 'pending']);
+            if ($order->trang_thai_thanh_toan === Order::PAYMENT_PAID && $order->refund_status === Order::REFUND_STATUS_NONE) {
+                $order->update(['refund_status' => Order::REFUND_STATUS_PENDING]);
             }
         }
 
         // Trừ kho khi duyệt đơn
-        if ($oldStatus === 'pending' && $newStatus === 'confirmed') {
+        if ($oldStatus === Order::STATUS_PENDING && $newStatus === Order::STATUS_CONFIRMED && ! $this->inventoryWasDeducted($order)) {
             $this->deductInventory($order);
         }
 
         $order->update(['trang_thai' => $newStatus]);
+        AuditLog::record('order_status_updated', $order, "Cập nhật trạng thái đơn {$order->ma_don_hang}", [
+            'trang_thai' => $oldStatus,
+        ], [
+            'trang_thai' => $newStatus,
+        ]);
 
         if ($oldStatus !== $newStatus) {
             try {
@@ -124,12 +129,17 @@ class OrderController extends Controller
     public function updatePaymentStatus(Request $request, Order $order)
     {
         $request->validate([
-            'trang_thai_thanh_toan' => 'required|in:unpaid,paid',
+            'trang_thai_thanh_toan' => 'required|in:' . implode(',', array_keys(Order::paymentStatusLabels())),
         ]);
 
         $oldStatus = $order->trang_thai_thanh_toan;
 
         $order->update(['trang_thai_thanh_toan' => $request->trang_thai_thanh_toan]);
+        AuditLog::record('payment_status_updated', $order, "Cập nhật thanh toán đơn {$order->ma_don_hang}", [
+            'trang_thai_thanh_toan' => $oldStatus,
+        ], [
+            'trang_thai_thanh_toan' => $request->trang_thai_thanh_toan,
+        ]);
 
         // Gửi thông báo khi trạng thái thanh toán thay đổi
         if ($oldStatus !== $request->trang_thai_thanh_toan) {
@@ -205,6 +215,11 @@ class OrderController extends Controller
         });
     }
 
+    private function inventoryWasDeducted(Order $order): bool
+    {
+        return (int) InventoryLog::where('order_id', $order->id)->sum('so_luong_thay_doi') < 0;
+    }
+
     /**
      * Đơn hàng của tôi (Customer)
      */
@@ -259,13 +274,20 @@ class OrderController extends Controller
         }
 
         // Chỉ cho phép hủy khi đang ở trạng thái pending (Chờ duyệt)
-        if ($order->trang_thai !== 'pending') {
+        if ($order->trang_thai !== Order::STATUS_PENDING) {
             return back()->with('error', 'Chỉ có thể hủy đơn hàng khi đang ở trạng thái "Chờ duyệt"!');
         }
 
+        $oldStatus = $order->trang_thai;
+
         $order->update([
-            'previous_trang_thai' => $order->trang_thai,
-            'trang_thai' => 'cancelling',
+            'previous_trang_thai' => $oldStatus,
+            'trang_thai' => Order::STATUS_CANCELLING,
+        ]);
+        AuditLog::record('order_cancel_requested', $order, "Khách yêu cầu hủy đơn {$order->ma_don_hang}", [
+            'trang_thai' => $oldStatus,
+        ], [
+            'trang_thai' => Order::STATUS_CANCELLING,
         ]);
 
         return back()->with('success', 'Yêu cầu hủy đơn hàng đã được gửi và đang chờ Admin duyệt!');
@@ -291,6 +313,11 @@ class OrderController extends Controller
         }
 
         $order->update(['trang_thai' => $newStatus]);
+        AuditLog::record('customer_order_status_updated', $order, "Khách cập nhật trạng thái đơn {$order->ma_don_hang}", [
+            'trang_thai' => $oldStatus,
+        ], [
+            'trang_thai' => $newStatus,
+        ]);
 
         try {
             $order->user->notify(new OrderStatusUpdated($order, $oldStatus, $newStatus));
@@ -363,9 +390,9 @@ class OrderController extends Controller
                 'phi_van_chuyen' => 0,
                 'giam_gia' => 0,
                 'thanh_tien' => $tongTien,
-                'trang_thai' => 'pending',
+                'trang_thai' => Order::STATUS_PENDING,
                 'phuong_thuc_thanh_toan' => $validated['phuong_thuc_thanh_toan'],
-                'trang_thai_thanh_toan' => 'unpaid',
+                'trang_thai_thanh_toan' => Order::PAYMENT_PENDING,
                 'ghi_chu' => $validated['ghi_chu'] ?? null,
             ]);
 
@@ -375,6 +402,11 @@ class OrderController extends Controller
             }
 
             DB::commit();
+            AuditLog::record('admin_order_created', $order, "Admin tao don {$order->ma_don_hang}", null, [
+                'trang_thai' => Order::STATUS_PENDING,
+                'trang_thai_thanh_toan' => Order::PAYMENT_PENDING,
+                'thanh_tien' => $order->thanh_tien,
+            ]);
 
             return redirect()->route('admin.orders.show', $order)->with('success', 'Tạo đơn hàng thành công!');
         } catch (\Exception $e) {
@@ -415,7 +447,12 @@ class OrderController extends Controller
             'refund_user_note' => 'nullable|string',
         ]);
 
-        $order->update(array_merge($validated, ['refund_status' => 'pending']));
+        $order->update(array_merge($validated, ['refund_status' => Order::REFUND_STATUS_PENDING]));
+        AuditLog::record('refund_info_submitted', $order, "Khách gửi thông tin hoàn tiền đơn {$order->ma_don_hang}", null, [
+            'refund_bank_name' => $validated['refund_bank_name'],
+            'refund_account_number' => $validated['refund_account_number'],
+            'refund_status' => Order::REFUND_STATUS_PENDING,
+        ]);
 
         return redirect()->route('orders.show', $order)->with('success', 'Thông tin hoàn tiền đã được gửi. Admin sẽ xử lý sớm nhất!');
     }
@@ -435,28 +472,30 @@ class OrderController extends Controller
             
             // Hoàn tồn kho (Chỉ hoàn nếu đã từng trừ kho)
             // Vì inventory được trừ ngay khi checkout (trạng thái pending), nên cần hoàn kho cho tất cả các trạng thái này
-            $statusesWithDeductedInventory = ['pending', 'confirmed', 'shipping', 'delivered', 'disputing', 'cancelling'];
-            if (in_array($oldStatus, $statusesWithDeductedInventory)) {
+            if ($this->inventoryWasDeducted($order)) {
                 $this->restoreInventory($order);
             }
 
             $updateData = [
-                'trang_thai' => 'cancelled',
+                'trang_thai' => Order::STATUS_CANCELLED,
                 'previous_trang_thai' => null,
             ];
 
             // Nếu đã thanh toán, yêu cầu hoàn tiền
             $message = 'Đơn hàng đã được hủy thành công.';
-            if ($order->trang_thai_thanh_toan === 'paid') {
-                $updateData['refund_status'] = 'pending';
+            if ($order->trang_thai_thanh_toan === Order::PAYMENT_PAID) {
+                $updateData['refund_status'] = Order::REFUND_STATUS_PENDING;
                 $message = 'Đơn hàng đã được chấp nhận hủy. Vui lòng kiểm tra và xử lý hoàn tiền cho khách hàng.';
             }
 
             $order->update($updateData);
+            AuditLog::record('order_cancel_approved', $order, "Duyệt hủy đơn {$order->ma_don_hang}", [
+                'trang_thai' => $oldStatus,
+            ], $updateData);
 
             try {
                 $order->user->notify(new OrderStatusUpdated($order, $oldStatus, 'cancelled'));
-                if ($order->trang_thai_thanh_toan === 'paid') {
+                if ($order->trang_thai_thanh_toan === Order::PAYMENT_PAID) {
                     // Bạn có thể tạo thêm notification riêng cho việc hoàn tiền ở đây
                 }
             } catch (\Exception $e) {
@@ -487,6 +526,11 @@ class OrderController extends Controller
             'trang_thai' => $revertStatus,
             'previous_trang_thai' => null,
         ]);
+        AuditLog::record('order_cancel_rejected', $order, "Từ chối hủy đơn {$order->ma_don_hang}", [
+            'trang_thai' => $oldStatus,
+        ], [
+            'trang_thai' => $revertStatus,
+        ]);
 
         try {
             // Thông báo cho user
@@ -511,6 +555,15 @@ class OrderController extends Controller
         $oldRefundStatus = $order->refund_status;
 
         $order->update([
+            'refund_status' => $request->refund_status,
+            'refund_admin_note' => $request->refund_admin_note,
+            'trang_thai_thanh_toan' => $request->refund_status === Order::REFUND_STATUS_COMPLETED
+                ? Order::PAYMENT_REFUNDED
+                : $order->trang_thai_thanh_toan,
+        ]);
+        AuditLog::record('refund_status_updated', $order, "Cập nhật hoàn tiền đơn {$order->ma_don_hang}", [
+            'refund_status' => $oldRefundStatus,
+        ], [
             'refund_status' => $request->refund_status,
             'refund_admin_note' => $request->refund_admin_note,
         ]);

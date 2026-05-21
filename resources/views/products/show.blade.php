@@ -3,7 +3,7 @@
 @section('title', $product->ten_sp . ' - Sàn Tím Vi En')
 
 @push('styles')
-@vite(['resources/css/views/product_show.css'])
+@vite(['public/css/views/product_show.css'])
 @endpush
 
 @section('content')

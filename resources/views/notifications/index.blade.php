@@ -3,7 +3,7 @@
 @section('title', 'Thông báo của tôi - Sàn Tím Vi En')
 
 @push('styles')
-    @vite(['resources/css/views/notifications.css'])
+    @vite(['public/css/views/notifications.css'])
 @endpush
 
 @section('content')

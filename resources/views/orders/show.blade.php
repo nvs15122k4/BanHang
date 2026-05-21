@@ -3,7 +3,7 @@
 @section('title', 'Chi tiết đơn hàng - ' . $order->id)
 
 @push('styles')
-    @vite(['resources/css/views/order_show.css'])
+    @vite(['public/css/views/order_show.css'])
 @endpush
 
 @section('content')

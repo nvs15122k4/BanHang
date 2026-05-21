@@ -3,7 +3,7 @@
 @section('title', 'Liên hệ - Sàn Tím Vi En')
 
 @push('styles')
-    @vite(['resources/css/views/static_pages.css'])
+    @vite(['public/css/views/static_pages.css'])
 @endpush
 
 @section('content')

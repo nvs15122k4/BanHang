@@ -37,7 +37,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $message = $user->isAdmin() ? 'Chào mừng Admin!' : 'Đăng nhập thành công!';
             
-            $redirect = Auth::user()->isAdmin() ? route('admin.dashboard') : route('home');
+            $redirect = Auth::user()->isAdmin() ? route('home') : route('home');
             return redirect()->intended($redirect)->with('success', $message);
         }
 

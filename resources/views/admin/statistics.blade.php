@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-chart-line me-3"></i>THỐNG KÊ HỆ THỐNG</h1>
         <div class="d-flex gap-2">
-            <a href="{{ route('export.statistics') }}" class="btn btn-primary btn-sm rounded-pill px-3">
+            <a href="{{ route('admin.export.statistics') }}" class="btn btn-primary btn-sm rounded-pill px-3">
                 <i class="fas fa-file-export me-2"></i>XUẤT BÁO CÁO
             </a>
         </div>

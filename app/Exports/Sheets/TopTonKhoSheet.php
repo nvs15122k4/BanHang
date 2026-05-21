@@ -37,8 +37,8 @@ class TopTonKhoSheet implements FromCollection, WithTitle, WithHeadings, WithMap
             $i,
             $product->ten_sp,
             $product->loai ?: '—',
-            number_format($product->gia, 0, ',', '.'),
-            $product->so_luong,
+            (int) $product->gia,
+            (int) $product->so_luong,
             $product->trang_thai === 'con' ? 'Còn hàng' : 'Hết hàng',
         ];
     }

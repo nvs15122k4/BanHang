@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public static function avatarOptions(): array
     {
-        return collect(range(2, 12))
+        return collect(range(0, 12))
             ->map(fn (int $id) => self::AVATAR_BASE_URL . $id . '.jpg')
             ->all();
     }

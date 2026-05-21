@@ -34,7 +34,8 @@
                         <h4 class="card-section-title">Thông tin cá nhân</h4>
 
                         @php
-                            $selectedAvatar = $user->avatar ?: \App\Models\User::DEFAULT_AVATAR_URL;
+                            $defaultAvatar = \App\Models\User::DEFAULT_AVATAR_URL;
+                            $selectedAvatar = $user->avatar ?: $defaultAvatar;
                         @endphp
 
                         <form id="profileForm">
@@ -44,7 +45,7 @@
                                 <div class="col-md-9 avatar-field">
                                     <input type="hidden" name="avatar" id="userAvatar" value="{{ $selectedAvatar }}">
                                     <div class="avatar-compact">
-                                        <img src="{{ $selectedAvatar }}" alt="Avatar hiện tại" id="avatarPreview" style="width: 80px; height: 80px; border-radius: 50%;">
+                                        <img src="{{ $selectedAvatar }}" alt="Avatar hiện tại" id="avatarPreview" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='{{ $defaultAvatar }}';">
                                         <button type="button" class="btn-link-action" data-bs-toggle="modal" data-bs-target="#avatarModal">Chọn avatar</button>
                                     </div>
                                     <div class="invalid-feedback-field text-danger small mt-1"></div>
@@ -195,7 +196,7 @@
                 <div class="avatar-picker" id="avatarPicker">
                     @foreach($avatarOptions as $index => $avatar)
                         <button type="button" class="avatar-option {{ $selectedAvatar === $avatar ? 'active' : '' }}" data-avatar="{{ $avatar }}" aria-label="Avatar {{ $index + 1 }}">
-                            <img src="{{ $avatar }}" alt="Avatar {{ $index + 1 }}" style="width: 100px; height: 100px; border-radius: 50%;">
+                            <img src="{{ $avatar }}" alt="Avatar {{ $index + 1 }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='{{ $defaultAvatar }}';">
                         </button>
                     @endforeach
                 </div>
@@ -270,8 +271,15 @@
     const avatarInput = document.getElementById('userAvatar');
     const avatarPreview = document.getElementById('avatarPreview');
     const avatarModal = document.getElementById('avatarModal');
+    const defaultAvatar = @js($defaultAvatar);
 
     if (avatarPicker && avatarInput && avatarPreview) {
+        avatarPreview.addEventListener('error', function() {
+            if (this.getAttribute('src') !== defaultAvatar) {
+                this.src = defaultAvatar;
+            }
+        });
+
         avatarPicker.querySelectorAll('.avatar-option').forEach(function(option) {
             option.addEventListener('click', function() {
                 const avatar = this.dataset.avatar;

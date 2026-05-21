@@ -105,6 +105,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/audit-logs', [App\Http\Controllers\AuditLogController::class, 'index'])->name('audit-logs.index');
+    Route::get('/export/statistics', [ProductController::class, 'exportStatistics'])->name('export.statistics');
     
     // Users management
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
@@ -120,6 +121,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Products management
     Route::get('/products', [App\Http\Controllers\AdminController::class, 'products'])->name('products');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::put('/products/{product}/status', [App\Http\Controllers\AdminController::class, 'updateProductStatus'])->name('products.status');
     Route::put('/products/{product}/stock', [App\Http\Controllers\AdminController::class, 'updateProductStock'])->name('products.stock');
     Route::patch('/products/{productId}/restore', [App\Http\Controllers\AdminController::class, 'restoreProduct'])->name('products.restore');

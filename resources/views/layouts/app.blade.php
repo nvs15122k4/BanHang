@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Sàn Tím Vi En - Phong cách Việt')</title>
     <meta name="description" content="Sàn Tím Vi En - Shop thời trang Việt chất lượng cao. Phong cách Việt — Sống đẹp mỗi ngày.">
-
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -128,7 +128,7 @@
                             $navbarAvatar = auth()->user()->avatar ?: \App\Models\User::DEFAULT_AVATAR_URL;
                         @endphp
                         <a href="#" class="dropdown-toggle uix-becf5e5a9c navbar-avatar-toggle" data-bs-toggle="dropdown">
-                            <img src="{{ $navbarAvatar }}" alt="{{ auth()->user()->name }}" class="navbar-user-avatar" style="width: 40px; height: 40px; min-width: 40px; max-width: 40px; min-height: 40px; max-height: 40px; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: 50%;">
+                            <img src="{{ $navbarAvatar }}" alt="{{ auth()->user()->name }}" class="navbar-user-avatar" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='{{ \App\Models\User::DEFAULT_AVATAR_URL }}';" style="width: 40px; height: 40px; min-width: 40px; max-width: 40px; min-height: 40px; max-height: 40px; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: 50%;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 uix-920e6abfc3">
                             @if(auth()->user()->role === 'admin')
@@ -225,8 +225,7 @@
                     <li><a href="{{ route('pages.blog') }}">Blog</a></li>
                     <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
                     <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>
-                    {{-- Đánh giá — ẩn khi chưa có trang riêng --}}
-                    {{-- <li><a href="#">Đánh giá</a></li> --}}
+
                 </ul>
             </div>
 

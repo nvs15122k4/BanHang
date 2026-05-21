@@ -44,10 +44,10 @@ class TongQuanSheet implements FromArray, WithTitle, WithStyles, WithColumnWidth
         $rows[] = ['Tổng sản phẩm',            Product::count()];
         $rows[] = ['Đang bán (còn hàng)',       Product::where('trang_thai', 'con')->count()];
         $rows[] = ['Hết hàng',                  Product::where('trang_thai', 'het')->count()];
-        $rows[] = ['Tổng tồn kho',              number_format(Product::sum('so_luong'), 0, ',', '.')];
-        $rows[] = ['Giá trung bình (VNĐ)',      number_format(Product::avg('gia'), 0, ',', '.')];
-        $rows[] = ['Giá cao nhất (VNĐ)',        number_format(Product::max('gia'), 0, ',', '.')];
-        $rows[] = ['Giá thấp nhất (VNĐ)',       number_format(Product::min('gia'), 0, ',', '.')];
+        $rows[] = ['Tổng tồn kho',              (int) Product::sum('so_luong')];
+        $rows[] = ['Giá trung bình (VNĐ)',      (int) Product::avg('gia')];
+        $rows[] = ['Giá cao nhất (VNĐ)',        (int) Product::max('gia')];
+        $rows[] = ['Giá thấp nhất (VNĐ)',       (int) Product::min('gia')];
         $rows[] = ['Sắp hết hàng (< 10)',       Product::where('so_luong', '<', 10)->where('so_luong', '>', 0)->count()];
         $rows[] = ['Hết hàng (= 0)',            Product::where('so_luong', 0)->count()];
 
@@ -69,9 +69,9 @@ class TongQuanSheet implements FromArray, WithTitle, WithStyles, WithColumnWidth
         foreach ($byLoai as $item) {
             $rows[] = [
                 $item->loai ?: '(Chưa phân loại)',
-                $item->so_sp,
-                number_format($item->tong_ton, 0, ',', '.'),
-                number_format($item->gia_tb, 0, ',', '.'),
+                (int) $item->so_sp,
+                (int) $item->tong_ton,
+                (int) $item->gia_tb,
             ];
         }
 

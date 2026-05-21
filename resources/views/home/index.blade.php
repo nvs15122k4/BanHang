@@ -3,7 +3,7 @@
 @section('title', 'Sàn Tím Vi En — Phong cách Việt, Sống đẹp mỗi ngày')
 
 @push('styles')
-    @vite(['resources/css/views/home.css'])
+    @vite(['public/css/views/home.css'])
 @endpush
 
 @section('content')

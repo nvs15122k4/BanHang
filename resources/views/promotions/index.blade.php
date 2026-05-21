@@ -2,7 +2,7 @@
 @section('title', 'Khuyến Mãi Hot — Sàn Tím')
 
 @push('styles')
-    @vite(['resources/css/views/product_index.css'])
+    @vite(['public/css/views/product_index.css'])
 @endpush
 
 @section('content')

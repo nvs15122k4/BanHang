@@ -2,7 +2,7 @@
 @section('title', 'Danh sách yêu thích - Sàn Tím')
 
 @push('styles')
-    @vite(['resources/css/views/product_index.css'])
+    @vite(['public/css/views/product_index.css'])
 @endpush
 
 @section('content')

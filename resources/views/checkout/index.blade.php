@@ -3,7 +3,7 @@
 @section('title', 'Thanh toán - AVA')
 
 @push('styles')
-    @vite(['resources/css/views/checkout.css'])
+    @vite(['public/css/views/checkout.css'])
 @endpush
 
 @section('content')

@@ -14,9 +14,9 @@
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['public/css/app.css', 'public/js/app.js'])
     @stack('styles')
-    @vite(['resources/css/extracted-inline.css'])
+    @vite(['public/css/extracted-inline.css'])
 </head>
 <body>
 

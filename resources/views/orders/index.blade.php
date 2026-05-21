@@ -3,7 +3,7 @@
 @section('title', 'Đơn hàng của tôi - AVA')
 
 @push('styles')
-    @vite(['resources/css/views/order_index.css'])
+    @vite(['public/css/views/order_index.css'])
 @endpush
 
 @section('content')

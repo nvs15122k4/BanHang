@@ -3,7 +3,7 @@
 @section('title', 'Sản phẩm - Sàn Tím Vi En')
 
 @push('styles')
-    @vite(['resources/css/views/product_index.css'])
+    @vite(['public/css/views/product_index.css'])
 @endpush
 
 @section('content')

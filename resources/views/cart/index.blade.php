@@ -3,7 +3,7 @@
 @section('title', 'Giỏ hàng - AVA')
 
 @push('styles')
-    @vite(['resources/css/views/cart.css'])
+    @vite(['public/css/views/cart.css'])
 @endpush
 
 @section('content')

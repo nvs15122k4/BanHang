@@ -3,7 +3,7 @@
 @section('title', 'Tài khoản của tôi - Sàn Tím Vi En')
 
 @push('styles')
-@vite(['resources/css/views/profile.css'])
+@vite(['public/css/views/profile.css'])
 @endpush
 
 @section('content')

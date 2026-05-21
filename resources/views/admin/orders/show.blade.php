@@ -3,7 +3,7 @@
 @section('title', 'Chi tiết đơn hàng')
 
 @push('styles')
-    @vite(['resources/css/admin_common.css'])
+    @vite(['public/css/admin_common.css'])
 @endpush
 
 @section('content')

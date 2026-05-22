@@ -77,7 +77,7 @@
                 </div>
                 <div class="ms-3 flex-grow-1">
                     <div class="stat-value">{{ $stats['total_orders'] }}</div>
-                    <div class="stat-label">Tong don hang</div>
+                    <div class="stat-label">Tổng đơn hàng</div>
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
                 </div>
                 <div class="ms-3 flex-grow-1">
                     <div class="stat-value">{{ $stats['pending_orders'] }}</div>
-                    <div class="stat-label">Cho xu ly</div>
+                    <div class="stat-label">Chờ xử lý</div>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="ms-3 flex-grow-1">
                     <div class="stat-value">{{ number_format($stats['completed_revenue']) }}d</div>
-                    <div class="stat-label">Doanh thu hoan thanh</div>
+                    <div class="stat-label">Doanh thu hoàn thành</div>
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@
                 </div>
                 <div class="ms-3 flex-grow-1">
                     <div class="stat-value">{{ $stats['today_orders'] }}</div>
-                    <div class="stat-label">Don hom nay</div>
+                    <div class="stat-label">Đơn hôm nay</div>
                 </div>
             </div>
         </div>
@@ -186,16 +186,16 @@
     <div class="col-md-6">
         <div class="card admin-table">
             <div class="card-header">
-                <i class="fas fa-shopping-bag me-2"></i>DON HANG MOI NHAT
+                <i class="fas fa-shopping-bag me-2"></i>ĐƠN HÀNG MỚI NHẤT
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr class="bg-gray-light-custom">
-                            <th>Ma don</th>
-                            <th>Khach</th>
-                            <th>Trang thai</th>
-                            <th>Tong</th>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Trạng thái</th>
+                            <th>Tổng</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -208,7 +208,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center text-muted">Chua co don hang nao</td>
+                                <td colspan="4" class="text-center text-muted">Chưa có đơn hàng nào</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -216,7 +216,7 @@
             </div>
             <div class="card-footer text-center bg-gray-light-custom">
                 <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-primary">
-                    Xem tat ca <i class="fas fa-arrow-right ms-2"></i>
+                    Xem tất cả <i class="fas fa-arrow-right ms-2"></i>
                 </a>
             </div>
         </div>
@@ -225,15 +225,15 @@
     <div class="col-md-6">
         <div class="card admin-table">
             <div class="card-header">
-                <i class="fas fa-clipboard-list me-2"></i>NHAT KY GAN DAY
+                <i class="fas fa-clipboard-list me-2"></i>NHẬT KÝ GẦN ĐÂY
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr class="bg-gray-light-custom">
-                            <th>Thoi gian</th>
-                            <th>Nguoi dung</th>
-                            <th>Hanh dong</th>
+                            <th>Thời gian</th>
+                            <th>Người dùng</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -245,7 +245,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center text-muted">Chua co nhat ky</td>
+                                <td colspan="3" class="text-center text-muted">Chưa có nhật ký</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -253,7 +253,7 @@
             </div>
             <div class="card-footer text-center bg-gray-light-custom">
                 <a href="{{ route('admin.audit-logs.index') }}" class="btn btn-sm btn-primary">
-                    Xem audit log <i class="fas fa-arrow-right ms-2"></i>
+                    Xem nhật ký <i class="fas fa-arrow-right ms-2"></i>
                 </a>
             </div>
         </div>

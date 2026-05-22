@@ -21,7 +21,9 @@
             <select name="action" class="form-select">
                 <option value="">-- Hành động --</option>
                 @foreach($actions as $action)
-                    <option value="{{ $action }}" {{ request('action') === $action ? 'selected' : '' }}>{{ $action }}</option>
+                    <option value="{{ $action }}" {{ request('action') === $action ? 'selected' : '' }}>
+                        {{ \App\Models\AuditLog::actionLabelFor($action) }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -75,32 +77,20 @@
                                 <span class="text-muted">System</span>
                             @endif
                         </td>
-                        <td><span class="badge bg-dark">{{ $log->action }}</span></td>
+                        <td><span class="badge bg-dark">{{ $log->action_label }}</span></td>
                         <td>
                             @if($log->auditable_type)
-                                <code>{{ class_basename($log->auditable_type) }}#{{ $log->auditable_id }}</code>
+                                <span>{{ $log->auditable_label }}</span>
                             @else
-                                <span class="text-muted">-</span>
+                                <span class="text-muted">{{ $log->auditable_label }}</span>
                             @endif
                         </td>
-                        <td>{{ $log->description }}</td>
+                        <td>{{ $log->description_label }}</td>
                         <td class="small">
-                            @if($log->old_values || $log->new_values)
-                                <details>
-                                    <summary>Xem dữ liệu</summary>
-                                    @if($log->old_values)
-                                        <div class="mt-2">
-                                            <strong>Trước:</strong>
-                                            <pre class="bg-light p-2 mb-2">{{ json_encode($log->old_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                                        </div>
-                                    @endif
-                                    @if($log->new_values)
-                                        <div>
-                                            <strong>Sau:</strong>
-                                            <pre class="bg-light p-2 mb-0">{{ json_encode($log->new_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                                        </div>
-                                    @endif
-                                </details>
+                            @if(count($log->change_rows))
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#auditLogDetailModal{{ $log->id }}">
+                                    <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                </button>
                             @else
                                 <span class="text-muted">-</span>
                             @endif
@@ -123,4 +113,67 @@
         </div>
     @endif
 </div>
+
+@foreach($logs as $log)
+    @if(count($log->change_rows))
+        <div class="modal fade admin-modal" id="auditLogDetailModal{{ $log->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content admin-modal-content">
+                    <div class="modal-header admin-modal-header">
+                        <h5 class="modal-title admin-modal-title">Chi tiết thay đổi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="text-muted small">Thời gian</div>
+                                <div class="fw-semibold">{{ $log->created_at->format('d/m/Y H:i') }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-muted small">Người thực hiện</div>
+                                <div class="fw-semibold">{{ $log->user ? $log->user->name : 'System' }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-muted small">Hành động</div>
+                                <div><span class="badge bg-dark">{{ $log->action_label }}</span></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-muted small">Đối tượng</div>
+                                <div class="fw-semibold">{{ $log->auditable_label }}</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="text-muted small">Mô tả</div>
+                                <div>{{ $log->description_label }}</div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Trường</th>
+                                        <th>Trước</th>
+                                        <th>Sau</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($log->change_rows as $change)
+                                        <tr>
+                                            <td>{{ $change['field'] }}</td>
+                                            <td>{{ $change['old'] ?? '-' }}</td>
+                                            <td>{{ $change['new'] ?? '-' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer admin-modal-footer">
+                        <button type="button" class="btn btn-secondary admin-btn-rounded" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+@endforeach
 @endsection

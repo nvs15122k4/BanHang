@@ -241,7 +241,7 @@
                             <tr>
                                 <td>{{ $log->created_at->format('d/m H:i') }}</td>
                                 <td>{{ $log->user->name ?? 'System' }}</td>
-                                <td>{{ $log->action }}</td>
+                                <td> <span class="badge bg-dark">{{ $log->action_label ?? $log->action }}</span></td>
                             </tr>
                         @empty
                             <tr>
@@ -334,7 +334,7 @@
                                 </td>
                                 <td>
                                     <span class="badge-status-{{ $product->trang_thai }}">
-                                        {{ $product->trang_thai === 'con' ? 'DANG BAN' : 'NGUNG BAN' }}
+                                        {{ $product->trang_thai === 'con' ? 'ĐANG BÁN' : 'NGỪNG BÁN' }}
                                     </span>
                                 </td>
                             </tr>
@@ -384,7 +384,7 @@
                                 </td>
                                 <td>
                                     <span class="badge-status-{{ $product->trang_thai }}">
-                                        {{ $product->trang_thai === 'con' ? 'DANG BAN' : 'NGUNG BAN' }}
+                                        {{ $product->trang_thai === 'con' ? 'ĐANG BÁN' : 'NGỪNG BÁN' }}
                                     </span>
                                 </td>
                                 <td>

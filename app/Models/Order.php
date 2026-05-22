@@ -105,11 +105,8 @@ class Order extends Model
     public static function paymentStatusLabels(): array
     {
         return [
-            self::PAYMENT_PENDING => 'Chờ thanh toán',
             self::PAYMENT_UNPAID => 'Chưa thanh toán',
             self::PAYMENT_PAID => 'Đã thanh toán',
-            self::PAYMENT_FAILED => 'Thanh toán thất bại',
-            self::PAYMENT_REFUNDED => 'Đã hoàn tiền',
         ];
     }
 

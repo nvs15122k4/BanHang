@@ -140,6 +140,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Cancellation approval
     Route::post('/orders/{order}/approve-cancel', [App\Http\Controllers\OrderController::class, 'approveCancel'])->name('orders.approveCancel');
     Route::post('/orders/{order}/reject-cancel', [App\Http\Controllers\OrderController::class, 'rejectCancel'])->name('orders.rejectCancel');
+    Route::get('/orders/{order}/refund', function (\App\Models\Order $order) {
+        return redirect()->route('admin.orders.show', $order);
+    })->name('orders.refund.redirect');
     Route::put('/orders/{order}/refund', [App\Http\Controllers\OrderController::class, 'updateRefund'])->name('orders.updateRefund');
     
     // Promotions management

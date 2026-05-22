@@ -553,13 +553,23 @@ class OrderController extends Controller
         ]);
 
         $oldRefundStatus = $order->refund_status;
+        $nextPaymentStatus = $order->trang_thai_thanh_toan;
+
+        // DB enum of trang_thai_thanh_toan only accepts unpaid/paid.
+        // Refund lifecycle is tracked by refund_status.
+        if ($request->refund_status === Order::REFUND_STATUS_COMPLETED) {
+            $nextPaymentStatus = Order::PAYMENT_PAID;
+        } elseif (
+            $request->refund_status === Order::REFUND_STATUS_PENDING
+            && $oldRefundStatus === Order::REFUND_STATUS_COMPLETED
+        ) {
+            $nextPaymentStatus = Order::PAYMENT_PAID;
+        }
 
         $order->update([
             'refund_status' => $request->refund_status,
             'refund_admin_note' => $request->refund_admin_note,
-            'trang_thai_thanh_toan' => $request->refund_status === Order::REFUND_STATUS_COMPLETED
-                ? Order::PAYMENT_REFUNDED
-                : $order->trang_thai_thanh_toan,
+            'trang_thai_thanh_toan' => $nextPaymentStatus,
         ]);
         AuditLog::record('refund_status_updated', $order, "Cập nhật hoàn tiền đơn {$order->ma_don_hang}", [
             'refund_status' => $oldRefundStatus,

@@ -117,7 +117,7 @@
                         </td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info" title="Xem">
+                                <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="btn btn-outline-info" title="Xem">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-primary" title="Sửa">

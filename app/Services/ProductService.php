@@ -55,6 +55,8 @@ class ProductService
 
     public function createProduct(array $data, ?UploadedFile $image = null, ?string $imageUrl = null): Product
     {
+        $data['slug'] = Product::generateUniqueSlug($data['ten_sp']);
+
         if ($image) {
             $data['anh'] = $this->cloudinary->uploadImage($image);
         } elseif ($imageUrl) {

@@ -28,7 +28,7 @@
                         <i class="fas fa-box"></i> {{ $product->so_luong }}
                     </small>
                     <div class="btn-group" role="group">
-                        <a href="{{ route('products.show', $product) }}" 
+                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
                            class="btn btn-sm btn-outline-info" 
                            title="Xem chi tiết">
                             <i class="fas fa-eye"></i>

@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nữ</h3>
-                        <a href="{{ route('products.index', ['loai_filter' => 'women']) }}" class="btn-shop-now">Khám phá</a>
+                        <a href="{{ route('categories.show', ['category' => 'women']) }}" class="btn-shop-now">Khám phá</a>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nam</h3>
-                        <a href="{{ route('products.index', ['loai_filter' => 'men']) }}" class="btn-shop-now">Khám phá</a>
+                        <a href="{{ route('categories.show', ['category' => 'men']) }}" class="btn-shop-now">Khám phá</a>
                     </div>
                 </div>
             </div>
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-3 col-6">
                     <div class="product-card">
                         <div class="product-img-wrapper">
-                            <a href="{{ route('products.show', $product->id) }}">
+                            <a href="{{ route('products.show', ['product' => $product->slug]) }}">
                                 @if($product->so_luong <= 0)
                                     <div class="product-badge badge-out">Hết hàng</div>
                                 @else
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                         <span class="product-category">{{ $product->loai }}</span>
-                        <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
+                        <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="product-title">{{ $product->ten_sp }}</a>
                         <div class="product-price">
                             {{ number_format($promoPrice) }}đ
                             <span class="price-old">{{ number_format($product->gia) }}đ</span>
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-3 col-6">
                     <div class="product-card">
                         <div class="product-img-wrapper">
-                            <a href="{{ route('products.show', $product->id) }}">
+                            <a href="{{ route('products.show', ['product' => $product->slug]) }}">
                                 @if($product->so_luong <= 0)
                                     <div class="product-badge badge-out">Hết hàng</div>
                                 @elseif($product->is_new)
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                         <span class="product-category">{{ $product->loai }}</span>
-                        <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
+                        <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="product-title">{{ $product->ten_sp }}</a>
                         <div class="product-price">
                             {{ number_format($product->gia) }}đ
                         </div>

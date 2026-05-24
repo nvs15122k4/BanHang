@@ -1,39 +1,77 @@
 @extends('layouts.app')
 
 @php
+    $category = $category ?? null;
     $productFilterKeys = ['search', 'loai_filter', 'min_price', 'max_price', 'sort', 'trang_thai_filter', 'per_page'];
     $hasProductFilters = collect($productFilterKeys)->contains(fn ($key) => request()->filled($key));
-    $productsCanonical = 'https://santimvien.vn/products';
+    $productsCanonical = $category
+        ? 'https://santimvien.vn/danh-muc/' . $category->slug
+        : 'https://santimvien.vn/products';
 
     if (! $hasProductFilters && request()->integer('page') > 1) {
         $productsCanonical .= '?page=' . request()->integer('page');
     }
+
+    $pageTitle = $category
+        ? $category->name . ' - Sàn Tím Vi En'
+        : 'Sản phẩm thời trang nam nữ - Sàn Tím Vi En';
+    $pageDescription = $category && filled($category->description)
+        ? \Illuminate\Support\Str::limit(strip_tags($category->description), 155)
+        : ($category
+            ? 'Khám phá sản phẩm ' . $category->name . ' tại Sàn Tím Vi En với lựa chọn thời trang chất lượng.'
+            : 'Khám phá sản phẩm thời trang nam nữ hiện đại, chất lượng từ Sàn Tím Vi En với nhiều lựa chọn phù hợp phong cách Việt.');
+    $categoryBreadcrumbSchema = $category ? [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Trang chủ',
+                'item' => 'https://santimvien.vn/',
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => $category->name,
+                'item' => 'https://santimvien.vn/danh-muc/' . $category->slug,
+            ],
+        ],
+    ] : null;
 @endphp
 
-@section('title', 'Sản phẩm thời trang nam nữ - Sàn Tím Vi En')
-@section('meta_description', 'Khám phá sản phẩm thời trang nam nữ hiện đại, chất lượng từ Sàn Tím Vi En với nhiều lựa chọn phù hợp phong cách Việt.')
+@section('title', $pageTitle)
+@section('meta_description', $pageDescription)
 @section('canonical', $productsCanonical)
 @section('robots', $hasProductFilters ? 'noindex, follow' : 'index, follow')
-@section('og_title', 'Sản phẩm thời trang nam nữ - Sàn Tím Vi En')
-@section('og_description', 'Khám phá sản phẩm thời trang nam nữ hiện đại, chất lượng từ Sàn Tím Vi En với nhiều lựa chọn phù hợp phong cách Việt.')
+@section('og_title', $pageTitle)
+@section('og_description', $pageDescription)
 
 @push('styles')
     @vite(['public/css/views/product_index.css'])
 @endpush
 
 @section('content')
+@if($categoryBreadcrumbSchema)
+<script type="application/ld+json">{!! json_encode($categoryBreadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+@endif
 <div class="container py-4">
     <div class="breadcrumb-st">
-        <a href="{{ route('home') }}">Trang chủ</a> &nbsp;/&nbsp; Tất cả sản phẩm
+        <a href="{{ route('home') }}">Trang chủ</a> &nbsp;/&nbsp;
+        @if($category)
+            Danh mục &nbsp;/&nbsp; {{ $category->name }}
+        @else
+            Tất cả sản phẩm
+        @endif
     </div>
 
     <div class="row">
         <!-- SIDEBAR FILTERS -->
         <aside class="col-lg-3 d-none d-lg-block">
             <div class="sidebar-filter">
-                <h1 class="uix-30b515ec19">Cửa hàng</h1>
+                <h1 class="uix-30b515ec19">{{ $category ? $category->name : 'Cửa hàng' }}</h1>
 
-                <form method="GET" action="{{ route('products.index') }}" id="filterForm">
+                <form method="GET" action="{{ $category ? route('categories.show', ['category' => $category->slug]) : route('products.index') }}" id="filterForm">
                     <!-- Tìm kiếm -->
                     <div class="filter-section">
                         <div class="filter-title">Tìm kiếm</div>
@@ -51,19 +89,18 @@
                         <div class="filter-title">Danh mục <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
                         <ul class="filter-list">
                             <li class="filter-item">
-                                <a href="{{ route('products.index', request()->except('loai_filter')) }}"
-                                   class="filter-link {{ !request('loai_filter') ? 'active' : '' }}">Tất cả</a>
+                                <a href="{{ route('products.index') }}"
+                                   class="filter-link {{ ! $category && !request('loai_filter') ? 'active' : '' }}">Tất cả</a>
                             </li>
-                            @foreach($loaiList as $loai)
+                            @foreach($loaiList as $loaiSlug => $loaiName)
                                 <li class="filter-item">
-                                    <a href="{{ route('products.index', array_merge(request()->all(), ['loai_filter' => $loai])) }}"
-                                       class="filter-link {{ request('loai_filter') == $loai ? 'active' : '' }}">
-                                        {{ ucfirst($loai) }}
+                                    <a href="{{ route('categories.show', ['category' => $loaiSlug]) }}"
+                                       class="filter-link {{ ($category?->slug ?? request('loai_filter')) == $loaiSlug ? 'active' : '' }}">
+                                        {{ $loaiName }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
-                        <input type="hidden" name="loai_filter" value="{{ request('loai_filter') }}">
                     </div>
 
                     <!-- Khoảng giá -->
@@ -84,6 +121,9 @@
 
         <!-- MAIN CONTENT -->
         <main class="col-lg-9">
+            @if($category && filled($category->description))
+                <p class="mb-4 text-muted">{{ $category->description }}</p>
+            @endif
             <div class="result-bar">
                 <div class="result-count">
                     Hiển thị {{ $products->count() }} / {{ $products->total() }} sản phẩm
@@ -103,7 +143,7 @@
                     <div class="col-md-4 col-6">
                         <div class="product-card">
                             <div class="product-img-wrapper">
-                                <a href="{{ route('products.show', $product->id) }}">
+                                <a href="{{ route('products.show', ['product' => $product->slug]) }}">
                                     @if($product->so_luong <= 0)
                                         <div class="product-badge badge-out">Hết hàng</div>
                                     @elseif($product->is_new)
@@ -149,7 +189,7 @@
                                 </div>
                             </div>
                             <span class="product-category">{{ $product->loai }}</span>
-                            <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
+                            <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="product-title">{{ $product->ten_sp }}</a>
                             <div class="product-price">
                                 {{ number_format($product->gia) }}đ
                                 @if($product->gia_goc > $product->gia)

@@ -50,7 +50,7 @@
                                             </div>
                                         @endif
                                         <div>
-                                            <a href="{{ route('products.show', $product->id) }}" class="cart-item-title">
+                                            <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="cart-item-title">
                                                 {{ $product->ten_sp }}
                                             </a>
                                         </div>

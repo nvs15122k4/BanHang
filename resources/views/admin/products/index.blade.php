@@ -171,7 +171,7 @@
                       </button>
                     </form>
                   @else
-                    <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-info" title="Xem" target="_blank">
+                    <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="btn btn-sm btn-outline-info" title="Xem" target="_blank">
                         <i class="fas fa-eye"></i>
                     </a>
                     <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-primary" title="Sửa">

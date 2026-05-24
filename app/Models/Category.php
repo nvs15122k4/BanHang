@@ -15,4 +15,9 @@ class Category extends Model
         'icon',
         'description',
     ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'loai', 'slug');
+    }
 }

@@ -82,3 +82,32 @@
     padding: 80px 20px;
     text-align: center;
 }
+
+.notifications-header-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.mark-all-read-btn {
+    align-items: center;
+    display: inline-flex;
+    height: 38px;
+    justify-content: center;
+    width: 38px;
+}
+
+.mark-all-read-btn i {
+    font-size: 15px;
+}
+
+@media (max-width: 576px) {
+    .notifications-page-header {
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    .notifications-header-actions {
+        justify-content: flex-start;
+        width: 100%;
+    }
+}

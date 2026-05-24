@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Về chúng tôi - Sàn Tím Vi En')
+@section('title', 'Về Sàn Tím Vi En - Thời trang Việt')
+@section('meta_description', 'Tìm hiểu câu chuyện Sàn Tím Vi En, thương hiệu thời trang Việt hướng đến phong cách hiện đại, chất lượng và sự tự tin mỗi ngày.')
+@section('canonical', 'https://santimvien.vn/about')
+@section('og_title', 'Về Sàn Tím Vi En - Thời trang Việt')
+@section('og_description', 'Tìm hiểu câu chuyện Sàn Tím Vi En, thương hiệu thời trang Việt hướng đến phong cách hiện đại, chất lượng và sự tự tin mỗi ngày.')
 
 @push('styles')
     @vite(['public/css/views/static_pages.css'])

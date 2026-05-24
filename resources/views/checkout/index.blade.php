@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Thanh toán - AVA')
+@section('robots', 'noindex, nofollow')
 
 @push('styles')
     @vite(['public/css/views/checkout.css'])

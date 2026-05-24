@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Tài khoản của tôi - Sàn Tím Vi En')
+@section('robots', 'noindex, nofollow')
 
 @push('styles')
 @vite(['public/css/views/profile.css'])

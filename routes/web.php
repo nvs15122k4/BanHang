@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,9 @@ Route::get('/confirm-password', function() {
 
 // Home route (public)
 Route::get('/', [ProductController::class, 'home'])->name('home');
+
+// Public XML sitemap for search engines
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Public Promotions page
 Route::get('/khuyen-mai', [PromotionController::class, 'publicIndex'])->name('promotions.index');

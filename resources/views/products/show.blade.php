@@ -1,29 +1,138 @@
 @extends('layouts.app')
 
 @php
+    $productCanonical = 'https://santimvien.vn/san-pham/' . $product->slug;
     $productMetaDescription = trim(strip_tags((string) $product->mo_ta));
     $productMetaDescription = $productMetaDescription !== ''
         ? \Illuminate\Support\Str::limit($productMetaDescription, 155)
         : 'Khám phá ' . $product->ten_sp . ' tại Sàn Tím Vi En - thời trang Việt hiện đại, chất lượng và phong cách.';
+    $productStructuredDescription = trim(strip_tags((string) $product->mo_ta));
+    $productStructuredDescription = $productStructuredDescription !== ''
+        ? \Illuminate\Support\Str::squish($productStructuredDescription)
+        : 'Sản phẩm đang được cập nhật thông tin chi tiết.';
+    $isProductInStock = $product->trang_thai === 'con' && $product->so_luong > 0;
+
+    $productSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => $product->ten_sp,
+        'image' => [$product->image_path],
+        'description' => $productStructuredDescription,
+        'sku' => 'product-' . $product->id,
+        'offers' => [
+            '@type' => 'Offer',
+            'url' => $productCanonical,
+            'priceCurrency' => 'VND',
+            'price' => (string) $productCurrentPrice,
+            'availability' => 'https://schema.org/' . ($isProductInStock ? 'InStock' : 'OutOfStock'),
+        ],
+    ];
+
+    if (filled($product->loai)) {
+        $productSchema['category'] = $product->loai_label;
+    }
+
+    if ($reviews->isNotEmpty()) {
+        $productSchema['aggregateRating'] = [
+            '@type' => 'AggregateRating',
+            'ratingValue' => number_format((float) $reviews->avg('rating'), 1, '.', ''),
+            'reviewCount' => (string) $reviews->count(),
+        ];
+        $productSchema['review'] = $reviews->map(function ($review) {
+            $reviewSchema = [
+                '@type' => 'Review',
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $review->user->name,
+                ],
+                'datePublished' => $review->created_at->toDateString(),
+                'reviewRating' => [
+                    '@type' => 'Rating',
+                    'ratingValue' => (string) $review->rating,
+                    'bestRating' => '5',
+                ],
+            ];
+
+            if (filled($review->comment)) {
+                $reviewSchema['reviewBody'] = $review->comment;
+            }
+
+            return $reviewSchema;
+        })->values()->all();
+    }
+
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Trang chủ',
+                'item' => 'https://santimvien.vn/',
+            ],
+        ],
+    ];
+
+    if ($product->category) {
+        $breadcrumbSchema['itemListElement'][] = [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Sản phẩm',
+            'item' => 'https://santimvien.vn/products',
+        ];
+        $breadcrumbSchema['itemListElement'][] = [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $product->category->name,
+            'item' => 'https://santimvien.vn/danh-muc/' . $product->category->slug,
+        ];
+    } else {
+        $breadcrumbSchema['itemListElement'][] = [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Sản phẩm',
+            'item' => 'https://santimvien.vn/products',
+        ];
+    }
+
+    $breadcrumbSchema['itemListElement'][] = [
+        '@type' => 'ListItem',
+        'position' => count($breadcrumbSchema['itemListElement']) + 1,
+        'name' => $product->ten_sp,
+        'item' => $productCanonical,
+    ];
 @endphp
 
 @section('title', e($product->ten_sp) . ' - Sàn Tím Vi En')
 @section('meta_description', e($productMetaDescription))
-@section('canonical', 'https://santimvien.vn/products/' . (int) $product->id)
+@section('canonical', $productCanonical)
 @section('og_type', 'product')
 @section('og_title', e($product->ten_sp) . ' - Sàn Tím Vi En')
 @section('og_description', e($productMetaDescription))
 @section('og_image', e($product->image_path))
+
+@push('head')
+    <meta property="product:price:amount" content="{{ $productCurrentPrice }}">
+    <meta property="product:price:currency" content="VND">
+@endpush
 
 @push('styles')
 @vite(['public/css/views/product_show.css'])
 @endpush
 
 @section('content')
+<script type="application/ld+json">{!! json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+<script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 <div class="container py-4">
     <div class="breadcrumb-ava">
         <a href="{{ route('home') }}">Trang chủ</a> &nbsp;/&nbsp;
-        <a href="{{ route('products.index') }}">Cửa hàng</a> &nbsp;/&nbsp;
+        @if($product->category)
+            <a href="{{ route('products.index') }}">Sản phẩm</a> &nbsp;/&nbsp;
+            <a href="{{ route('categories.show', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a> &nbsp;/&nbsp;
+        @else
+            <a href="{{ route('products.index') }}">Sản phẩm</a> &nbsp;/&nbsp;
+        @endif
         {{ $product->ten_sp }}
     </div>
 
@@ -49,11 +158,7 @@
                 </a>
                 @endauth
 
-                @if($product->anh)
                 <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="detail-img" id="mainImage">
-                @else
-                <i class="fas fa-image fa-6x text-muted"></i>
-                @endif
             </div>
         </div>
 
@@ -63,10 +168,10 @@
                 <h1 class="detail-title">{{ $product->ten_sp }}</h1>
 
                 <div class="detail-price">
-                    @if($product->gia_goc > $product->gia)
-                    <span class="price-old">{{ number_format($product->gia_goc) }}đ</span>
+                    @if($productCurrentPrice < $productOriginalPrice)
+                    <span class="price-old">{{ number_format($productOriginalPrice) }}đ</span>
                     @endif
-                    {{ number_format($product->gia) }}đ
+                    {{ number_format($productCurrentPrice) }}đ
                 </div>
 
                 <div class="detail-desc">
@@ -86,6 +191,9 @@
                     </div>
                     <input type="hidden" name="selected_size" id="selectedSize" value="">
                     <small class="text-danger d-none" id="sizeError">Vui lòng chọn kích cỡ</small>
+                    <div class="mt-2">
+                        <a href="{{ route('guides.size') }}">Xem hướng dẫn chọn size</a>
+                    </div>
                 </div>
                 @endif
 
@@ -110,13 +218,12 @@
                 <button class="btn-add-cart mb-4" disabled>SẢN PHẨM TẠM HẾT HÀNG</button>
                 @endif
 
-                {{-- Delivery Options (theo wireframe) --}}
+                {{-- Purchase information links --}}
                 <div class="delivery-options mt-4">
-                    <div class="delivery-title">Tuỳ chọn giao hàng</div>
-                    <div class="delivery-item"><i class="fas fa-check-circle"></i> 100% hàng chính hãng Sàn Tím Vi En</div>
-                    <div class="delivery-item"><i class="fas fa-check-circle"></i> Thanh toán tiện lợi qua VietQR</div>
-                    <div class="delivery-item"><i class="fas fa-check-circle"></i> Đổi trả dễ dàng trong 14 ngày</div>
-                    <div class="delivery-item"><i class="fas fa-check-circle"></i> Giao hàng toàn quốc 2-3 ngày</div>
+                    <div class="delivery-title">Thông tin trước khi mua</div>
+                    <div class="delivery-item"><i class="fas fa-check-circle"></i> Hỗ trợ thanh toán qua COD hoặc VietQR tại bước thanh toán</div>
+                    <div class="delivery-item"><i class="fas fa-info-circle"></i> <a href="{{ route('policies.shipping') }}">Xem thông tin giao hàng</a></div>
+                    <div class="delivery-item"><i class="fas fa-info-circle"></i> <a href="{{ route('policies.returns') }}">Xem thông tin đổi trả</a></div>
                 </div>
 
                 {{-- Size Recommendation --}}
@@ -383,7 +490,7 @@
         <div class="col-md-3 col-6">
             <div class="product-card">
                 <div class="product-img-wrapper">
-                    <a href="{{ route('products.show', $rp->id) }}">
+                    <a href="{{ route('products.show', ['product' => $rp->slug]) }}">
                         @if($rp->anh)
                         <img src="{{ $rp->image_path }}" alt="{{ $rp->ten_sp }}" class="product-img">
                         @else
@@ -425,7 +532,7 @@
                 </div>
                 <div class="product-info">
                     <span class="product-category">{{ $rp->loai }}</span>
-                    <a href="{{ route('products.show', $rp->id) }}" class="product-title">{{ $rp->ten_sp }}</a>
+                    <a href="{{ route('products.show', ['product' => $rp->slug]) }}" class="product-title">{{ $rp->ten_sp }}</a>
                     <div class="product-price">
                         {{ number_format($rp->gia) }}đ
                     </div>

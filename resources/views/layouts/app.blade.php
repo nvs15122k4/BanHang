@@ -21,6 +21,7 @@
     <meta property="og:url" content="@yield('canonical', $defaultSeoCanonical)">
     <meta property="og:image" content="@yield('og_image', $defaultSeoImage)">
     <meta name="twitter:card" content="summary_large_image">
+    @stack('head')
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -39,8 +40,8 @@
 <div class="top-bar d-none d-md-block">
     <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex gap-4">
-            <span><i class="fas fa-phone me-1"></i> 1800 2345 (Miễn phí)</span>
-            <span><i class="fas fa-envelope me-1"></i> hotro@santimvien.vn</span>
+            <a href="{{ route('support.purchase-guide') }}"><i class="fas fa-shopping-bag me-1"></i> Hướng dẫn mua hàng</a>
+            <a href="{{ route('guides.size') }}"><i class="fas fa-ruler me-1"></i> Hướng dẫn chọn size</a>
         </div>
         <div class="d-flex gap-4">
             <a href="{{ route('pages.about') }}">Về chúng tôi</a>
@@ -181,8 +182,8 @@
     <div class="offcanvas-body p-0">
         <div class="list-group list-group-flush">
             <a href="{{ route('home') }}" class="list-group-item list-group-item-action py-3 border-0 fw-600">TRANG CHỦ</a>
-            <a href="{{ route('products.index', ['loai_filter' => 'men']) }}" class="list-group-item list-group-item-action py-3 border-0">NAM</a>
-            <a href="{{ route('products.index', ['loai_filter' => 'women']) }}" class="list-group-item list-group-item-action py-3 border-0">NỮ</a>
+            <a href="{{ route('categories.show', ['category' => 'men']) }}" class="list-group-item list-group-item-action py-3 border-0">NAM</a>
+            <a href="{{ route('categories.show', ['category' => 'women']) }}" class="list-group-item list-group-item-action py-3 border-0">NỮ</a>
             <a href="{{ route('products.index') }}" class="list-group-item list-group-item-action py-3 border-0">TRẺ EM</a>
             <a href="{{ route('pages.blog') }}" class="list-group-item list-group-item-action py-3 border-0">BLOG</a>
             <a href="{{ route('pages.about') }}" class="list-group-item list-group-item-action py-3 border-0">VỀ CHÚNG TÔI</a>
@@ -210,27 +211,21 @@
             <div class="col-lg-3 col-md-6">
                 <div class="footer-brand mb-3">SÀN <span>TÍM</span> VI EN</div>
                 <p class="uix-8e5dc3393d">
-                    Phong cách Việt — Sống đẹp mỗi ngày.<br>
-                    Lorem Ipsum, 235 Simply, Quận 1, TP.HCM
+                    Cửa hàng thời trang trực tuyến với danh mục sản phẩm,
+                    gợi ý chọn size và theo dõi đơn hàng trên website.
                 </p>
                 <p class="uix-28dfc8b539">
-                    santimvien@gmail.com<br>
-                    +84 (28) 3822-4242
+                    Thông tin liên hệ chính thức sẽ được công bố
+                    sau khi được xác nhận.
                 </p>
-                <div class="d-flex gap-2 mt-3">
-                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
-                </div>
             </div>
 
             <!-- Thông tin -->
             <div class="col-lg-2 col-md-3 col-6">
                 <div class="footer-title">Thông tin</div>
                 <ul class="footer-links">
-                    <li><a href="{{ route('products.index', ['loai_filter' => 'men']) }}">Nam</a></li>
-                    <li><a href="{{ route('products.index', ['loai_filter' => 'women']) }}">Nữ</a></li>
+                    <li><a href="{{ route('categories.show', ['category' => 'men']) }}">Nam</a></li>
+                    <li><a href="{{ route('categories.show', ['category' => 'women']) }}">Nữ</a></li>
                     <li><a href="{{ route('products.index') }}">Trẻ em</a></li>
                     <li><a href="{{ route('products.index') }}">Hàng mới về</a></li>
                 </ul>
@@ -241,7 +236,7 @@
                 <div class="footer-title">Khám phá</div>
                 <ul class="footer-links">
                     <li><a href="{{ route('pages.blog') }}">Blog</a></li>
-                    <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
+                    <li><a href="{{ route('guides.size') }}">Hướng dẫn chọn size</a></li>
                     <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>
 
                 </ul>
@@ -251,29 +246,21 @@
             <div class="col-lg-2 col-md-6 col-6">
                 <div class="footer-title">Liên hệ</div>
                 <ul class="footer-links">
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="{{ route('support.faq') }}">Câu hỏi thường gặp</a></li>
                     <li><a href="{{ route('orders.index') }}">Theo dõi đơn hàng</a></li>
-                    <li><a href="#">Vận chuyển</a></li>
-                    <li><a href="#">Đổi trả</a></li>
+                    <li><a href="{{ route('policies.shipping') }}">Thông tin giao hàng</a></li>
+                    <li><a href="{{ route('policies.returns') }}">Thông tin đổi trả</a></li>
                 </ul>
             </div>
 
-            <!-- Hỗ trợ + Newsletter -->
+            <!-- Hỗ trợ -->
             <div class="col-lg-3 col-md-6 col-6">
-                <div class="footer-title">Đăng ký nhận tin</div>
-                <p class="uix-0135655ae3">Nhận ưu đãi & cập nhật mới nhất</p>
-                <div class="newsletter-inline">
-                    <input type="email" placeholder="Email của bạn">
-                    <button type="button">GỬI</button>
-                </div>
-                <div class="mt-4">
-                    <div class="footer-title">Hỗ trợ</div>
-                    <ul class="footer-links">
-                        <li><a href="#">Trung tâm hỗ trợ</a></li>
-                        <li><a href="{{ route('pages.contact') }}">Liên hệ</a></li>
-                        <li><a href="#">Tuyển dụng</a></li>
-                    </ul>
-                </div>
+                <div class="footer-title">Hỗ trợ</div>
+                <ul class="footer-links">
+                    <li><a href="{{ route('support.purchase-guide') }}">Hướng dẫn mua hàng</a></li>
+                    <li><a href="{{ route('policies.payment') }}">Phương thức thanh toán</a></li>
+                    <li><a href="{{ route('pages.contact') }}">Liên hệ</a></li>
+                </ul>
             </div>
         </div>
 
@@ -281,8 +268,8 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center footer-bottom">
             <span>© 2026 Sàn Tím Vi En. All Rights Reserved.</span>
             <div class="d-flex gap-3 mt-2 mt-md-0">
-                <a class="uix-477a93d71b" href="#">Chính sách bảo mật</a>
-                <a class="uix-477a93d71b" href="#">Điều khoản & Điều kiện</a>
+                <a class="uix-477a93d71b" href="{{ route('policies.privacy') }}">Chính sách bảo mật</a>
+                <a class="uix-477a93d71b" href="{{ route('policies.terms') }}">Điều khoản sử dụng</a>
             </div>
         </div>
     </div>

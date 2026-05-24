@@ -227,7 +227,7 @@
                             <div class="uix-7623f05545">
                                 <div class="item-title">
                                     @if($detail->product)
-                                        <a href="{{ route('products.show', $detail->product->id) }}" class="inline-link-inherit">
+                                        <a href="{{ route('products.show', ['product' => $detail->product->slug]) }}" class="inline-link-inherit">
                                             {{ $detail->product->ten_sp }}
                                         </a>
                                     @else

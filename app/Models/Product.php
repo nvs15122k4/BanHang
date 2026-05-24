@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -12,6 +13,7 @@ class Product extends Model
 
     protected $fillable = [
         'ten_sp',
+        'slug',
         'loai',
         'mo_ta',
         'anh',
@@ -21,21 +23,42 @@ class Product extends Model
         'sizes',
     ];
 
-    // Category management has been moved to the Category model and categories table
+    protected static function booted(): void
+    {
+        static::creating(function (Product $product): void {
+            if (blank($product->slug)) {
+                $product->slug = static::generateUniqueSlug($product->ten_sp);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug(string $name): string
+    {
+        $baseSlug = Str::slug($name) ?: 'san-pham';
+        $slug = $baseSlug;
+        $suffix = 2;
+
+        while (static::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
+    }
 
     public static function getLoaiList(): array
     {
-        return \App\Models\Category::pluck('name', 'slug')->toArray();
+        return Category::pluck('name', 'slug')->toArray();
     }
 
     public static function getLoaiIcon(string $loai): string
     {
-        return \App\Models\Category::where('slug', $loai)->value('icon') ?? 'fas fa-tag';
+        return Category::where('slug', $loai)->value('icon') ?? 'fas fa-tag';
     }
 
     public function getLoaiLabelAttribute(): string
     {
-        return $this->loai ?? 'Chua phan loai';
+        return $this->category?->name ?? $this->loai ?? 'Chua phan loai';
     }
 
     protected $casts = [
@@ -122,6 +145,11 @@ class Product extends Model
     public function inventoryLogs()
     {
         return $this->hasMany(InventoryLog::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'loai', 'slug');
     }
 
     public function getAverageRatingAttribute()

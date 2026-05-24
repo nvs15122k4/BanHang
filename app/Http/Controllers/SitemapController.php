@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Response;
 use XMLWriter;
@@ -12,25 +13,52 @@ class SitemapController extends Controller
 
     public function index(): Response
     {
-        $xml = new XMLWriter();
+        $xml = new XMLWriter;
         $xml->openMemory();
         $xml->startDocument('1.0', 'UTF-8');
         $xml->startElement('urlset');
         $xml->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
-        foreach (['/', '/products', '/khuyen-mai', '/about', '/blog', '/contact'] as $path) {
-            $this->writeUrl($xml, self::BASE_URL . $path);
+        foreach ([
+            '/',
+            '/products',
+            '/khuyen-mai',
+            '/about',
+            '/blog',
+            '/blog/cach-chon-size-quan-ao-khi-mua-online',
+            '/blog/cach-phoi-ao-thun-don-gian-hang-ngay',
+            '/blog/cach-bao-quan-trang-phuc-ben-mau',
+            '/chinh-sach/thanh-toan',
+            '/ho-tro/cau-hoi-thuong-gap',
+            '/ho-tro/huong-dan-mua-hang',
+            '/huong-dan/chon-size',
+        ] as $path) {
+            $this->writeUrl($xml, self::BASE_URL.$path);
         }
 
         Product::query()
-            ->select(['id', 'updated_at'])
+            ->select(['id', 'slug', 'updated_at'])
             ->orderBy('id')
             ->chunkById(500, function ($products) use ($xml): void {
                 foreach ($products as $product) {
                     $this->writeUrl(
                         $xml,
-                        self::BASE_URL . '/products/' . $product->id,
+                        self::BASE_URL.'/san-pham/'.$product->slug,
                         $product->updated_at?->toDateString()
+                    );
+                }
+            });
+
+        Category::query()
+            ->whereHas('products')
+            ->select(['id', 'slug', 'updated_at'])
+            ->orderBy('id')
+            ->chunkById(500, function ($categories) use ($xml): void {
+                foreach ($categories as $category) {
+                    $this->writeUrl(
+                        $xml,
+                        self::BASE_URL.'/danh-muc/'.$category->slug,
+                        $category->updated_at?->toDateString()
                     );
                 }
             });

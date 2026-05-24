@@ -35,7 +35,7 @@
                 <div class="col-md-3 col-6 mb-4">
                     <div class="product-card">
                         <div class="product-img-wrapper position-relative">
-                            <a href="{{ route('products.show', $product->id) }}">
+                            <a href="{{ route('products.show', ['product' => $product->slug]) }}">
                                 @if($product->so_luong <= 0)
                                     <div class="product-badge badge-out">Hết hàng</div>
                                 @elseif($promo)
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <span class="product-category">{{ $product->loai }}</span>
-                        <a href="{{ route('products.show', $product->id) }}" class="product-title">{{ $product->ten_sp }}</a>
+                        <a href="{{ route('products.show', ['product' => $product->slug]) }}" class="product-title">{{ $product->ten_sp }}</a>
                         <div class="product-price">
                             {{ number_format($promoPrice, 0, ',', '.') }}đ
                             @if($promo)

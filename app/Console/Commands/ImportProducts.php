@@ -37,6 +37,7 @@ class ImportProducts extends Command
         $total     = 0;
         $skipped   = 0;
         $now       = now();
+        $usedSlugs = [];
 
         $file = fopen($path, 'r');
         fgetcsv($file); // bỏ header
@@ -85,6 +86,7 @@ class ImportProducts extends Command
 
             $batch[] = [
                 'ten_sp'     => $tenSp,
+                'slug'       => $this->generateUniqueSlug($tenSp, $usedSlugs),
                 'loai'       => $masterCategory,
                 'mo_ta'      => trim($row[8]),   // usage (Casual, Formal, Sports...)
                 'anh'        => $anhUrl,
@@ -126,6 +128,27 @@ class ImportProducts extends Command
                 ['Tổng trong DB', number_format(DB::table('products')->count())],
             ]
         );
+    }
+
+    /**
+     * Sinh slug duy nhất trong đợt import để khớp route public theo slug.
+     *
+     * @param  array<string, true>  $usedSlugs
+     */
+    private function generateUniqueSlug(string $name, array &$usedSlugs): string
+    {
+        $baseSlug = Str::slug($name) ?: 'san-pham';
+        $slug = $baseSlug;
+        $suffix = 2;
+
+        while (isset($usedSlugs[$slug])) {
+            $slug = $baseSlug.'-'.$suffix;
+            $suffix++;
+        }
+
+        $usedSlugs[$slug] = true;
+
+        return $slug;
     }
 
     /**

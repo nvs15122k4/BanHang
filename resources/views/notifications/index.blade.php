@@ -9,11 +9,21 @@
 @section('content')
 <div class="container py-4 max-w-760-px-custom">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center gap-3 mb-4 notifications-page-header">
         <h1 class="page-title">Thông báo</h1>
-        <a href="{{ route('orders.index') }}" class="btn btn-outline-dark rounded-0 text-md-custom-extra font-bold uppercase letter-spacing-1-custom">
-            <i class="fas fa-box me-2"></i>Đơn hàng của tôi
-        </a>
+        <div class="d-flex align-items-center gap-2 notifications-header-actions">
+            @if($unreadCount > 0)
+                <form method="POST" action="{{ route('notifications.readAll') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary rounded-0 mark-all-read-btn" title="Đánh dấu tất cả đã đọc" aria-label="Đánh dấu tất cả đã đọc">
+                        <i class="fas fa-check-double"></i>
+                    </button>
+                </form>
+            @endif
+            <a href="{{ route('orders.index') }}" class="btn btn-outline-dark rounded-0 text-md-custom-extra font-bold uppercase letter-spacing-1-custom">
+                <i class="fas fa-box me-2"></i>Đơn hàng của tôi
+            </a>
+        </div>
     </div>
 
     <div class="border-e-custom">

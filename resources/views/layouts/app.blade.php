@@ -82,7 +82,10 @@
                                 {{-- Header --}}
                                 <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom flex-shrink-0">
                                     <span class="uix-95ce444e5f">Thông báo</span>
-                                    <a class="uix-ad6bef653f" href="#" id="markAllRead">Đánh dấu đã đọc</a>
+                                    <button class="mark-all-read-button" type="button" id="markAllRead" title="Đánh dấu tất cả đã đọc" aria-label="Đánh dấu tất cả đã đọc">
+                                        <i class="fas fa-check-double"></i>
+                                        <span>Đánh dấu tất cả</span>
+                                    </button>
                                 </div>
                                 {{-- List --}}
                                 <div class="uix-441b1b7425" id="notifList">
@@ -592,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Mark all button
         if (markAllBtn) {
-            markAllBtn.style.display = unreadCount > 0 ? 'inline' : 'none';
+            markAllBtn.classList.toggle('is-disabled', unreadCount <= 0);
         }
 
         if (!notifications || notifications.length === 0) {

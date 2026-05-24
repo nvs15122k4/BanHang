@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
 {
@@ -13,14 +12,12 @@ class NotificationController extends Controller
      */
     public function index()
     {
+        $unreadCount = Auth::user()->unreadNotifications()->count();
         $notifications = Auth::user()->notifications()
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        // Đánh dấu tất cả là đã đọc khi vào trang
-        Auth::user()->unreadNotifications->markAsRead();
-
-        return view('notifications.index', compact('notifications'));
+        return view('notifications.index', compact('notifications', 'unreadCount'));
     }
 
     /**
@@ -65,9 +62,13 @@ class NotificationController extends Controller
     /**
      * Mark all notifications as read
      */
-    public function markAllRead()
+    public function markAllRead(Request $request)
     {
         Auth::user()->unreadNotifications->markAsRead();
+
+        if (!$request->expectsJson() && !$request->ajax()) {
+            return back()->with('success', 'Đã đánh dấu tất cả thông báo là đã đọc.');
+        }
 
         return response()->json(['success' => true]);
     }

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Giỏ hàng - AVA')
+@section('robots', 'noindex, nofollow')
 
 @push('styles')
     @vite(['public/css/views/cart.css'])

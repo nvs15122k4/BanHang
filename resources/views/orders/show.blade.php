@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Chi tiết đơn hàng - ' . $order->id)
+@section('robots', 'noindex, nofollow')
 
 @push('styles')
     @vite(['public/css/views/order_show.css'])

@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Liên hệ - Sàn Tím Vi En')
+@section('title', 'Liên hệ Sàn Tím Vi En')
+@section('meta_description', 'Liên hệ Sàn Tím Vi En để được hỗ trợ về sản phẩm, mua sắm và dịch vụ thời trang Việt nhanh chóng, tận tâm.')
+@section('canonical', 'https://santimvien.vn/contact')
+@section('og_title', 'Liên hệ Sàn Tím Vi En')
+@section('og_description', 'Liên hệ Sàn Tím Vi En để được hỗ trợ về sản phẩm, mua sắm và dịch vụ thời trang Việt nhanh chóng, tận tâm.')
 
 @push('styles')
     @vite(['public/css/views/static_pages.css'])

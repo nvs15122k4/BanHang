@@ -1,5 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Khuyến Mãi Hot — Sàn Tím')
+@php
+    $hasPromotionFilters = count(request()->query()) > 0;
+@endphp
+@section('title', 'Khuyến mãi thời trang mới nhất - Sàn Tím Vi En')
+@section('meta_description', 'Cập nhật các chương trình khuyến mãi thời trang mới nhất từ Sàn Tím Vi En và lựa chọn sản phẩm phong cách với mức giá hấp dẫn.')
+@section('canonical', 'https://santimvien.vn/khuyen-mai')
+@section('robots', $hasPromotionFilters ? 'noindex, follow' : 'index, follow')
+@section('og_title', 'Khuyến mãi thời trang mới nhất - Sàn Tím Vi En')
+@section('og_description', 'Cập nhật các chương trình khuyến mãi thời trang mới nhất từ Sàn Tím Vi En và lựa chọn sản phẩm phong cách với mức giá hấp dẫn.')
 
 @push('styles')
     @vite(['public/css/views/product_index.css'])

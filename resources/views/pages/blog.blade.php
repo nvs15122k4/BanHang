@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Blog - Sàn Tím Vi En')
+@section('title', 'Blog thời trang - Sàn Tím Vi En')
+@section('meta_description', 'Đọc blog thời trang Sàn Tím Vi En để cập nhật xu hướng, cảm hứng phối đồ và bí quyết xây dựng phong cách Việt hiện đại.')
+@section('canonical', 'https://santimvien.vn/blog')
+@section('og_title', 'Blog thời trang - Sàn Tím Vi En')
+@section('og_description', 'Đọc blog thời trang Sàn Tím Vi En để cập nhật xu hướng, cảm hứng phối đồ và bí quyết xây dựng phong cách Việt hiện đại.')
 
 @push('styles')
     @vite(['public/css/views/static_pages.css'])

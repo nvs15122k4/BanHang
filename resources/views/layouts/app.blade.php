@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+    @php
+        $defaultSeoTitle = 'Sàn Tím Vi En - Thời trang Việt phong cách';
+        $defaultSeoDescription = 'Sàn Tím Vi En mang đến thời trang Việt hiện đại, chất lượng, giúp bạn tự tin thể hiện phong cách riêng qua những bộ sưu tập tinh tế mỗi ngày.';
+        $defaultSeoCanonical = 'https://santimvien.vn' . (request()->path() === '/' ? '/' : '/' . request()->path());
+        $defaultSeoImage = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png';
+    @endphp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sàn Tím Vi En - Phong cách Việt')</title>
-    <meta name="description" content="Sàn Tím Vi En - Shop thời trang Việt chất lượng cao. Phong cách Việt — Sống đẹp mỗi ngày.">
+    <title>@yield('title', $defaultSeoTitle)</title>
+    <meta name="description" content="@yield('meta_description', $defaultSeoDescription)">
+    <meta name="robots" content="@yield('robots', 'index, follow')">
+    <link rel="canonical" href="@yield('canonical', $defaultSeoCanonical)">
+
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:title" content="@yield('og_title', $defaultSeoTitle)">
+    <meta property="og:description" content="@yield('og_description', $defaultSeoDescription)">
+    <meta property="og:url" content="@yield('canonical', $defaultSeoCanonical)">
+    <meta property="og:image" content="@yield('og_image', $defaultSeoImage)">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

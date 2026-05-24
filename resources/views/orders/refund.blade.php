@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Thông tin hoàn tiền - ' . $order->id)
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <div class="container py-5">

@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Sản phẩm - Sàn Tím Vi En')
+@php
+    $productFilterKeys = ['search', 'loai_filter', 'min_price', 'max_price', 'sort', 'trang_thai_filter', 'per_page'];
+    $hasProductFilters = collect($productFilterKeys)->contains(fn ($key) => request()->filled($key));
+    $productsCanonical = 'https://santimvien.vn/products';
+
+    if (! $hasProductFilters && request()->integer('page') > 1) {
+        $productsCanonical .= '?page=' . request()->integer('page');
+    }
+@endphp
+
+@section('title', 'Sản phẩm thời trang nam nữ - Sàn Tím Vi En')
+@section('meta_description', 'Khám phá sản phẩm thời trang nam nữ hiện đại, chất lượng từ Sàn Tím Vi En với nhiều lựa chọn phù hợp phong cách Việt.')
+@section('canonical', $productsCanonical)
+@section('robots', $hasProductFilters ? 'noindex, follow' : 'index, follow')
+@section('og_title', 'Sản phẩm thời trang nam nữ - Sàn Tím Vi En')
+@section('og_description', 'Khám phá sản phẩm thời trang nam nữ hiện đại, chất lượng từ Sàn Tím Vi En với nhiều lựa chọn phù hợp phong cách Việt.')
 
 @push('styles')
     @vite(['public/css/views/product_index.css'])

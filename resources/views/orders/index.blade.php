@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Đơn hàng của tôi - AVA')
+@section('robots', 'noindex, nofollow')
 
 @push('styles')
     @vite(['public/css/views/order_index.css'])

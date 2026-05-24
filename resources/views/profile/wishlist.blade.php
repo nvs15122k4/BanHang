@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Danh sách yêu thích - Sàn Tím')
+@section('robots', 'noindex, nofollow')
 
 @push('styles')
     @vite(['public/css/views/product_index.css'])

@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
-@section('title', $product->ten_sp . ' - Sàn Tím Vi En')
+@php
+    $productMetaDescription = trim(strip_tags((string) $product->mo_ta));
+    $productMetaDescription = $productMetaDescription !== ''
+        ? \Illuminate\Support\Str::limit($productMetaDescription, 155)
+        : 'Khám phá ' . $product->ten_sp . ' tại Sàn Tím Vi En - thời trang Việt hiện đại, chất lượng và phong cách.';
+@endphp
+
+@section('title', e($product->ten_sp) . ' - Sàn Tím Vi En')
+@section('meta_description', e($productMetaDescription))
+@section('canonical', 'https://santimvien.vn/products/' . (int) $product->id)
+@section('og_type', 'product')
+@section('og_title', e($product->ten_sp) . ' - Sàn Tím Vi En')
+@section('og_description', e($productMetaDescription))
+@section('og_image', e($product->image_path))
 
 @push('styles')
 @vite(['public/css/views/product_show.css'])

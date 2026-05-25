@@ -20,11 +20,9 @@
                     <a class="nav-link active" href="#profile" data-bs-toggle="pill">Thông tin cá nhân</a>
                     <a class="nav-link" href="#password" data-bs-toggle="pill">Đổi mật khẩu</a>
                     <a class="nav-link" href="#addresses" data-bs-toggle="pill">Sổ địa chỉ</a>
-                    <a class="nav-link" href="{{ route('orders.index') }}">Đơn hàng của tôi</a>
                 </nav>
             </div>
         </div>
-
         <!-- Content -->
         <div class="col-md-9">
             <div class="tab-content">

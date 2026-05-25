@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="page-header">
-    <h1><i class="fas fa-clipboard-list me-3"></i>AUDIT LOG</h1>
+    <h1><i class="fas fa-clipboard-list me-3"></i>NHẬT KÝ GẦN ĐÂY</h1>
 </div>
 
 <div class="filter-section">

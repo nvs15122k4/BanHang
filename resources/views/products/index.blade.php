@@ -4,6 +4,7 @@
     $category = $category ?? null;
     $productFilterKeys = ['search', 'loai_filter', 'min_price', 'max_price', 'sort', 'trang_thai_filter', 'per_page'];
     $hasProductFilters = collect($productFilterKeys)->contains(fn ($key) => request()->filled($key));
+    $selectedCategory = $category?->slug ?? request('loai_filter', '');
     $productsCanonical = $category
         ? 'https://santimvien.vn/danh-muc/' . $category->slug
         : 'https://santimvien.vn/products';
@@ -66,58 +67,14 @@
     </div>
 
     <div class="row">
-        <!-- SIDEBAR FILTERS -->
-        <aside class="col-lg-3 d-none d-lg-block">
-            <div class="sidebar-filter">
-                <h1 class="uix-30b515ec19">{{ $category ? $category->name : 'Cửa hàng' }}</h1>
-
-                <form method="GET" action="{{ $category ? route('categories.show', ['category' => $category->slug]) : route('products.index') }}" id="filterForm">
-                    <!-- Tìm kiếm -->
-                    <div class="filter-section">
-                        <div class="filter-title">Tìm kiếm</div>
-                        <div class="position-relative">
-                            <input type="text" name="search" class="form-control rounded-0" placeholder="Tên sản phẩm..."
-                                   value="{{ request('search') }}">
-                            <button class="uix-8493cc9cf4" type="submit">
-                                <i class="fas fa-search text-muted uix-9e6595fb01"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Danh mục -->
-                    <div class="filter-section">
-                        <div class="filter-title">Danh mục <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
-                        <ul class="filter-list">
-                            <li class="filter-item">
-                                <a href="{{ route('products.index') }}"
-                                   class="filter-link {{ ! $category && !request('loai_filter') ? 'active' : '' }}">Tất cả</a>
-                            </li>
-                            @foreach($loaiList as $loaiSlug => $loaiName)
-                                <li class="filter-item">
-                                    <a href="{{ route('categories.show', ['category' => $loaiSlug]) }}"
-                                       class="filter-link {{ ($category?->slug ?? request('loai_filter')) == $loaiSlug ? 'active' : '' }}">
-                                        {{ $loaiName }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    <!-- Khoảng giá -->
-                    <div class="filter-section">
-                        <div class="filter-title">Khoảng giá <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
-                        <div class="d-flex gap-2 align-items-center mb-3">
-                            <input type="number" name="min_price" class="form-control form-control-sm rounded-0"
-                                   placeholder="Từ" value="{{ request('min_price') }}">
-                            <span class="uix-8bd34921dd">—</span>
-                            <input type="number" name="max_price" class="form-control form-control-sm rounded-0"
-                                   placeholder="Đến" value="{{ request('max_price') }}">
-                        </div>
-                        <button type="submit" class="btn-st-dark w-100 py-2-custom text-xs-custom">ÁP DỤNG</button>
-                    </div>
-                </form>
-            </div>
-        </aside>
+        <x-catalog-filter
+            :action="route('products.index')"
+            :categories="$loaiList"
+            :title="$category ? $category->name : 'Cửa hàng'"
+            :selected-category="$selectedCategory"
+            :has-filters="$hasProductFilters"
+            :clear-url="route('products.index')"
+        />
 
         <!-- MAIN CONTENT -->
         <main class="col-lg-9">

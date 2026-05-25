@@ -29,7 +29,7 @@
     <nav class="navbar admin-navbar navbar-expand-lg">
         <div class="container-fluid px-4">
             <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-                <i class="fas fa-shield-alt me-2"></i>ADMIN PANEL
+                <i class="fas fa-shield-alt me-2"></i>ADMIN CONTROLLER
             </a>
             <div class="d-flex align-items-center gap-3">
                 <a href="{{ route('home') }}" class="btn btn-light btn-sm"><i class="fas fa-home me-1"></i>
@@ -119,7 +119,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.audit-logs*') ? 'active' : '' }}" href="{{ route('admin.audit-logs.index') }}">
-                                <i class="fas fa-clipboard-list me-2"></i> Audit log
+                                <i class="fas fa-clipboard-list me-2"></i> Nhật ký gần đây
                             </a>
                         </li>
                     </ul>

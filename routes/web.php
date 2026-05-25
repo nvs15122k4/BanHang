@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -170,20 +171,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 
     // Orders management
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
-    Route::put('/orders/{order}/payment', [OrderController::class, 'updatePaymentStatus'])->name('orders.payment');
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [AdminOrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [AdminOrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
+    Route::put('/orders/{order}/payment', [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment');
 
     // Cancellation approval
-    Route::post('/orders/{order}/approve-cancel', [OrderController::class, 'approveCancel'])->name('orders.approveCancel');
-    Route::post('/orders/{order}/reject-cancel', [OrderController::class, 'rejectCancel'])->name('orders.rejectCancel');
+    Route::post('/orders/{order}/approve-cancel', [AdminOrderController::class, 'approveCancel'])->name('orders.approveCancel');
+    Route::post('/orders/{order}/reject-cancel', [AdminOrderController::class, 'rejectCancel'])->name('orders.rejectCancel');
     Route::get('/orders/{order}/refund', function (Order $order) {
         return redirect()->route('admin.orders.show', $order);
     })->name('orders.refund.redirect');
-    Route::put('/orders/{order}/refund', [OrderController::class, 'updateRefund'])->name('orders.updateRefund');
+    Route::put('/orders/{order}/refund', [AdminOrderController::class, 'updateRefund'])->name('orders.updateRefund');
 
     // Promotions management
     Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @php
-    $hasPromotionFilters = count(request()->query()) > 0;
+    $promotionFilterKeys = ['search', 'loai_filter', 'loai', 'min_price', 'max_price', 'min_discount', 'sort'];
+    $hasPromotionFilters = collect($promotionFilterKeys)->contains(fn ($key) => request()->filled($key));
 @endphp
 @section('title', 'Khuyến mãi thời trang mới nhất - Sàn Tím Vi En')
 @section('meta_description', 'Cập nhật các chương trình khuyến mãi thời trang mới nhất từ Sàn Tím Vi En và lựa chọn sản phẩm phong cách với mức giá hấp dẫn.')
@@ -23,56 +24,15 @@
     </div>
 
     <div class="row mt-3">
-        <!-- SIDEBAR FILTERS -->
-        <aside class="col-lg-3 d-none d-lg-block">
-            <div class="sidebar-filter">
-                <h1 class="uix-b69612cfda">Lọc Khuyến Mãi</h1>
-
-                <form method="GET" action="{{ route('promotions.index') }}" id="filterForm">
-                    <!-- Danh mục -->
-                    <div class="filter-section">
-                        <div class="filter-title">Danh mục <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
-                        <ul class="filter-list">
-                            <li class="filter-item">
-                                <a href="{{ route('promotions.index', request()->except('loai')) }}"
-                                   class="filter-link {{ !request('loai') ? 'active' : '' }}">Tất cả</a>
-                            </li>
-                            @foreach($categories as $cat)
-                                <li class="filter-item">
-                                    <a href="{{ route('promotions.index', array_merge(request()->all(), ['loai' => $cat])) }}"
-                                       class="filter-link {{ request('loai') == $cat ? 'active' : '' }}">
-                                        {{ ucfirst($cat) }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    <!-- Mức giảm -->
-                    <div class="filter-section">
-                        <div class="filter-title">Mức giảm tối thiểu <i class="fas fa-chevron-down uix-00313dcbd7"></i></div>
-                        <ul class="filter-list">
-                            <li class="filter-item">
-                                <a href="{{ route('promotions.index', request()->except('min_discount')) }}"
-                                   class="filter-link {{ !request('min_discount') ? 'active' : '' }}">Bất kỳ</a>
-                            </li>
-                            @foreach([10, 20, 30, 50] as $discount)
-                                <li class="filter-item">
-                                    <a href="{{ route('promotions.index', array_merge(request()->all(), ['min_discount' => $discount])) }}"
-                                       class="filter-link {{ request('min_discount') == $discount ? 'active' : '' }}">
-                                        Từ {{ $discount }}% trở lên
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    
-                    @if(request()->hasAny(['loai','min_discount','sort']))
-                        <a href="{{ route('promotions.index') }}" class="btn-st-dark w-100 py-2-custom text-xs-custom text-center mt-3 d-block">XÓA BỘ LỌC</a>
-                    @endif
-                </form>
-            </div>
-        </aside>
+        <x-catalog-filter
+            :action="route('promotions.index')"
+            :categories="$categories"
+            title="Khuyến mãi"
+            :selected-category="request('loai_filter', request('loai', ''))"
+            :show-discount="true"
+            :has-filters="$hasPromotionFilters"
+            :clear-url="route('promotions.index')"
+        />
 
         <!-- MAIN CONTENT -->
         <main class="col-lg-9">

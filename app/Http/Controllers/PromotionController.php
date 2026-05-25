@@ -255,8 +255,21 @@ class PromotionController extends Controller
         // Lấy tất cả KM đang active
         $activePromotions = Promotion::currentlyActive()->with('items')->get();
 
+        $categoryFilter = (string) $request->input('loai_filter', $request->input('loai', ''));
+        $search = trim((string) $request->input('search', ''));
+
         // Lấy danh sách sản phẩm (giới hạn 1000 để tránh tràn bộ nhớ nếu database quá lớn)
-        $allProducts = Product::where('trang_thai', 'con')->with(['wishlists'])->limit(1000)->get();
+        $productsQuery = Product::where('trang_thai', 'con')->with(['wishlists']);
+
+        if ($search !== '') {
+            $productsQuery->where('ten_sp', 'like', '%'.$search.'%');
+        }
+
+        if ($categoryFilter !== '') {
+            $productsQuery->where('loai', $categoryFilter);
+        }
+
+        $allProducts = $productsQuery->limit(1000)->get();
 
         // Gán KM vào từng sản phẩm (runtime)
         $promoProducts = collect();
@@ -287,16 +300,22 @@ class PromotionController extends Controller
             }
         }
 
-        // Filter theo danh mục
-        if ($request->filled('loai')) {
-            $promoProducts = $promoProducts->filter(fn($p) => $p->loai === $request->loai);
+        // Filter theo giá sau khuyến mãi
+        if ($request->filled('min_price') && is_numeric($request->input('min_price'))) {
+            $minPrice = max(0, (int) $request->input('min_price'));
+            $promoProducts = $promoProducts->filter(fn ($product) => $product->promo_price >= $minPrice);
+        }
+
+        if ($request->filled('max_price') && is_numeric($request->input('max_price'))) {
+            $maxPrice = max(0, (int) $request->input('max_price'));
+            $promoProducts = $promoProducts->filter(fn ($product) => $product->promo_price <= $maxPrice);
         }
 
         // Filter theo % giảm tối thiểu
-        if ($request->filled('min_discount')) {
-            $min = (int) $request->min_discount;
-            $promoProducts = $promoProducts->filter(function ($p) use ($min) {
-                $pct = $p->gia > 0 ? (($p->gia - $p->promo_price) / $p->gia * 100) : 0;
+        if ($request->filled('min_discount') && is_numeric($request->input('min_discount'))) {
+            $min = max(0, min(100, (int) $request->input('min_discount')));
+            $promoProducts = $promoProducts->filter(function ($product) use ($min) {
+                $pct = $product->gia > 0 ? (($product->gia - $product->promo_price) / $product->gia * 100) : 0;
                 return $pct >= $min;
             });
         }
@@ -322,8 +341,7 @@ class PromotionController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        $categories  = Product::whereNotNull('loai')->where('loai', '!=', '')
-                               ->distinct()->orderBy('loai')->pluck('loai');
+        $categories = Product::getLoaiList();
         $bannerPromos = Promotion::currentlyActive()->orderByDesc('gia_tri')->take(3)->get();
 
         return view('promotions.index', compact('paginated', 'categories', 'bannerPromos', 'activePromotions'));

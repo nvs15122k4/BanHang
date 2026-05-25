@@ -54,9 +54,9 @@
 <section class="stat-container">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-4"><div class="vision-card h-100"><h2 class="h5 fw-bold">Chọn sản phẩm</h2><p class="text-muted mb-0">Duyệt danh mục và chi tiết từng sản phẩm trước khi mua.</p></div></div>
-            <div class="col-md-4"><div class="vision-card h-100"><h2 class="h5 fw-bold">Chọn size</h2><p class="text-muted mb-0">Tham khảo hướng dẫn và tính năng gợi ý size của website.</p></div></div>
-            <div class="col-md-4"><div class="vision-card h-100"><h2 class="h5 fw-bold">Theo dõi đơn</h2><p class="text-muted mb-0">Khách hàng đăng nhập có thể xem đơn mua trong tài khoản.</p></div></div>
+            <div class="col-md-4"><div class="vision-card h-100"><h2 class="h5 fw-bold">Chọn sản phẩm</h2><p class="mb-0">Duyệt danh mục và chi tiết từng sản phẩm trước khi mua.</p></div></div>
+            <div class="col-md-4"><div class="vision-card h-100"><h2 class="h5 fw-bold">Chọn size</h2><p class="mb-0">Tham khảo hướng dẫn và tính năng gợi ý size của website.</p></div></div>
+            <div class="col-md-4"><div class="vision-card h-100"><h2 class="h5 fw-bold">Theo dõi đơn</h2><p class="mb-0">Khách hàng đăng nhập có thể xem đơn mua trong tài khoản.</p></div></div>
         </div>
     </div>
 </section>

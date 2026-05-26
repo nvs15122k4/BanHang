@@ -19,24 +19,31 @@
     <div class="auth-card">
         <a href="{{ route('home') }}" class="brand-logo">AVA</a>
         
-        <h1 class="auth-title">Xác thực Email</h1>
-        <p class="auth-subtitle">Cảm ơn bạn đã đăng ký! Trước khi bắt đầu, bạn có thể xác nhận địa chỉ email của mình bằng cách nhấp vào liên kết chúng tôi vừa gửi cho bạn không? Nếu bạn không nhận được email, chúng tôi sẽ vui lòng gửi lại cho bạn một email khác.</p>
+        <h1 class="auth-title">Xác nhận Email</h1>
+        <p class="auth-subtitle">Chúng tôi đã gửi email xác nhận đăng ký. Hãy nhấn <strong>Chấp nhận</strong> trong email để hoàn tất đăng ký, sau đó bạn có thể đăng nhập.</p>
         
-        @if (session('status') == 'verification-link-sent')
+        @if (session('status'))
             <div class="alert alert-success rounded-0 mb-4 uix-063c78b9e9">
-                Một liên kết xác thực mới đã được gửi đến địa chỉ email bạn cung cấp khi đăng ký.
+                {{ session('status') }}
             </div>
         @endif
 
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
+            <div class="mb-4">
+                <label class="form-label">Địa chỉ Email</label>
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                       value="{{ old('email', $email ?? '') }}" required>
+                @error('email')
+                    <div class="invalid-feedback uix-4fc05cceb3">{{ $message }}</div>
+                @enderror
+            </div>
             <button type="submit" class="btn-ava-dark">GỬI LẠI EMAIL XÁC THỰC</button>
         </form>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn-logout">Đăng xuất</button>
-        </form>
+        <a href="{{ route('login') }}" class="back-to-login">
+            <i class="fas fa-arrow-left me-2"></i> Quay lại Đăng nhập
+        </a>
     </div>
 
 </body>

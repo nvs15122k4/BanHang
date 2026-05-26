@@ -6,7 +6,6 @@ export default defineConfig({
         laravel({
             input: [
                 'public/css/app.css',
-                'public/css/utilities.css',
                 'public/css/airbnb-style.css',
                 'public/css/admin.css',
                 'public/css/admin_common.css',

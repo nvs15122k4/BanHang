@@ -27,34 +27,20 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Additional auth routes for tests compatibility
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->name('password.request');
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendPasswordResetLink'])
+    ->middleware('throttle:6,1')
+    ->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
 
-// Forgot password (stub - chưa có logic)
-Route::post('/forgot-password', function () {
-    return back()->with('status', 'Chức năng đang phát triển.');
-})->name('password.email');
-
-// Reset password (stub - chưa có logic)
-Route::post('/reset-password', function () {
-    return back()->with('status', 'Chức năng đang phát triển.');
-})->name('password.store');
-
-Route::get('/verify-email', function () {
-    return view('auth.verify-email');
-})->name('verification.notice');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-Route::get('/verify-email/{id}/{hash}', function () {
-    return redirect('/');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+Route::get('/verify-email', [AuthController::class, 'showVerificationNotice'])->name('verification.notice');
+Route::post('/email/verification-notification', [AuthController::class, 'sendVerificationEmail'])
+    ->middleware('throttle:6,1')
+    ->name('verification.send');
+Route::get('/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
 
 Route::get('/confirm-password', function () {
     return view('auth.confirm-password');

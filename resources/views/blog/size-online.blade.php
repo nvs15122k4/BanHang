@@ -38,9 +38,9 @@
 @section('content')
 <script type="application/ld+json">{!! json_encode($articleSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
-<article class="container py-5 max-w-900-px-custom">
-    <nav class="mb-4" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / <a href="{{ route('pages.blog') }}">Blog</a> / Chọn size khi mua online</nav>
-    <header class="mb-5">
+<article class="container article-page article-body">
+    <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / <a href="{{ route('pages.blog') }}">Blog</a> / Chọn size khi mua online</nav>
+    <header class="article-header">
         <p class="blog-meta">Hướng dẫn chọn size • Xuất bản: 24 tháng 5, 2026</p>
         <h1 class="page-title text-start">Cách chọn size quần áo khi mua online</h1>
         <p class="lead">Chọn size tốt hơn bắt đầu từ số đo đúng và việc hiểu kiểu mặc bạn muốn: vừa vặn, thoải mái hay rộng hơn.</p>
@@ -51,7 +51,9 @@
     <p>Website có gợi ý size dựa trên chiều cao, cân nặng và BMI. Đây là gợi ý tham khảo để rút ngắn bước lựa chọn, không thay thế cảm nhận về phom dáng hay thông tin cụ thể của từng sản phẩm.</p>
     <h2>3. Cân nhắc form mặc</h2>
     <p>Nếu muốn mặc thoải mái hoặc kết hợp nhiều lớp, bạn có thể cân nhắc size rộng hơn. Nếu đứng giữa hai lựa chọn, hãy ưu tiên kiểu mặc mong muốn và đọc mô tả sản phẩm trước khi đặt hàng.</p>
-    <h2>Đi tiếp từ đây</h2>
-    <p><a href="{{ route('guides.size') }}">Xem bảng hướng dẫn chọn size của website</a> hoặc <a href="{{ route('products.index') }}">khám phá sản phẩm đang có</a>.</p>
+    <div class="content-actions">
+        <a class="btn-primary-content" href="{{ route('guides.size') }}">Xem bảng size</a>
+        <a class="btn-outline-content" href="{{ route('products.index') }}">Khám phá sản phẩm</a>
+    </div>
 </article>
 @endsection

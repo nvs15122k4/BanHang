@@ -6,6 +6,7 @@
 :root {
     --primary: #7C3AED;       /* Tím Vi En */
     --primary-light: #EDE9FE;
+    --primary-muted: #A78BFA;
     --text-main: #1A1A1A;
     --text-light: #888888;
     --bg-main: #FFFFFF;
@@ -42,7 +43,7 @@ a:hover { color: var(--text-light); }
 /* ── NAVBAR ── */
 .san-tim-navbar {
     background: var(--bg-main);
-    padding: 18px 0;
+    padding: 16px 0;
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -51,12 +52,28 @@ a:hover { color: var(--text-light); }
 
 .brand-logo {
     font-weight: 800;
-    font-size: 22px;
-    color: #7C3AED;
-    letter-spacing: 1px;
+    font-size: 21px;
+    color: var(--text-main);
+    letter-spacing: 1.5px;
     line-height: 1;
+    transition: color 0.2s ease;
 }
-.brand-logo span { color: var(--primary); }
+.brand-logo span {
+    color: var(--primary);
+    transition: color 0.2s ease;
+}
+.brand-logo:hover,
+.brand-logo:focus {
+    color: var(--text-light);
+}
+.brand-logo:hover span,
+.brand-logo:focus span {
+    color: var(--primary-muted);
+}
+.san-tim-navbar a.brand-logo:hover span,
+.san-tim-navbar a.brand-logo:focus-visible span {
+    color: var(--primary-muted) !important;
+}
 
 .nav-menu {
     display: flex;
@@ -72,8 +89,22 @@ a:hover { color: var(--text-light); }
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: color 0.2s;
+    position: relative;
+}
+.nav-menu li a::after {
+    background: var(--primary);
+    bottom: -10px;
+    content: "";
+    height: 2px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+    width: 100%;
 }
 .nav-menu li a:hover { color: var(--primary); }
+.nav-menu li a:hover::after { transform: scaleX(1); }
 .nav-menu li a.sale-link { color: #E53E3E; font-weight: 700; }
 .nav-menu li a.products-link { color: #7c3aed; font-weight: 700; }
 
@@ -169,13 +200,19 @@ a:hover { color: var(--text-light); }
 
 /* ── FOOTER ── */
 .st-footer {
-    background: var(--text-main);
+    background: #15121b;
     color: rgba(255,255,255,0.85);
-    padding: 60px 0 30px;
+    padding: 64px 0 28px;
     margin-top: auto;
 }
-.footer-brand { font-weight: 800; font-size: 20px; color: #FFF; letter-spacing: 1px; }
-.footer-brand span { color: var(--primary); }
+.footer-brand { font-weight: 800; font-size: 20px; color: #FFF; letter-spacing: 1px; transition: color 0.2s ease; }
+.footer-brand span { color: var(--primary); transition: color 0.2s ease; }
+.footer-brand:hover {
+    color: rgba(255,255,255,0.5);
+}
+.footer-brand:hover span {
+    color: var(--primary-muted);
+}
 .footer-title {
     font-weight: 700;
     font-size: 13px;
@@ -192,8 +229,28 @@ a:hover { color: var(--text-light); }
     transition: color 0.2s;
 }
 .footer-links li a:hover { color: #FFF; }
+.footer-copy {
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    line-height: 1.75;
+    max-width: 330px;
+}
+.footer-support-link {
+    color: #c4b5fd;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+.footer-support-link:hover { color: #fff; }
 .footer-divider { border-color: rgba(255,255,255,0.1); margin: 30px 0; }
 .footer-bottom { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+@media (max-width: 991.98px) {
+    .san-tim-navbar { padding: 14px 0; }
+    .brand-logo { font-size: 18px; }
+    .st-footer { padding-top: 48px; }
+}
 
 .social-btn {
     width: 36px; height: 36px;

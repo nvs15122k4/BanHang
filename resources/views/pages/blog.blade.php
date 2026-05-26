@@ -40,15 +40,16 @@
 @endpush
 
 @section('content')
-<div class="blog-header">
+<section class="blog-header">
     <div class="container">
-        <nav class="mb-4" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Blog</nav>
+        <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Blog</nav>
+        <span class="content-eyebrow">Cẩm nang thời trang</span>
         <h1 class="page-title">Góc thời trang</h1>
-        <p class="text-muted">Hướng dẫn thực tế để chọn, phối và chăm sóc trang phục.</p>
+        <p class="content-intro">Những gợi ý dễ áp dụng về chọn size, phối trang phục và chăm sóc quần áo mỗi ngày.</p>
     </div>
-</div>
+</section>
 
-<div class="container pb-5">
+<div class="container content-page">
     <div class="row g-4">
         @foreach($posts as $post)
         <article class="col-lg-4 col-md-6">
@@ -56,10 +57,12 @@
                 <div class="blog-img-wrap">
                     <img src="{{ $post['image'] }}" alt="{{ $post['title'] }}" loading="lazy">
                 </div>
-                <span class="blog-meta">{{ $post['topic'] }} • {{ $post['date'] }}</span>
-                <h2 class="blog-title"><a href="{{ route('blog.show', ['slug' => $post['slug']]) }}">{{ $post['title'] }}</a></h2>
-                <p class="blog-excerpt">{{ $post['excerpt'] }}</p>
-                <a href="{{ route('blog.show', ['slug' => $post['slug']]) }}" class="btn-more">Đọc bài viết</a>
+                <div class="blog-card-body">
+                    <span class="blog-meta">{{ $post['topic'] }} • {{ $post['date'] }}</span>
+                    <h2 class="blog-title"><a href="{{ route('blog.show', ['slug' => $post['slug']]) }}">{{ $post['title'] }}</a></h2>
+                    <p class="blog-excerpt">{{ $post['excerpt'] }}</p>
+                    <a href="{{ route('blog.show', ['slug' => $post['slug']]) }}" class="btn-more">Đọc bài viết <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
             </div>
         </article>
         @endforeach

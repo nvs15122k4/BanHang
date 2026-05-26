@@ -19,12 +19,16 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->get('/profile');
 
-        $response->assertOk();
+        $response
+            ->assertOk()
+            ->assertSee('profile-readonly-field', false)
+            ->assertSee('Email đăng nhập chỉ có thể xem, không thể thay đổi tại thông tin cá nhân.', false);
     }
 
     public function test_profile_information_can_be_updated(): void
     {
         $user = User::factory()->create();
+        $originalEmail = $user->email;
 
         $response = $this
             ->actingAs($user)
@@ -43,10 +47,32 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertSame('Test User Updated', $user->name);
-        $this->assertSame('test@example.com', $user->email);
+        $this->assertSame($originalEmail, $user->email);
         $this->assertSame('0123456789', $user->phone);
         $this->assertSame('male', $user->gender);
         $this->assertSame('1990-01-01', $user->birthday->format('Y-m-d'));
+    }
+
+    public function test_profile_email_cannot_be_changed_by_submitted_request(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'original@example.com',
+            'is_active' => true,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->from('/profile')
+            ->put('/profile', [
+                'name' => $user->name,
+                'email' => 'changed@example.com',
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $this->assertSame('original@example.com', $user->fresh()->email);
     }
 
     public function test_user_can_add_address(): void

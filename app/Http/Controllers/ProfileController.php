@@ -32,7 +32,6 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name'   => 'required|string|max:255',
-            'email'  => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'phone'  => 'nullable|string|max:20',
             'gender' => 'nullable|in:male,female,other',
             'height' => 'nullable|integer|min:100|max:300',
@@ -40,9 +39,6 @@ class ProfileController extends Controller
             'avatar' => ['nullable', 'string', Rule::in(array_merge([User::DEFAULT_AVATAR_URL], User::avatarOptions()))],
         ], [
             'name.required'  => 'Vui lòng nhập họ tên',
-            'email.required' => 'Vui lòng nhập email',
-            'email.email'    => 'Email phải đúng định dạng',
-            'email.unique'   => 'Email này đã được sử dụng',
             'height.integer' => 'Chiều cao phải là số nguyên (cm)',
             'height.min'     => 'Chiều cao phải từ 100cm',
             'height.max'     => 'Chiều cao phải dưới 300cm',

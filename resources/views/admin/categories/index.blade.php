@@ -59,7 +59,10 @@
                                                 'Bạn có chắc chắn muốn xóa danh mục &quot;{{ addslashes($category->name) }}&quot;?',
                                                 () => document.getElementById('form-delete-{{ $category->id }}').submit(),
                                                 'XÓA DANH MỤC',
-                                                'danger'
+                                                'danger',
+                                                'XÓA DANH MỤC',
+                                                '{{ addslashes($category->name) }}',
+                                                'Danh mục chỉ được xóa khi không còn sản phẩm liên kết.'
                                             )">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>

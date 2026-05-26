@@ -23,14 +23,20 @@
 
 @section('content')
 <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
-<div class="container py-5">
-    <nav class="mb-4" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Hướng dẫn chọn size</nav>
+<section class="content-hero">
+    <div class="container">
+        <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Hướng dẫn chọn size</nav>
+        <span class="content-eyebrow">Hướng dẫn mua sắm</span>
+        <h1 class="page-title">Cách chọn size quần áo phù hợp</h1>
+        <p class="content-intro">Đo đúng thông tin cơ bản và đối chiếu bảng size để chọn lựa thuận tiện hơn trước khi đặt hàng.</p>
+    </div>
+</section>
+<div class="container content-page">
     <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <h1 class="page-title text-start">Cách chọn size quần áo phù hợp</h1>
-            <p class="lead">Bảng dưới đây phản ánh đúng quy tắc gợi ý size đang áp dụng trên website dựa trên chiều cao, cân nặng và BMI.</p>
+        <article class="col-lg-10 content-shell">
+            <p class="lead mb-0">Bảng dưới đây phản ánh đúng quy tắc gợi ý size đang áp dụng trên website dựa trên chiều cao, cân nặng và BMI.</p>
 
-            <h2 class="mt-5">Cách chuẩn bị thông tin</h2>
+            <h2>Cách chuẩn bị thông tin</h2>
             <ol class="mb-4">
                 <li class="mb-2">Đo chiều cao theo centimet và cân nặng theo kilogram.</li>
                 <li class="mb-2">Khi đăng nhập, cập nhật chiều cao và cân nặng trong hồ sơ để nhận gợi ý trên trang sản phẩm.</li>
@@ -38,8 +44,8 @@
             </ol>
 
             <h2>Bảng size tham khảo đang dùng</h2>
-            <div class="table-responsive my-4">
-                <table class="table table-bordered align-middle">
+            <div class="table-responsive">
+                <table class="table size-table align-middle mb-0">
                     <thead class="table-light">
                         <tr><th>Size</th><th>Chiều cao (cm)</th><th>Cân nặng (kg)</th><th>BMI tham khảo</th></tr>
                     </thead>
@@ -53,15 +59,15 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text-muted">Ở ranh giới giữa hai khoảng, công cụ có thể so sánh nhiều tiêu chí và hiển thị các size gần phù hợp nhất. Bảng size là tham khảo, vì chất liệu và phom sản phẩm có thể ảnh hưởng cảm giác mặc.</p>
+            <div class="notice-card">Ở ranh giới giữa hai khoảng, công cụ có thể so sánh nhiều tiêu chí và hiển thị các size gần phù hợp nhất. Bảng size mang tính tham khảo vì chất liệu và phom sản phẩm có thể ảnh hưởng cảm giác mặc.</div>
 
-            <h2 class="mt-5">Nếu bạn nằm giữa hai size</h2>
+            <h2>Nếu bạn nằm giữa hai size</h2>
             <p>Chọn size nhỏ hơn khi muốn mặc gọn và sản phẩm có phom rộng; chọn size lớn hơn khi ưu tiên thoải mái hoặc muốn mặc thêm lớp bên trong.</p>
-            <div class="d-flex flex-wrap gap-2 mt-4">
-                <a class="btn btn-dark" href="{{ route('products.index') }}">Xem sản phẩm</a>
-                <a class="btn btn-outline-dark" href="{{ route('blog.show', ['slug' => 'cach-chon-size-quan-ao-khi-mua-online']) }}">Đọc bài chọn size online</a>
+            <div class="content-actions">
+                <a class="btn-primary-content" href="{{ route('products.index') }}">Xem sản phẩm</a>
+                <a class="btn-outline-content" href="{{ route('blog.show', ['slug' => 'cach-chon-size-quan-ao-khi-mua-online']) }}">Đọc bài chọn size</a>
             </div>
-        </div>
+        </article>
     </div>
 </div>
 @endsection

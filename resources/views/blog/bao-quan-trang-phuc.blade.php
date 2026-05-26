@@ -28,9 +28,9 @@
 
 @section('content')
 <script type="application/ld+json">{!! json_encode($articleSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
-<article class="container py-5 max-w-900-px-custom">
-    <nav class="mb-4" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / <a href="{{ route('pages.blog') }}">Blog</a> / Bảo quản trang phục</nav>
-    <header class="mb-5">
+<article class="container article-page article-body">
+    <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / <a href="{{ route('pages.blog') }}">Blog</a> / Bảo quản trang phục</nav>
+    <header class="article-header">
         <p class="blog-meta">Chăm sóc trang phục • Xuất bản: 24 tháng 5, 2026</p>
         <h1 class="page-title text-start">Cách bảo quản trang phục bền màu</h1>
         <p class="lead">Chăm sóc đúng từ lần giặt đầu tiên giúp trang phục trông mới lâu hơn và hạn chế biến dạng.</p>
@@ -43,6 +43,9 @@
     <p>Ánh nắng mạnh trong thời gian dài có thể làm màu vải xuống nhanh hơn. Phơi nơi thông thoáng và cất sản phẩm khi đã khô hoàn toàn.</p>
     <h2>Cất giữ theo phom trang phục</h2>
     <p>Áo dễ nhăn có thể treo đúng vai áo; đồ dệt kim thường phù hợp hơn khi gấp gọn để tránh kéo giãn.</p>
-    <p class="mt-4">Tìm trang phục phù hợp tại <a href="{{ route('products.index') }}">danh sách sản phẩm</a>, hoặc đọc <a href="{{ route('blog.show', ['slug' => 'cach-chon-size-quan-ao-khi-mua-online']) }}">cách chọn size khi mua online</a>.</p>
+    <div class="content-actions">
+        <a class="btn-primary-content" href="{{ route('products.index') }}">Xem sản phẩm</a>
+        <a class="btn-outline-content" href="{{ route('blog.show', ['slug' => 'cach-chon-size-quan-ao-khi-mua-online']) }}">Đọc cách chọn size</a>
+    </div>
 </article>
 @endsection

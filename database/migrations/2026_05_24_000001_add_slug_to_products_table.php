@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('slug')->nullable()->after('ten_sp');
+            $table->string('slug', 180)->nullable()->after('ten_sp');
         });
 
         $usedSlugs = [];
@@ -21,7 +21,9 @@ return new class extends Migration
             ->orderBy('id')
             ->chunkById(500, function ($products) use (&$usedSlugs): void {
                 foreach ($products as $product) {
-                    $baseSlug = Str::slug($product->ten_sp) ?: 'san-pham';
+                    $baseSlug = Str::limit(Str::slug($product->ten_sp) ?: 'san-pham', 160, '');
+                    $baseSlug = rtrim($baseSlug, '-');
+                    
                     $slug = $baseSlug;
                     $suffix = 2;
 

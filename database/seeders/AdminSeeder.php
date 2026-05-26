@@ -10,8 +10,8 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
+        $admin = User::updateOrCreate(
+            ['email' => 'khanhtrung778@gmail.com'],
             [
                 'name' => 'Admin',
                 'password' => Hash::make('123456'),
@@ -22,5 +22,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
             ]
         );
+
+        $admin->forceFill(['email_verified_at' => now()])->save();
     }
 }

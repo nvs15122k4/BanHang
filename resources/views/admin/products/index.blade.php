@@ -76,7 +76,7 @@
         </div>
         <div class="col-md-2">
           <select name="loai" class="form-select">
-            <option value="">-- Loại SP --</option>
+            <option value="">-- Danh mục --</option>
             @foreach(\App\Models\Product::getLoaiList() as $key => $label)
                 <option value="{{ $key }}" {{ request('loai') === $key ? 'selected' : '' }}>{{ $label }}</option>
             @endforeach
@@ -112,7 +112,7 @@
           <thead class="bg-light">
             <tr>
               <th class="ps-4">Sản phẩm</th>
-              <th>Loại</th>
+              <th>Danh mục</th>
               <th>Giá Bán</th>
               <th>Số lượng</th>
               <th>Trạng thái</th>
@@ -124,7 +124,7 @@
             <tr class="{{ $product->trashed() ? 'table-secondary' : '' }}">
               <td class="ps-4">
                 <div class="d-flex align-items-center gap-3">
-                    @if($product->anh)
+                    @if($product->anh || $product->productImages->isNotEmpty())
                         <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="product-img">
                     @else
                         <div class="product-img-placeholder">

@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function openSizePicker(form, fallbackSizes = null) {
         const sizes = getSizeOptions(form, fallbackSizes);
         if (!sizes.length) {
-            showToast('Sản phẩm này chưa được cấu hình size.', 'danger');
+            showToast('Sản phẩm này chưa được cấu hình biến thể.', 'danger');
             return;
         }
 
@@ -403,12 +403,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!modalEl || !nameEl || !optionsEl) return;
 
         nameEl.textContent = form.dataset.productName
-            ? `${form.dataset.productName} bắt buộc chọn size`
-            : 'Sản phẩm này bắt buộc chọn size';
+            ? `${form.dataset.productName} bắt buộc chọn biến thể`
+            : 'Sản phẩm này bắt buộc chọn biến thể';
 
-        optionsEl.innerHTML = sizes.map(size => (
-            `<button type="button" class="size-picker-option" data-size="${String(size).replace(/"/g, '&quot;')}">${size}</button>`
-        )).join('');
+        optionsEl.replaceChildren(...sizes.map(size => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'size-picker-option';
+            button.dataset.size = String(size);
+            button.textContent = String(size);
+            return button;
+        }));
 
         bootstrap.Modal.getOrCreateInstance(modalEl).show();
     }

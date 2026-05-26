@@ -138,7 +138,7 @@ class AuditLog extends Model
     {
         $labels = [
             'ten_sp' => 'Tên sản phẩm',
-            'loai' => 'Loại sản phẩm',
+            'loai' => 'Danh mục',
             'gia' => 'Giá',
             'so_luong' => 'Số lượng tồn',
             'change' => 'Mức thay đổi',
@@ -203,11 +203,11 @@ class AuditLog extends Model
         }
 
         if (in_array($field, ['gia', 'thanh_tien'], true) && is_numeric($value)) {
-            return number_format((float) $value, 0, ',', '.') . ' đ';
+            return number_format((float) $value, 0, ',', '.').' đ';
         }
 
         if ($field === 'change' && is_numeric($value)) {
-            return ((float) $value > 0 ? '+' : '') . $stringValue;
+            return ((float) $value > 0 ? '+' : '').$stringValue;
         }
 
         return $stringValue;

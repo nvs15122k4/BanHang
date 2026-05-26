@@ -11,12 +11,17 @@
         ? \Illuminate\Support\Str::squish($productStructuredDescription)
         : 'Sản phẩm đang được cập nhật thông tin chi tiết.';
     $isProductInStock = $product->trang_thai === 'con' && $product->so_luong > 0;
+    $variantOptions = $product->variant_options;
+    $galleryImages = $product->productImages->map->image_path;
+    if ($galleryImages->isEmpty()) {
+        $galleryImages = collect([$product->image_path]);
+    }
 
     $productSchema = [
         '@context' => 'https://schema.org',
         '@type' => 'Product',
         'name' => $product->ten_sp,
-        'image' => [$product->image_path],
+        'image' => $galleryImages->all(),
         'description' => $productStructuredDescription,
         'sku' => 'product-' . $product->id,
         'offers' => [
@@ -159,6 +164,15 @@
                 @endauth
 
                 <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="detail-img" id="mainImage">
+                @if($galleryImages->count() > 1)
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        @foreach($galleryImages as $galleryImage)
+                            <button type="button" class="btn p-0 border" data-gallery-src="{{ $galleryImage }}" onclick="document.getElementById('mainImage').src=this.dataset.gallerySrc">
+                                <img src="{{ $galleryImage }}" alt="{{ $product->ten_sp }}" class="inline-product-image-sm">
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -166,6 +180,9 @@
             <div class="detail-info">
                 <span class="detail-category">{{ $product->loai }}</span>
                 <h1 class="detail-title">{{ $product->ten_sp }}</h1>
+                @if($product->brand)
+                    <div class="text-muted mb-2">Thương hiệu: {{ $product->brand->name }}</div>
+                @endif
 
                 <div class="detail-price">
                     @if($productCurrentPrice < $productOriginalPrice)
@@ -178,30 +195,32 @@
                     {!! nl2br(e($product->mo_ta ?: 'Chưa có mô tả cho sản phẩm này.')) !!}
                 </div>
 
-                {{-- Size Selection --}}
-                @if($product->sizes && count($product->sizes) > 0)
+                {{-- Product variant selection --}}
+                @if(count($variantOptions) > 0)
                 <div class="size-selection mb-3">
-                    <label class="form-label fw-semibold">Chọn kích cỡ:</label>
+                    <label class="form-label fw-semibold">Chọn biến thể:</label>
                     <div class="d-flex flex-wrap gap-2" id="sizeOptions">
-                        @foreach($product->sizes as $size)
-                        <button type="button" class="btn btn-outline-primary size-btn" data-size="{{ $size }}" onclick="selectSize('{{ $size }}')">
+                        @foreach($variantOptions as $size)
+                        <button type="button" class="btn btn-outline-primary size-btn" data-size="{{ $size }}" onclick="selectSize(this.dataset.size)">
                             {{ $size }}
                         </button>
                         @endforeach
                     </div>
                     <input type="hidden" name="selected_size" id="selectedSize" value="">
-                    <small class="text-danger d-none" id="sizeError">Vui lòng chọn kích cỡ</small>
+                    <small class="text-danger d-none" id="sizeError">Vui lòng chọn biến thể</small>
+                    @if(collect($variantOptions)->contains(fn ($option) => preg_match('/\b(XS|S|M|L|XL|XXL)\b/i', $option)))
                     <div class="mt-2">
                         <a href="{{ route('guides.size') }}">Xem hướng dẫn chọn size</a>
                     </div>
+                    @endif
                 </div>
                 @endif
 
                 @if($product->so_luong > 0)
                 <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm"
-                      data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                      data-requires-size="{{ count($variantOptions) > 0 ? '1' : '0' }}"
                       data-product-name="{{ $product->ten_sp }}"
-                      data-size-options='@json($product->sizes ?? [])'>
+                      data-size-options="{{ json_encode($variantOptions, JSON_UNESCAPED_UNICODE) }}">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="size" id="cartSize" value="">
@@ -281,8 +300,14 @@
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Danh mục:</span>
-                        <span>{{ ucfirst($product->loai) }}</span>
+                        <span>{{ $product->loai_label }}</span>
                     </div>
+                    @if($product->brand)
+                    <div class="meta-item">
+                        <span class="meta-label">Thương hiệu:</span>
+                        <span>{{ $product->brand->name }}</span>
+                    </div>
+                    @endif
                     <div class="meta-item">
                         <span class="meta-label">Mã SP:</span>
                         <span>#{{ str_pad($product->id, 6, '0', STR_PAD_LEFT) }}</span>
@@ -491,7 +516,7 @@
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <a href="{{ route('products.show', ['product' => $rp->slug]) }}">
-                        @if($rp->anh)
+                        @if($rp->anh || $rp->productImages->isNotEmpty())
                         <img src="{{ $rp->image_path }}" alt="{{ $rp->ten_sp }}" class="product-img">
                         @else
                         <div class="product-img d-flex align-items-center justify-content-center bg-light">
@@ -517,9 +542,9 @@
                     <div class="product-actions">
                         @if($rp->so_luong > 0)
                         <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1 add-to-cart-form"
-                              data-requires-size="{{ count($rp->sizes ?? []) > 0 ? '1' : '0' }}"
+                              data-requires-size="{{ count($rp->variant_options) > 0 ? '1' : '0' }}"
                               data-product-name="{{ $rp->ten_sp }}"
-                              data-size-options='@json($rp->sizes ?? [])'>
+                              data-size-options="{{ json_encode($rp->variant_options, JSON_UNESCAPED_UNICODE) }}">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $rp->id }}">
                             <input type="hidden" name="so_luong" value="1">

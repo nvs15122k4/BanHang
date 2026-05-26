@@ -15,6 +15,7 @@ class Product extends Model
         'ten_sp',
         'slug',
         'loai',
+        'brand_id',
         'mo_ta',
         'anh',
         'trang_thai',
@@ -48,7 +49,7 @@ class Product extends Model
 
     public static function getLoaiList(): array
     {
-        return Category::pluck('name', 'slug')->toArray();
+        return Category::treeList()->pluck('path', 'slug')->toArray();
     }
 
     public static function getLoaiIcon(string $loai): string
@@ -68,7 +69,7 @@ class Product extends Model
 
     public function getTrangThaiStatusAttribute()
     {
-        return $this->trang_thai === 'con' ? 'Con hang' : 'Het hang';
+        return $this->trang_thai === 'con' ? 'Còn hàng' : 'Hết hàng';
     }
 
     public function getIsNewAttribute(): bool
@@ -78,17 +79,28 @@ class Product extends Model
 
     public function getImagePathAttribute(): string
     {
-        if (empty($this->anh)) {
+        $galleryImage = $this->relationLoaded('productImages')
+            ? $this->productImages->sortBy([
+                ['is_primary', 'desc'],
+                ['sort_order', 'asc'],
+            ])->first()?->image_url
+            : ProductImage::where('product_id', $this->id)
+                ->orderByDesc('is_primary')
+                ->orderBy('sort_order')
+                ->value('image_url');
+        $image = $galleryImage ?: $this->anh;
+
+        if (empty($image)) {
             return asset('images/default-product.svg');
         }
 
         // Cloudinary URL hoặc URL ngoài → dùng trực tiếp
-        if (str_starts_with($this->anh, 'http://') || str_starts_with($this->anh, 'https://')) {
-            return $this->anh;
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
         }
 
         // File local cũ (backward compatibility)
-        return asset('storage/products/'.$this->anh);
+        return asset('storage/products/'.$image);
     }
 
     public function getImageUrlAttribute()
@@ -150,6 +162,30 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'loai', 'slug');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class)->orderBy('id');
+    }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function getVariantOptionsAttribute(): array
+    {
+        $variants = $this->relationLoaded('variants')
+            ? $this->variants->pluck('name')->all()
+            : $this->variants()->pluck('name')->all();
+
+        return $variants ?: array_values($this->sizes ?? []);
     }
 
     public function getAverageRatingAttribute()

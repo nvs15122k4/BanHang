@@ -254,6 +254,44 @@ body {
             background: #FFFFFF;
             color: var(--accent);
         }
+
+/* Shared password visibility control for authentication forms. */
+.password-field {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.auth-card .password-field {
+    margin-bottom: 25px;
+}
+
+.password-field .form-control {
+    margin-bottom: 0;
+    padding-right: 52px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 48px;
+    border: 0;
+    background: transparent;
+    color: #716a7d;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.password-toggle:hover,
+.password-toggle:focus {
+    color: #6d28d9;
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid #7c3aed;
+    outline-offset: -3px;
+}
         
         .back-to-login {
             display: block;
@@ -586,4 +624,3 @@ body {
             background: #FFFFFF;
             color: var(--accent);
         }
-

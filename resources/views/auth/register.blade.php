@@ -49,7 +49,12 @@
                 
                 <div>
                     <label class="form-label">Mật khẩu</label>
-                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                    <div class="password-field">
+                        <input id="register-password" type="password" name="password" class="form-control @error('password') is-invalid @enderror" required autocomplete="new-password">
+                        <button type="button" class="password-toggle js-password-toggle" data-target="register-password" aria-label="Hiện mật khẩu" aria-controls="register-password" aria-pressed="false">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
                     @error('password')
                         <span class="error-msg">{{ $message }}</span>
                     @enderror
@@ -57,7 +62,12 @@
 
                 <div>
                     <label class="form-label">Xác nhận mật khẩu</label>
-                    <input type="password" name="password_confirmation" class="form-control" required>
+                    <div class="password-field">
+                        <input id="register-password-confirmation" type="password" name="password_confirmation" class="form-control" required autocomplete="new-password">
+                        <button type="button" class="password-toggle js-password-toggle" data-target="register-password-confirmation" aria-label="Hiện mật khẩu" aria-controls="register-password-confirmation" aria-pressed="false">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-ava-dark">ĐĂNG KÝ</button>
@@ -71,5 +81,19 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.js-password-toggle').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = document.getElementById(button.dataset.target);
+                var isVisible = input.type === 'text';
+
+                input.type = isVisible ? 'password' : 'text';
+                button.setAttribute('aria-label', isVisible ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+                button.setAttribute('aria-pressed', isVisible ? 'false' : 'true');
+                button.querySelector('i').classList.toggle('fa-eye', isVisible);
+                button.querySelector('i').classList.toggle('fa-eye-slash', !isVisible);
+            });
+        });
+    </script>
 </body>
 </html>

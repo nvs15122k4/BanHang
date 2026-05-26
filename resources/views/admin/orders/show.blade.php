@@ -125,7 +125,7 @@
                     $paymentStatusLabels = \App\Models\Order::paymentStatusLabels();
                 @endphp
 
-                <form method="POST" action="{{ route('admin.orders.status', $order) }}" class="mb-3">
+                <form method="POST" action="{{ route('admin.orders.status', $order) }}" class="mb-3" data-item-name="#{{ $order->ma_don_hang }}" data-current-value="{{ $order->trang_thai }}" data-confirm-note="Trạng thái đơn hàng và thông báo cho khách sẽ được cập nhật." onsubmit="return confirmOrderStatus(this)">
                     @csrf
                     @method('PUT')
                     <label class="form-label"><strong>Chuyển trạng thái:</strong></label>
@@ -145,13 +145,13 @@
                     <div class="mb-3">
                         <label class="form-label text-danger"><strong>YÊU CẦU HỦY ĐƠN HÀNG:</strong></label>
                         <div class="d-grid gap-2">
-                            <form action="{{ route('admin.orders.approveCancel', $order) }}" method="POST" onsubmit="return confirmForm(this, 'Bạn có chắc chắn muốn CHẤP NHẬN yêu cầu hủy đơn hàng này?', 'DUYỆT HỦY ĐƠN', 'danger')">
+                            <form action="{{ route('admin.orders.approveCancel', $order) }}" method="POST" data-item-name="#{{ $order->ma_don_hang }}" onsubmit="return confirmForm(this, 'Chấp nhận yêu cầu hủy sẽ hủy đơn hàng và hoàn kho nếu đơn đã trừ kho.', 'ĐỒNG Ý HỦY ĐƠN', 'success', 'ĐỒNG Ý HỦY')">
                                 @csrf
                                 <button type="submit" class="btn btn-danger w-100">
                                     <i class="fas fa-check me-2"></i>Đồng ý hủy
                                 </button>
                             </form>
-                            <form action="{{ route('admin.orders.rejectCancel', $order) }}" method="POST" onsubmit="return confirmForm(this, 'Bạn có chắc chắn muốn TỪ CHỐI yêu cầu hủy đơn hàng này?', 'TỪ CHỐI HỦY', 'danger')">
+                            <form action="{{ route('admin.orders.rejectCancel', $order) }}" method="POST" data-item-name="#{{ $order->ma_don_hang }}" data-confirm-note="Đơn hàng sẽ trở về trạng thái trước khi khách gửi yêu cầu hủy." onsubmit="return confirmForm(this, 'Từ chối yêu cầu hủy của khách hàng?', 'TỪ CHỐI HỦY ĐƠN', 'action', 'TỪ CHỐI HỦY')">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-secondary w-100">
                                     <i class="fas fa-times me-2"></i>Từ chối hủy
@@ -181,7 +181,7 @@
                             <div class="alert alert-info py-2 small">Chờ khách hàng cung cấp thông tin ngân hàng.</div>
                         @endif
 
-                        <form action="{{ route('admin.orders.updateRefund', $order) }}" method="POST">
+                        <form action="{{ route('admin.orders.updateRefund', $order) }}" method="POST" data-item-name="#{{ $order->ma_don_hang }}" data-current-value="{{ $order->refund_status }}" data-confirm-note="Chỉ xác nhận đã hoàn tiền sau khi đã thực hiện chuyển khoản." onsubmit="return confirmRefundUpdate(this)">
                             @csrf
                             @method('PUT')
                             <div class="mb-2">
@@ -208,7 +208,7 @@
                     </span>
                 </div>
 
-                <form method="POST" action="{{ route('admin.orders.payment', $order) }}">
+                <form method="POST" action="{{ route('admin.orders.payment', $order) }}" data-item-name="#{{ $order->ma_don_hang }}" data-current-value="{{ $order->trang_thai_thanh_toan }}" data-confirm-note="Khách hàng sẽ nhận thông báo khi trạng thái thanh toán thay đổi." onsubmit="return confirmPaymentStatus(this)">
                     @csrf
                     @method('PUT')
                     <label class="form-label"><strong>Cập nhật thanh toán:</strong></label>
@@ -258,4 +258,55 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script>
+function confirmOrderStatus(form) {
+    const select = form.querySelector('[name="trang_thai"]');
+    if (select.value === form.dataset.currentValue) {
+        showToast('Trạng thái đơn hàng chưa thay đổi.', 'info');
+        return false;
+    }
+
+    return confirmForm(
+        form,
+        `Chuyển trạng thái đơn hàng sang "${select.options[select.selectedIndex].text}"?`,
+        'CẬP NHẬT TRẠNG THÁI',
+        'action',
+        'XÁC NHẬN'
+    );
+}
+
+function confirmPaymentStatus(form) {
+    const select = form.querySelector('[name="trang_thai_thanh_toan"]');
+    if (select.value === form.dataset.currentValue) {
+        showToast('Trạng thái thanh toán chưa thay đổi.', 'info');
+        return false;
+    }
+
+    return confirmForm(
+        form,
+        `Cập nhật thanh toán sang "${select.options[select.selectedIndex].text}"?`,
+        'CẬP NHẬT THANH TOÁN',
+        'success',
+        'XÁC NHẬN'
+    );
+}
+
+function confirmRefundUpdate(form) {
+    const select = form.querySelector('[name="refund_status"]');
+    const isCompleted = select.value === 'completed';
+
+    return confirmForm(
+        form,
+        isCompleted
+            ? 'Xác nhận tiền hoàn đã được chuyển cho khách hàng?'
+            : 'Đưa yêu cầu hoàn tiền về trạng thái chờ xử lý?',
+        'CẬP NHẬT HOÀN TIỀN',
+        isCompleted ? 'success' : 'action',
+        isCompleted ? 'XÁC NHẬN ĐÃ HOÀN' : 'GIỮ CHỜ XỬ LÝ'
+    );
+}
+</script>
+@endpush
 @endsection

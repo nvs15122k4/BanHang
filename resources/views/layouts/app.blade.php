@@ -900,7 +900,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h3 class="premium-title" id="stDeleteTitle">Xóa sản phẩm</h3>
                 <div class="premium-subtitle-pill" id="stDeletePill"></div>
                 <p class="premium-description" id="stDeleteMessage">
-                    Sản phẩm sẽ bị xóa vĩnh viễn khỏi giỏ hàng và không thể khôi phục.
+                    Dữ liệu này sẽ bị xóa và không thể khôi phục.
                 </p>
                 <div class="premium-btn-group">
                     <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Giữ lại</button>
@@ -908,8 +908,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas fa-trash-alt me-2"></i>Xóa ngay
                     </button>
                 </div>
-                <div class="premium-footer-note">
-                    <i class="fas fa-exclamation-triangle uix-50bfccc846"></i> Thao tác này không thể hoàn tác
+                <div class="premium-footer-note" id="stDeleteNote">
+                    <i class="fas fa-exclamation-triangle uix-50bfccc846"></i> <span id="stDeleteNoteText">Thao tác này không thể hoàn tác</span>
                 </div>
             </div>
         </div>
@@ -924,15 +924,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="premium-icon-wrap premium-icon-cancel">
                     <i class="fas fa-ban"></i>
                 </div>
-                <h3 class="premium-title">Hủy đơn hàng</h3>
+                <h3 class="premium-title" id="stActionTitle">Hủy đơn hàng</h3>
                 <div class="premium-subtitle-pill" id="stCancelOrderPill">#ORD00000</div>
-                <p class="premium-description">Bạn có chắc chắn muốn hủy đơn hàng này không? Yêu cầu hủy sẽ được gửi cho Admin phê duyệt.</p>
+                <p class="premium-description" id="stActionMessage">Bạn có chắc chắn muốn hủy đơn hàng này không? Yêu cầu hủy sẽ được gửi cho Admin phê duyệt.</p>
                 <div class="premium-btn-group">
-                    <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+                    <button type="button" class="premium-btn premium-btn-secondary" id="stActionCancelBtn" data-bs-dismiss="modal">Quay lại</button>
                     <button type="button" class="premium-btn premium-btn-orange" id="stCancelOrderConfirmBtn">Xác nhận hủy</button>
                 </div>
-                <div class="premium-footer-note">
-                    <i class="fas fa-info-circle"></i> Tiền sẽ được hoàn lại trong 3-5 ngày làm việc
+                <div class="premium-footer-note" id="stActionNote">
+                    <i class="fas fa-info-circle"></i> <span id="stActionNoteText">Yêu cầu sẽ được xử lý theo trạng thái đơn hàng.</span>
                 </div>
             </div>
         </div>
@@ -951,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="premium-subtitle-pill" id="stSuccessPill">#000000</div>
                 <p class="premium-description" id="stSuccessMessage">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
                 <div class="premium-btn-group">
-                    <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="premium-btn premium-btn-secondary" id="stSuccessCancelBtn" data-bs-dismiss="modal">Hủy bỏ</button>
                     <button type="button" class="premium-btn premium-btn-success" id="stSuccessConfirmBtn">Xác nhận ngay</button>
                 </div>
             </div>
@@ -971,12 +971,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let modal = bootstrap.Modal.getInstance(modalEl);
         if (!modal) modal = new bootstrap.Modal(modalEl);
         
-        document.getElementById('stDeleteTitle').innerText = options.title || 'Xóa sản phẩm';
-        document.getElementById('stDeletePill').innerText = options.pill || '';
-        document.getElementById('stDeleteMessage').innerText = options.message || 'Hành động này không thể hoàn tác.';
+        document.getElementById('stDeleteTitle').textContent = options.title || 'Xóa mục này';
+        document.getElementById('stDeletePill').textContent = options.pill || '';
+        document.getElementById('stDeleteMessage').textContent = options.message || 'Hành động này không thể hoàn tác.';
+        document.getElementById('stDeleteNoteText').textContent = options.note || 'Thao tác này không thể hoàn tác';
         
         const confirmBtn = document.getElementById('stDeleteConfirmBtn');
-        confirmBtn.innerText = options.confirmText || 'Xóa ngay';
+        confirmBtn.textContent = options.confirmText || 'Xóa ngay';
         const newBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
         
@@ -991,18 +992,22 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.show();
     };
 
-    // 2. Confirm Cancel Order
-    window.stConfirmCancelOrder = function(options) {
+    // 2. Confirm non-delete state-changing action
+    window.stConfirmAction = function(options) {
         const modalEl = document.getElementById('stCancelOrderModal');
         if (!modalEl) return;
 
         let modal = bootstrap.Modal.getInstance(modalEl);
         if (!modal) modal = new bootstrap.Modal(modalEl);
-        
-        document.getElementById('stCancelOrderPill').innerText = options.orderCode || '';
+
+        document.getElementById('stActionTitle').textContent = options.title || 'Xác nhận hành động';
+        document.getElementById('stCancelOrderPill').textContent = options.pill || '';
+        document.getElementById('stActionMessage').textContent = options.message || 'Bạn có chắc chắn muốn thực hiện hành động này không?';
+        document.getElementById('stActionNoteText').textContent = options.note || 'Trạng thái sẽ được cập nhật sau khi xác nhận.';
+        document.getElementById('stActionCancelBtn').textContent = options.cancelText || 'Quay lại';
 
         const confirmBtn = document.getElementById('stCancelOrderConfirmBtn');
-        confirmBtn.innerText = options.confirmText || 'Xác nhận hủy';
+        confirmBtn.textContent = options.confirmText || 'Xác nhận';
         const newBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
 
@@ -1017,6 +1022,17 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.show();
     };
 
+    window.stConfirmCancelOrder = function(options) {
+        stConfirmAction({
+            title: 'Hủy đơn hàng',
+            pill: options.orderCode || 'Đơn hàng',
+            message: 'Bạn có chắc chắn muốn hủy đơn hàng này không? Yêu cầu hủy sẽ được gửi cho Admin phê duyệt.',
+            note: 'Yêu cầu hủy sẽ chờ Admin duyệt; hoàn kho và hoàn tiền xử lý theo trạng thái đơn.',
+            confirmText: options.confirmText || 'Xác nhận hủy',
+            onConfirm: options.onConfirm
+        });
+    };
+
     // 3. Confirm Success Action
     window.stConfirmSuccess = function(options) {
         const modalEl = document.getElementById('stSuccessModal');
@@ -1028,6 +1044,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('stSuccessTitle').innerText = options.title || 'Xác nhận';
         document.getElementById('stSuccessPill').innerText = options.pill || 'Hành động';
         document.getElementById('stSuccessMessage').innerText = options.message || 'Bạn có chắc chắn?';
+        document.getElementById('stSuccessCancelBtn').textContent = options.cancelText || 'Hủy bỏ';
 
         const confirmBtn = document.getElementById('stSuccessConfirmBtn');
         confirmBtn.innerText = options.confirmText || 'Xác nhận ngay';
@@ -1047,8 +1064,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Legacy helper for forms (updated to use premium designs)
     window.confirmForm = function(form, message, title = 'XÁC NHẬN', type = 'danger', confirmText = null) {
-        const pill = title === 'HỦY ĐƠN HÀNG' ? 'Đơn hàng' : (form.dataset.itemName || 'Sản phẩm');
+        const pill = title === 'HỦY ĐƠN HÀNG' ? 'Đơn hàng' : (form.dataset.itemName || 'Hành động');
         const finalConfirmText = confirmText || form.dataset.confirmText || null;
+        const note = form.dataset.confirmNote || null;
         
         if (title === 'HỦY ĐƠN HÀNG') {
              stConfirmCancelOrder({
@@ -1072,12 +1090,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     form.submit();
                 }
             });
-        } else {
+        } else if (type === 'danger') {
             stConfirmDelete({
                 title: title,
                 pill: pill,
                 message: message,
                 confirmText: finalConfirmText,
+                note: note,
+                onConfirm: () => {
+                    window.ST_SAVE_SCROLL();
+                    form.onsubmit = null;
+                    form.submit();
+                }
+            });
+        } else {
+            stConfirmAction({
+                title: title,
+                pill: pill,
+                message: message,
+                confirmText: finalConfirmText,
+                note: note,
                 onConfirm: () => {
                     window.ST_SAVE_SCROLL();
                     form.onsubmit = null;

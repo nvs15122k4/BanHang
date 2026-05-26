@@ -120,14 +120,25 @@
                                                     onclick="showConfirm(
                                                         'Tài khoản &quot;{{ addslashes($user->name) }}&quot; sẽ bị vô hiệu hóa. Người dùng sẽ không thể đăng nhập.',
                                                         () => document.getElementById('form-status-{{ $user->id }}').submit(),
-                                                        'Vô hiệu hóa tài khoản'
+                                                        'VÔ HIỆU HÓA TÀI KHOẢN',
+                                                        'action',
+                                                        'VÔ HIỆU HÓA',
+                                                        '{{ addslashes($user->name) }}',
+                                                        'Tài khoản có thể được mở lại sau đó.'
                                                     )">
                                                 <i class="fas fa-ban"></i>
                                             </button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-outline-success"
                                                     title="Mở lại tài khoản"
-                                                    onclick="document.getElementById('form-status-{{ $user->id }}').submit()">
+                                                    onclick="showConfirm(
+                                                        'Mở lại tài khoản &quot;{{ addslashes($user->name) }}&quot; để người dùng có thể đăng nhập?',
+                                                        () => document.getElementById('form-status-{{ $user->id }}').submit(),
+                                                        'MỞ LẠI TÀI KHOẢN',
+                                                        'success',
+                                                        'MỞ LẠI',
+                                                        '{{ addslashes($user->name) }}'
+                                                    )">
                                                 <i class="fas fa-check-circle"></i>
                                             </button>
                                         @endif

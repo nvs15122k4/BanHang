@@ -117,7 +117,7 @@
                                         <input type="hidden" name="trang_thai" value="disputing">
                                         <button type="submit" class="btn btn-outline-danger rounded-0 font-bold tracking-wide-custom uix-d83ad4db53"
                                            
-                                            onclick="return confirmForm(this.form, 'Xác nhận bạn chưa nhận được hàng và muốn khiếu nại? Chúng tôi sẽ tiếp nhận và xử lý sớm nhất.', 'Xác nhận gửi khiếu nại', 'danger', 'Gửi khiếu nại')">
+                                            onclick="return confirmForm(this.form, 'Xác nhận bạn chưa nhận được hàng và muốn khiếu nại? Chúng tôi sẽ tiếp nhận và xử lý sớm nhất.', 'Xác nhận gửi khiếu nại', 'action', 'Gửi khiếu nại')">
                                             <i class="fas fa-exclamation-circle me-2"></i>CHƯA NHẬN ĐƯỢC HÀNG
                                         </button>
                                     </form>

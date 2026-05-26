@@ -538,6 +538,7 @@
             title: 'XÓA ĐỊA CHỈ',
             pill: addrName,
             message: 'Địa chỉ này sẽ bị xóa khỏi sổ địa chỉ của bạn.',
+            note: 'Bạn có thể thêm lại địa chỉ sau đó.',
             onConfirm: async () => {
                 const url = btn.dataset.deleteAddress;
                 try {

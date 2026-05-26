@@ -151,7 +151,7 @@
                   <form method="POST" action="{{ route('admin.promotions.destroy', $promo) }}" id="del-{{ $promo->id }}">
                     @csrf @method('DELETE')
                     <button type="button" class="btn btn-sm btn-outline-danger"
-                      onclick="stConfirmDelete({title:'Xóa khuyến mãi',pill:'{{ addslashes($promo->ten) }}',message:'KM này và toàn bộ phạm vi áp dụng sẽ bị xóa vĩnh viễn.',onConfirm:()=>document.getElementById('del-{{ $promo->id }}').submit()})">
+                      onclick="stConfirmDelete({title:'Xóa khuyến mãi',pill:'{{ addslashes($promo->ten) }}',message:'Khuyến mãi này và toàn bộ phạm vi áp dụng sẽ bị xóa vĩnh viễn.',confirmText:'XÓA KHUYẾN MÃI',onConfirm:()=>document.getElementById('del-{{ $promo->id }}').submit()})">
                       <i class="fas fa-trash"></i>
                     </button>
                   </form>

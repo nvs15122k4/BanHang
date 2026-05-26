@@ -164,13 +164,13 @@
                         Hành động này sẽ xóa vĩnh viễn dữ liệu và không thể khôi phục.
                     </p>
                     <div class="premium-btn-group">
-                        <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">HỦY</button>
+                        <button type="button" class="premium-btn premium-btn-secondary" id="stDeleteCancelBtn" data-bs-dismiss="modal">HỦY</button>
                         <button type="button" class="premium-btn premium-btn-danger" id="stDeleteConfirmBtn">
                             XÓA NGAY
                         </button>
                     </div>
-                    <div class="premium-footer-note">
-                        <i class="fas fa-exclamation-triangle uix-50bfccc846"></i> Thao tác này không thể hoàn tác
+                    <div class="premium-footer-note" id="stDeleteNote">
+                        <i class="fas fa-exclamation-triangle uix-50bfccc846"></i> <span id="stDeleteNoteText">Thao tác này không thể hoàn tác</span>
                     </div>
                 </div>
             </div>
@@ -185,12 +185,15 @@
                     <div class="premium-icon-wrap premium-icon-cancel">
                         <i class="fas fa-ban"></i>
                     </div>
-                    <h3 class="premium-title">Xác nhận hành động</h3>
+                    <h3 class="premium-title" id="stActionTitle">Xác nhận hành động</h3>
                     <div class="premium-subtitle-pill" id="stCancelOrderPill">#ORD00000</div>
-                    <p class="premium-description">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+                    <p class="premium-description" id="stActionMessage">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
                     <div class="premium-btn-group">
-                        <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">QUAY LẠI</button>
+                        <button type="button" class="premium-btn premium-btn-secondary" id="stActionCancelBtn" data-bs-dismiss="modal">QUAY LẠI</button>
                         <button type="button" class="premium-btn premium-btn-orange" id="stCancelOrderConfirmBtn">XÁC NHẬN</button>
+                    </div>
+                    <div class="premium-footer-note" id="stActionNote">
+                        <i class="fas fa-info-circle"></i> <span id="stActionNoteText">Trạng thái sẽ được cập nhật sau khi xác nhận.</span>
                     </div>
                 </div>
             </div>
@@ -209,7 +212,7 @@
                     <div class="premium-subtitle-pill" id="stSuccessPill">Dữ liệu</div>
                     <p class="premium-description" id="stSuccessMessage">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
                     <div class="premium-btn-group">
-                        <button type="button" class="premium-btn premium-btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="button" class="premium-btn premium-btn-secondary" id="stSuccessCancelBtn" data-bs-dismiss="modal">Hủy bỏ</button>
                         <button type="button" class="premium-btn premium-btn-success" id="stSuccessConfirmBtn">Xác nhận ngay</button>
                     </div>
                 </div>
@@ -258,10 +261,13 @@
         document.getElementById('stDeleteTitle').innerText = options.title || 'Xác nhận xóa';
         document.getElementById('stDeletePill').innerText = options.pill || 'Dữ liệu';
         document.getElementById('stDeleteMessage').innerText = options.message || 'Hành động này không thể hoàn tác.';
+        document.getElementById('stDeleteNoteText').textContent = options.note || 'Thao tác này không thể hoàn tác';
+        document.getElementById('stDeleteCancelBtn').textContent = options.cancelText || 'GIỮ LẠI';
         
         const confirmBtn = document.getElementById('stDeleteConfirmBtn');
         const newBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+        newBtn.textContent = options.confirmText || 'XÓA NGAY';
         
         newBtn.addEventListener('click', function() {
             newBtn.disabled = true;
@@ -278,13 +284,16 @@
         if (!modalEl) return;
         let modal = bootstrap.Modal.getOrCreateInstance(modalEl);
         
-        modalEl.querySelector('.premium-title').innerText = options.title || 'Xác nhận';
+        document.getElementById('stActionTitle').innerText = options.title || 'Xác nhận';
         document.getElementById('stCancelOrderPill').innerText = options.pill || '';
-        modalEl.querySelector('.premium-description').innerText = options.message || 'Bạn có chắc chắn?';
+        document.getElementById('stActionMessage').innerText = options.message || 'Bạn có chắc chắn?';
+        document.getElementById('stActionNoteText').textContent = options.note || 'Trạng thái sẽ được cập nhật sau khi xác nhận.';
+        document.getElementById('stActionCancelBtn').textContent = options.cancelText || 'QUAY LẠI';
         
         const confirmBtn = document.getElementById('stCancelOrderConfirmBtn');
         const newBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+        newBtn.textContent = options.confirmText || 'XÁC NHẬN';
         
         newBtn.addEventListener('click', function() {
             newBtn.disabled = true;
@@ -304,10 +313,12 @@
         document.getElementById('stSuccessTitle').innerText = options.title || 'Xác nhận';
         document.getElementById('stSuccessPill').innerText = options.pill || 'Hành động';
         document.getElementById('stSuccessMessage').innerText = options.message || 'Bạn có chắc chắn?';
+        document.getElementById('stSuccessCancelBtn').textContent = options.cancelText || 'HỦY BỎ';
         
         const confirmBtn = document.getElementById('stSuccessConfirmBtn');
         const newBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+        newBtn.textContent = options.confirmText || 'XÁC NHẬN';
         
         newBtn.addEventListener('click', function() {
             newBtn.disabled = true;
@@ -319,24 +330,31 @@
     };
 
     // Compatibility for existing showConfirm
-    window.showConfirm = function(message, onConfirm, title = 'XÁC NHẬN', type = 'danger') {
+    window.showConfirm = function(message, onConfirm, title = 'XÁC NHẬN', type = 'danger', confirmText = null, pill = 'Dữ liệu', note = null) {
         if (type === 'danger') {
-            stConfirmDelete({ title, message, pill: 'Dữ liệu', onConfirm });
+            stConfirmDelete({ title, message, pill, note, confirmText, onConfirm });
         } else if (type === 'success') {
-            stConfirmSuccess({ title, message, onConfirm });
+            stConfirmSuccess({ title, message, pill, confirmText, onConfirm });
         } else {
-            stConfirmAction({ title, message, onConfirm });
+            stConfirmAction({ title, message, pill, note, confirmText, onConfirm });
         }
     };
 
     // Helper for forms
-    window.confirmForm = function(form, message, title = 'XÁC NHẬN', type = 'danger') {
+    window.confirmForm = function(form, message, title = 'XÁC NHẬN', type = 'danger', confirmText = null) {
+        const pill = form.dataset.itemName || 'Hành động';
+        const note = form.dataset.confirmNote || null;
+        const submit = () => {
+            form.onsubmit = null;
+            form.submit();
+        };
+
         if (type === 'danger') {
-            stConfirmDelete({ title, message, pill: 'Hành động', onConfirm: () => form.submit() });
+            stConfirmDelete({ title, message, pill, note, confirmText, onConfirm: submit });
         } else if (type === 'success') {
-            stConfirmSuccess({ title, message, pill: 'Hành động', onConfirm: () => form.submit() });
+            stConfirmSuccess({ title, message, pill, confirmText, onConfirm: submit });
         } else {
-            stConfirmAction({ title, message, onConfirm: () => form.submit() });
+            stConfirmAction({ title, message, pill, note, confirmText, onConfirm: submit });
         }
         return false;
     };

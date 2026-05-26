@@ -258,7 +258,7 @@ document.getElementById('btnSaveStock').addEventListener('click', function () {
 /* ── Xóa sản phẩm (AJAX) ── */
 function deleteProduct(productId, productName) {
     showConfirm(
-        `Sản phẩm "${productName}" sẽ bị xóa vĩnh viễn.`,
+        `Sản phẩm "${productName}" sẽ được chuyển vào thùng rác.`,
         () => {
             fetch(`/products/${productId}`, {
                 method: 'DELETE',
@@ -280,7 +280,11 @@ function deleteProduct(productId, productName) {
             })
             .catch(() => showToast('Lỗi kết nối!', 'error'));
         },
-        'Xóa sản phẩm'
+        'CHUYỂN VÀO THÙNG RÁC',
+        'danger',
+        'CHUYỂN VÀO THÙNG RÁC',
+        productName,
+        'Sản phẩm có thể được khôi phục trong 60 ngày.'
     );
 }
 </script>

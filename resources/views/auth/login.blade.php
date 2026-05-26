@@ -52,7 +52,12 @@
                             <a class="uix-e2cf23cc81" href="{{ route('password.request') }}">Quên mật khẩu?</a>
                         @endif
                     </div>
-                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                    <div class="password-field">
+                        <input id="login-password" type="password" name="password" class="form-control @error('password') is-invalid @enderror" required autocomplete="current-password">
+                        <button type="button" class="password-toggle js-password-toggle" data-target="login-password" aria-label="Hiện mật khẩu" aria-controls="login-password" aria-pressed="false">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
                     @error('password')
                         <div class="invalid-feedback mb-3 uix-dd7c389abd">{{ $message }}</div>
                     @enderror
@@ -76,5 +81,19 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.js-password-toggle').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = document.getElementById(button.dataset.target);
+                var isVisible = input.type === 'text';
+
+                input.type = isVisible ? 'password' : 'text';
+                button.setAttribute('aria-label', isVisible ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+                button.setAttribute('aria-pressed', isVisible ? 'false' : 'true');
+                button.querySelector('i').classList.toggle('fa-eye', isVisible);
+                button.querySelector('i').classList.toggle('fa-eye-slash', !isVisible);
+            });
+        });
+    </script>
 </body>
 </html>

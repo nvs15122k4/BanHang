@@ -2,7 +2,6 @@
 
 .text-xs { font-size: 11px !important; }
 .text-sm-custom { font-size: 12px !important; }
-.text-md-custom { font-size: 13px !important; }
 .text-lg-custom { font-size: 14px !important; }
 
 .text-gray-light { color: #DDD !important; }
@@ -42,8 +41,6 @@
 .letter-spacing-05-custom { letter-spacing: 0.5px !important; }
 
 .m-0 { margin: 0 !important; }
-.rounded-0 { border-radius: 0 !important; }
-
 .w-60-px-custom { width: 60px !important; }
 .h-60-px-custom { height: 60px !important; }
 

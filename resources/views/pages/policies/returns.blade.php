@@ -5,14 +5,27 @@
 @section('robots', 'noindex, follow')
 @section('canonical', 'https://santimvien.vn/chinh-sach/doi-tra')
 
+@push('styles')
+    @vite(['public/css/views/static_pages.css'])
+@endpush
+
 @section('content')
-<div class="container py-5">
-    <nav class="mb-4" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Thông tin đổi trả</nav>
-    <div class="row justify-content-center"><article class="col-lg-9">
-        <h1 class="page-title text-start">Thông tin đổi trả</h1>
-        <div class="alert alert-info">Trang này chưa được lập chỉ mục vì thời hạn đổi trả, điều kiện sản phẩm và phương thức hoàn tiền chưa được chủ shop xác nhận.</div>
+<section class="content-hero">
+    <div class="container">
+        <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Thông tin đổi trả</nav>
+        <span class="content-eyebrow">Chính sách</span>
+        <h1 class="page-title">Thông tin đổi trả</h1>
+        <p class="content-intro">Điều kiện và quy trình đổi trả sẽ được cập nhật rõ ràng sau khi được xác nhận chính thức.</p>
+    </div>
+</section>
+<div class="container content-page">
+    <div class="row justify-content-center"><article class="col-lg-9 content-shell">
+        <div class="notice-card">Trang này chưa được lập chỉ mục vì thời hạn đổi trả, điều kiện sản phẩm và phương thức hoàn tiền chưa được chủ shop xác nhận.</div>
         <p>Website sẽ công bố quy trình đổi trả tại URL này sau khi chính sách vận hành được chốt. Không có cam kết thời hạn đổi trả nào được áp dụng từ nội dung trang hiện tại.</p>
-        <p>Để hạn chế chọn nhầm kích cỡ trước khi chính sách hoàn thiện, hãy tham khảo <a href="{{ route('guides.size') }}">hướng dẫn chọn size</a>.</p>
+        <div class="content-actions">
+            <a class="btn-primary-content" href="{{ route('guides.size') }}">Hướng dẫn chọn size</a>
+            <a class="btn-outline-content" href="{{ route('support.faq') }}">Câu hỏi thường gặp</a>
+        </div>
     </article></div>
 </div>
 @endsection

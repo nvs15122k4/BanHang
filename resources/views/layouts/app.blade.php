@@ -58,17 +58,16 @@
     <div class="container d-flex justify-content-between align-items-center">
         <!-- Logo -->
         <a href="{{ route('home') }}" class="brand-logo">
-            SÀN TÍM
+            SÀN <span>TÍM</span> VI EN
         </a>
         <!-- Desktop Menu -->
         <ul class="nav-menu d-none d-lg-flex">
             <li><a href="{{ route('home') }}">Trang chủ</a></li>
-            <li><a href="{{ route('promotions.index') }}" class="sale-link">KHUYẾN MÃI</a></li>
-            <li><a href="{{ route('products.index') }}" class="products-link">Sản Phẩm</a></li>
-            {{-- <li><a href="{{ route('products.index', ['loai_filter' => 'men']) }}">Nam</a></li>
-            <li><a href="{{ route('products.index', ['loai_filter' => 'women']) }}">Nữ</a></li> --}}
+            <li><a href="{{ route('products.index') }}" class="products-link">Sản phẩm</a></li>
+            <li><a href="{{ route('promotions.index') }}" class="sale-link">Khuyến mãi</a></li>
             <li><a href="{{ route('pages.blog') }}">Blog</a></li>
-            <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>            
+            <li><a href="{{ route('guides.size') }}">Chọn size</a></li>
+            <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>
         </ul>
 
         <!-- Mobile Toggle -->
@@ -176,18 +175,20 @@
 <!-- ── MOBILE MENU ── -->
 <div class="offcanvas offcanvas-start uix-eed5c25912" tabindex="-1" id="mobileMenu">
     <div class="offcanvas-header border-bottom">
-        <span class="brand-logo">SÀN <span>TÍM</span></span>
+        <span class="brand-logo">SÀN <span>TÍM</span> VI EN</span>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body p-0">
         <div class="list-group list-group-flush">
             <a href="{{ route('home') }}" class="list-group-item list-group-item-action py-3 border-0 fw-600">TRANG CHỦ</a>
+            <a href="{{ route('products.index') }}" class="list-group-item list-group-item-action py-3 border-0">SẢN PHẨM</a>
+            <a href="{{ route('promotions.index') }}" class="list-group-item list-group-item-action py-3 border-0 text-danger fw-bold">KHUYẾN MÃI</a>
             <a href="{{ route('categories.show', ['category' => 'men']) }}" class="list-group-item list-group-item-action py-3 border-0">NAM</a>
             <a href="{{ route('categories.show', ['category' => 'women']) }}" class="list-group-item list-group-item-action py-3 border-0">NỮ</a>
-            <a href="{{ route('products.index') }}" class="list-group-item list-group-item-action py-3 border-0">TRẺ EM</a>
             <a href="{{ route('pages.blog') }}" class="list-group-item list-group-item-action py-3 border-0">BLOG</a>
+            <a href="{{ route('guides.size') }}" class="list-group-item list-group-item-action py-3 border-0">HƯỚNG DẪN CHỌN SIZE</a>
+            <a href="{{ route('support.faq') }}" class="list-group-item list-group-item-action py-3 border-0">HỖ TRỢ</a>
             <a href="{{ route('pages.about') }}" class="list-group-item list-group-item-action py-3 border-0">VỀ CHÚNG TÔI</a>
-            <a href="{{ route('promotions.index') }}" class="list-group-item list-group-item-action py-3 border-0 text-danger fw-bold">KHUYẾN MÃI</a>
         </div>
         <div class="p-3 mt-3">
             <form action="{{ route('products.index') }}" method="GET" class="d-flex align-items-center bg-light p-2 rounded-pill">
@@ -208,26 +209,25 @@
     <div class="container">
         <div class="row g-4">
             <!-- Brand -->
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-4 col-md-12">
                 <div class="footer-brand mb-3">SÀN <span>TÍM</span> VI EN</div>
-                <p class="uix-8e5dc3393d">
-                    Cửa hàng thời trang trực tuyến với danh mục sản phẩm,
-                    gợi ý chọn size và theo dõi đơn hàng trên website.
+                <p class="footer-copy">
+                    Không gian mua sắm thời trang trực tuyến với sản phẩm, bài viết phối đồ
+                    và hướng dẫn chọn size ngay trên website.
                 </p>
-                <p class="uix-28dfc8b539">
-                    Thông tin liên hệ chính thức sẽ được công bố
-                    sau khi được xác nhận.
-                </p>
+                <a class="footer-support-link" href="{{ route('support.purchase-guide') }}">
+                    <i class="fas fa-arrow-right me-2"></i>Xem hướng dẫn mua hàng
+                </a>
             </div>
 
-            <!-- Thông tin -->
+            <!-- Mua sắm -->
             <div class="col-lg-2 col-md-3 col-6">
-                <div class="footer-title">Thông tin</div>
+                <div class="footer-title">Mua sắm</div>
                 <ul class="footer-links">
+                    <li><a href="{{ route('products.index') }}">Tất cả sản phẩm</a></li>
+                    <li><a href="{{ route('promotions.index') }}">Khuyến mãi</a></li>
                     <li><a href="{{ route('categories.show', ['category' => 'men']) }}">Nam</a></li>
                     <li><a href="{{ route('categories.show', ['category' => 'women']) }}">Nữ</a></li>
-                    <li><a href="{{ route('products.index') }}">Trẻ em</a></li>
-                    <li><a href="{{ route('products.index') }}">Hàng mới về</a></li>
                 </ul>
             </div>
 
@@ -238,28 +238,33 @@
                     <li><a href="{{ route('pages.blog') }}">Blog</a></li>
                     <li><a href="{{ route('guides.size') }}">Hướng dẫn chọn size</a></li>
                     <li><a href="{{ route('pages.about') }}">Về chúng tôi</a></li>
-
-                </ul>
-            </div>
-
-            <!-- Liên hệ -->
-            <div class="col-lg-2 col-md-6 col-6">
-                <div class="footer-title">Liên hệ</div>
-                <ul class="footer-links">
-                    <li><a href="{{ route('support.faq') }}">Câu hỏi thường gặp</a></li>
-                    <li><a href="{{ route('orders.index') }}">Theo dõi đơn hàng</a></li>
-                    <li><a href="{{ route('policies.shipping') }}">Thông tin giao hàng</a></li>
-                    <li><a href="{{ route('policies.returns') }}">Thông tin đổi trả</a></li>
+                    <li><a href="{{ route('pages.contact') }}">Liên hệ</a></li>
                 </ul>
             </div>
 
             <!-- Hỗ trợ -->
-            <div class="col-lg-3 col-md-6 col-6">
+            <div class="col-lg-2 col-md-3 col-6">
                 <div class="footer-title">Hỗ trợ</div>
                 <ul class="footer-links">
                     <li><a href="{{ route('support.purchase-guide') }}">Hướng dẫn mua hàng</a></li>
-                    <li><a href="{{ route('policies.payment') }}">Phương thức thanh toán</a></li>
-                    <li><a href="{{ route('pages.contact') }}">Liên hệ</a></li>
+                    <li><a href="{{ route('support.faq') }}">Câu hỏi thường gặp</a></li>
+                    <li><a href="{{ route('policies.payment') }}">Thanh toán</a></li>
+                    @auth
+                        <li><a href="{{ route('orders.index') }}">Đơn mua của tôi</a></li>
+                    @else
+                        <li><a href="{{ route('login') }}">Đăng nhập xem đơn</a></li>
+                    @endauth
+                </ul>
+            </div>
+
+            <!-- Chính sách -->
+            <div class="col-lg-2 col-md-3 col-6">
+                <div class="footer-title">Chính sách</div>
+                <ul class="footer-links">
+                    <li><a href="{{ route('policies.shipping') }}">Giao hàng</a></li>
+                    <li><a href="{{ route('policies.returns') }}">Đổi trả</a></li>
+                    <li><a href="{{ route('policies.privacy') }}">Bảo mật</a></li>
+                    <li><a href="{{ route('policies.terms') }}">Điều khoản</a></li>
                 </ul>
             </div>
         </div>

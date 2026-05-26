@@ -28,9 +28,9 @@
 
 @section('content')
 <script type="application/ld+json">{!! json_encode($articleSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
-<article class="container py-5 max-w-900-px-custom">
-    <nav class="mb-4" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / <a href="{{ route('pages.blog') }}">Blog</a> / Phối áo thun</nav>
-    <header class="mb-5">
+<article class="container article-page article-body">
+    <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / <a href="{{ route('pages.blog') }}">Blog</a> / Phối áo thun</nav>
+    <header class="article-header">
         <p class="blog-meta">Phối đồ • Xuất bản: 24 tháng 5, 2026</p>
         <h1 class="page-title text-start">5 cách phối áo thun đơn giản hằng ngày</h1>
         <p class="lead">Một chiếc áo thun dễ trở thành nền tảng cho nhiều bộ trang phục khi màu sắc và phom dáng được cân bằng.</p>
@@ -45,6 +45,9 @@
     <p>Sơ mi khoác ngoài hoặc cardigan mỏng hữu ích khi di chuyển giữa không gian nóng và có điều hòa.</p>
     <h2>Chọn màu theo tủ đồ sẵn có</h2>
     <p>Nếu muốn áo mặc được nhiều lần, hãy bắt đầu từ màu dễ kết hợp với quần và giày bạn đang sở hữu.</p>
-    <p class="mt-4"><a href="{{ route('products.index') }}">Xem các sản phẩm thời trang</a> hoặc <a href="{{ route('guides.size') }}">tham khảo cách chọn size</a> trước khi mua.</p>
+    <div class="content-actions">
+        <a class="btn-primary-content" href="{{ route('products.index') }}">Xem sản phẩm</a>
+        <a class="btn-outline-content" href="{{ route('guides.size') }}">Tham khảo size</a>
+    </div>
 </article>
 @endsection

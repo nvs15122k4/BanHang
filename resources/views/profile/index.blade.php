@@ -58,10 +58,10 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-md-3 col-form-label form-label">Email <span class="text-danger">*</span></label>
+                                <label class="col-md-3 col-form-label form-label">Email</label>
                                 <div class="col-md-9">
-                                    <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
-                                    <div class="invalid-feedback-field text-danger small mt-1"></div>
+                                    <input type="email" class="form-control profile-readonly-field" value="{{ $user->email }}" readonly aria-readonly="true">
+                                    <div class="form-text text-muted text-sm-custom">Email đăng nhập chỉ có thể xem, không thể thay đổi tại thông tin cá nhân.</div>
                                 </div>
                             </div>
                             <div class="row mb-3">

@@ -25,9 +25,11 @@ class AuthTest extends TestCase
 
         $response = $this->post('/register', $du_lieu);
 
-        $response->assertRedirect('/dashboard'); 
+        $response->assertRedirect(route('verification.notice', ['email' => 'admin@gmail.com'], false));
+        $this->assertGuest();
         $this->assertDatabaseHas('users', [
-            'email' => 'admin@gmail.com'
+            'email' => 'admin@gmail.com',
+            'email_verified_at' => null,
         ]);
     }
 
@@ -125,7 +127,7 @@ class AuthTest extends TestCase
 
         $response = $this->post('/login', $du_lieu);
 
-        $response->assertRedirect('/dashboard'); 
+        $response->assertRedirect(route('home', absolute: false));
         $this->assertAuthenticatedAs($user);
     }
 

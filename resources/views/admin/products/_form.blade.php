@@ -12,28 +12,51 @@
       @error('ten_sp')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-6">
-      <label class="form-label fw-semibold small">Loại sản phẩm</label>
+      <label class="form-label fw-semibold small">Danh mục</label>
       @php
         $currentLoai = old('loai', $product->loai ?? '');
-        $isNewLoai   = $currentLoai && !array_key_exists($currentLoai, $loaiList);
+        $isNewCategory = filled(old('new_category_name'));
       @endphp
-      <select name="loai" id="loai_select" class="form-select @error('loai') is-invalid @enderror" onchange="handleLoaiChange(this)" style="{{ $isNewLoai ? 'display:none;' : '' }}">
+      <select name="loai" id="category_select" class="form-select @error('loai') is-invalid @enderror" onchange="handleCategoryChange(this)" style="{{ $isNewCategory ? 'display:none;' : '' }}">
         <option value="">-- Chọn danh mục --</option>
         @foreach($loaiList as $key => $label)
           <option value="{{ $key }}" {{ $currentLoai == $key ? 'selected' : '' }}>{{ $label }}</option>
         @endforeach
         <option value="__new__">+ Thêm danh mục mới...</option>
       </select>
-      <input type="text" name="{{ $isNewLoai ? 'loai' : '' }}" id="loai_new" class="form-control mt-2 @error('loai') is-invalid @enderror" placeholder="Nhập mã loại mới (vd: the_thao)" style="{{ $isNewLoai ? '' : 'display:none;' }}" value="{{ $isNewLoai ? $currentLoai : '' }}">
-      <div class="form-text" id="loai_new_hint" style="{{ $isNewLoai ? '' : 'display:none;' }}">
-        Tên loại sẽ tự động lưu vào hệ thống. <a href="#" onclick="cancelNewLoai(); return false;">Hủy</a>
+      <div id="new_category_fields" class="mt-2" style="{{ $isNewCategory ? '' : 'display:none;' }}">
+        <input type="text" name="new_category_name" id="new_category_name" class="form-control @error('new_category_name') is-invalid @enderror" placeholder="Tên danh mục mới, ví dụ: Áo polo nam" value="{{ old('new_category_name') }}">
+        @error('new_category_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        <select name="new_category_parent_id" class="form-select mt-2 @error('new_category_parent_id') is-invalid @enderror">
+          <option value="">-- Danh mục gốc (không có cha) --</option>
+          @foreach($categoryTree ?? [] as $categoryOption)
+            <option value="{{ $categoryOption->id }}" {{ (string) old('new_category_parent_id') === (string) $categoryOption->id ? 'selected' : '' }}>{{ $categoryOption->path }}</option>
+          @endforeach
+        </select>
+        @error('new_category_parent_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        <div class="form-text">
+          Chọn đường dẫn cha rồi nhập tên danh mục con. Danh mục mới sẽ được đánh dấu <strong>Mới</strong>.
+          <a href="#" onclick="cancelNewCategory(); return false;">Hủy</a>
+        </div>
       </div>
       @error('loai')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
+    <div class="col-md-6">
+      <label class="form-label fw-semibold small">Thương hiệu</label>
+      <input type="text" name="brand_name" list="brand_options" class="form-control @error('brand_name') is-invalid @enderror"
+        placeholder="Ví dụ: Nike, Apple" value="{{ old('brand_name', $product->brand?->name ?? '') }}">
+      <datalist id="brand_options">
+        @foreach($brands ?? [] as $brand)
+          <option value="{{ $brand->name }}"></option>
+        @endforeach
+      </datalist>
+      @error('brand_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
     <div class="col-12">
       <label class="form-label fw-semibold small">Mô tả sản phẩm</label>
-      <textarea name="mo_ta" class="form-control @error('mo_ta') is-invalid @enderror" rows="3" placeholder="Nhập mô tả chi tiết sản phẩm...">{{ old('mo_ta', $product->mo_ta ?? '') }}</textarea>
+      <textarea name="mo_ta" class="form-control @error('mo_ta') is-invalid @enderror" rows="5" placeholder="Áo Nike&#10;- Size M màu đen&#10;- Size L màu đen&#10;- Size XL màu trắng">{{ old('mo_ta', $product->mo_ta ?? '') }}</textarea>
       @error('mo_ta')<div class="invalid-feedback">{{ $message }}</div>@enderror
+      <div class="form-text">Nội dung được hiển thị nguyên dòng tại trang sản phẩm; có thể nhập cấu hình, màu sắc hoặc ghi chú bán hàng.</div>
     </div>
   </div>
 </div>
@@ -110,7 +133,7 @@
 
       <div id="tab-file" style="{{ $activeTab !== 'file' ? 'display:none;' : '' }}">
         <input type="file" name="anh_file" id="anh_file" class="form-control @error('anh_file') is-invalid @enderror" accept="image/*" onchange="previewFile(this)">
-        <div class="form-text mt-2">Chấp nhận: JPG, PNG, WEBP. Tối đa 2MB. Để trống nếu không muốn thay đổi.</div>
+        <div class="form-text mt-2">Ảnh đại diện. Chấp nhận: JPG, PNG, WEBP. Tối đa 2MB.</div>
         @error('anh_file')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
         <div id="preview-file" class="mt-3 uix-c8be1ccba6">
           <img class="uix-b917c0d0bb" id="preview-file-img" src="" alt="Preview">
@@ -127,6 +150,21 @@
       </div>
     </div>
   </div>
+
+  <div class="mt-3">
+    <label class="form-label fw-semibold small">Ảnh bổ sung</label>
+    <input type="file" name="image_files[]" class="form-control @error('image_files.*') is-invalid @enderror" accept="image/*" multiple>
+    <textarea name="image_urls" class="form-control mt-2 @error('image_urls') is-invalid @enderror" rows="3" placeholder="Hoặc nhập mỗi URL ảnh bổ sung trên một dòng">{{ old('image_urls') }}</textarea>
+    @error('image_files.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+    @error('image_urls')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+    @if(isset($product) && $product->productImages->isNotEmpty())
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        @foreach($product->productImages as $image)
+          <img src="{{ $image->image_url }}" alt="Ảnh sản phẩm" class="inline-product-image-sm">
+        @endforeach
+      </div>
+    @endif
+  </div>
 </div>
 
 <hr>
@@ -134,57 +172,42 @@
 <div class="mb-4">
   <div class="d-flex align-items-center gap-2 mb-3">
     <span class="step-badge">4</span>
-    <span class="fw-semibold text-dark">Kích cỡ (Size)</span>
+    <span class="fw-semibold text-dark">Biến thể sản phẩm</span>
   </div>
   <div class="row g-3">
     <div class="col-12">
-      <label class="form-label fw-semibold small">Chọn các size có sẵn cho sản phẩm này</label>
-      <div class="d-flex flex-wrap gap-3">
-        @php
-          $allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-          $selectedSizes = old('sizes', $product->sizes ?? []);
-        @endphp
-        @foreach($allSizes as $size)
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="sizes[]" value="{{ $size }}" id="size_{{ $size }}"
-              {{ in_array($size, $selectedSizes) ? 'checked' : '' }}>
-            <label class="form-check-label" for="size_{{ $size }}">
-              {{ $size }}
-            </label>
-          </div>
-        @endforeach
-      </div>
-      @error('sizes')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
-      <div class="form-text mt-2">Nếu tích size, khách hàng bắt buộc chọn một size trong popup trước khi thêm sản phẩm vào giỏ. Để trống nếu sản phẩm không cần chọn size.</div>
+      <label class="form-label fw-semibold small">Mỗi dòng là một lựa chọn khách có thể mua</label>
+      @php
+        $variantLines = old('variants_text', implode("\n", $product->variant_options ?? []));
+      @endphp
+      <textarea name="variants_text" class="form-control @error('variants_text') is-invalid @enderror" rows="5" placeholder="Size M màu đen&#10;Size L màu đen&#10;Size XL màu trắng">{{ $variantLines }}</textarea>
+      @error('variants_text')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+      <div class="form-text mt-2">Ví dụ quần áo: <code>Size M màu đen</code>. Ví dụ điện thoại: <code>256GB xanh</code>. Để trống nếu sản phẩm không cần chọn biến thể.</div>
     </div>
   </div>
 </div>
 
 @push('scripts')
 <script>
-function handleLoaiChange(sel) {
-  const newInput = document.getElementById('loai_new');
-  const hint     = document.getElementById('loai_new_hint');
+function handleCategoryChange(sel) {
+  const fields = document.getElementById('new_category_fields');
+  const nameInput = document.getElementById('new_category_name');
   if (sel.value === '__new__') {
     sel.removeAttribute('name');
-    newInput.setAttribute('name', 'loai');
-    newInput.style.display = '';
-    newInput.focus();
-    hint.style.display = '';
+    fields.style.display = '';
+    nameInput.focus();
     sel.style.display = 'none';
   }
 }
-function cancelNewLoai() {
-  const sel      = document.getElementById('loai_select');
-  const newInput = document.getElementById('loai_new');
-  const hint     = document.getElementById('loai_new_hint');
+function cancelNewCategory() {
+  const sel = document.getElementById('category_select');
+  const fields = document.getElementById('new_category_fields');
+  const nameInput = document.getElementById('new_category_name');
   sel.setAttribute('name', 'loai');
   sel.value = '';
   sel.style.display = '';
-  newInput.removeAttribute('name');
-  newInput.value = '';
-  newInput.style.display = 'none';
-  hint.style.display = 'none';
+  nameInput.value = '';
+  fields.style.display = 'none';
 }
 function switchTab(tab) {
   const fileDiv = document.getElementById('tab-file');

@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
-use App\Services\GoogleDriveService;
+use App\Services\CloudinaryService;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -22,12 +23,11 @@ class ProductsTest extends TestCase
         parent::setUp();
         Storage::fake('public');
 
-        // Mock GoogleDriveService để tránh kết nối thật trong test
-        $this->mock(GoogleDriveService::class, function ($mock) {
+        // Mock CloudinaryService để tránh kết nối thật trong test
+        $this->mock(CloudinaryService::class, function ($mock) {
             $mock->shouldReceive('uploadImage')->andReturnUsing(function ($file) {
-                return 'https://drive.google.com/uc?export=view&id=fake_test_id_'.$file->getClientOriginalName();
+                return 'https://cdn.example.test/products/'.$file->getClientOriginalName();
             });
-            $mock->shouldReceive('deleteFile')->andReturn(null);
         });
 
         // Tạo admin user cho tests
@@ -57,6 +57,148 @@ class ProductsTest extends TestCase
             'so_luong' => 10,
             'trang_thai' => 'con',
         ]);
+    }
+
+    public function test_them_hai_san_pham_cung_ten_tao_slug_khong_trung(): void
+    {
+        $data = [
+            'ten_sp' => 'Áo polo nam',
+            'gia' => '500000',
+            'so_luong' => '10',
+            'trang_thai' => 'con',
+        ];
+
+        $this->actingAs($this->admin)->post('/products', $data)->assertRedirect();
+        $this->actingAs($this->admin)->post('/products', $data)->assertRedirect();
+
+        $this->assertDatabaseHas('products', ['slug' => 'ao-polo-nam']);
+        $this->assertDatabaseHas('products', ['slug' => 'ao-polo-nam-2']);
+    }
+
+    public function test_them_san_pham_voi_thuong_hieu_bien_the_mo_ta_va_nhieu_anh(): void
+    {
+        $response = $this->actingAs($this->admin)->post('/products', [
+            'ten_sp' => 'iPhone 15',
+            'brand_name' => 'Apple',
+            'mo_ta' => "iPhone 15\n- 128GB đen\n- 256GB xanh",
+            'gia' => '25000000',
+            'so_luong' => '10',
+            'trang_thai' => 'con',
+            'anh' => 'https://cdn.example.test/products/iphone-main.jpg',
+            'image_urls' => "https://cdn.example.test/products/iphone-side.jpg\nhttps://cdn.example.test/products/iphone-back.jpg",
+            'variants_text' => "128GB đen\n256GB xanh\n512GB trắng",
+        ]);
+
+        $response->assertRedirect();
+        $product = Product::where('ten_sp', 'iPhone 15')->firstOrFail();
+
+        $this->assertDatabaseHas('brands', ['name' => 'Apple', 'slug' => 'apple']);
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'brand_id' => $product->brand_id,
+            'mo_ta' => "iPhone 15\n- 128GB đen\n- 256GB xanh",
+        ]);
+        $this->assertDatabaseHas('product_variants', ['product_id' => $product->id, 'name' => '256GB xanh']);
+        $this->assertDatabaseCount('product_images', 3);
+        $this->assertSame(['128GB đen', '256GB xanh', '512GB trắng'], $product->fresh()->variant_options);
+    }
+
+    public function test_them_san_pham_co_the_tao_danh_muc_con_theo_duong_dan(): void
+    {
+        $parent = Category::create([
+            'name' => 'Thời trang nam',
+            'slug' => 'thoi-trang-nam',
+            'is_new' => false,
+        ]);
+
+        $response = $this->actingAs($this->admin)->post('/products', [
+            'ten_sp' => 'Áo polo',
+            'new_category_name' => 'Áo nam',
+            'new_category_parent_id' => $parent->id,
+            'gia' => '500000',
+            'so_luong' => '10',
+            'trang_thai' => 'con',
+        ]);
+
+        $response->assertRedirect();
+        $child = Category::where('name', 'Áo nam')->firstOrFail();
+        $product = Product::where('ten_sp', 'Áo polo')->firstOrFail();
+
+        $this->assertSame($parent->id, $child->parent_id);
+        $this->assertTrue($child->is_new);
+        $this->assertSame($child->slug, $product->loai);
+        $this->assertSame('Thời trang nam > Áo nam', Product::getLoaiList()[$child->slug]);
+    }
+
+    public function test_admin_xem_danh_muc_se_tat_nhan_moi_va_khong_the_tao_vong_lap(): void
+    {
+        $parent = Category::create([
+            'name' => 'Thời trang nữ',
+            'slug' => 'thoi-trang-nu',
+            'is_new' => true,
+        ]);
+        $child = Category::create([
+            'name' => 'Áo nữ',
+            'slug' => 'ao-nu',
+            'parent_id' => $parent->id,
+            'is_new' => true,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->patchJson(route('admin.categories.seen', $parent))
+            ->assertOk();
+        $this->assertFalse($parent->fresh()->is_new);
+
+        $this->actingAs($this->admin)->put(route('admin.categories.update', $parent), [
+            'name' => $parent->name,
+            'slug' => $parent->slug,
+            'parent_id' => $child->id,
+        ])->assertSessionHasErrors('parent_id');
+    }
+
+    public function test_sua_slug_danh_muc_giu_lien_ket_san_pham(): void
+    {
+        $category = Category::create([
+            'name' => 'Áo nam',
+            'slug' => 'ao-nam',
+            'is_new' => false,
+        ]);
+        $product = Product::create([
+            'ten_sp' => 'Áo polo',
+            'loai' => $category->slug,
+            'gia' => 500000,
+            'so_luong' => 10,
+            'trang_thai' => 'con',
+        ]);
+
+        $this->actingAs($this->admin)->put(route('admin.categories.update', $category), [
+            'name' => 'Áo polo nam',
+            'slug' => 'ao-polo-nam',
+        ])->assertRedirect();
+
+        $this->assertSame('ao-polo-nam', $product->fresh()->loai);
+    }
+
+    public function test_gio_hang_luu_bien_the_tu_do_voi_khoa_an_toan(): void
+    {
+        $product = Product::create([
+            'ten_sp' => 'iPhone 15',
+            'gia' => 25000000,
+            'so_luong' => 10,
+            'trang_thai' => 'con',
+        ]);
+        $product->variants()->create(['name' => '256GB xanh']);
+
+        $this->actingAs($this->admin)
+            ->withHeader('X-Requested-With', 'XMLHttpRequest')
+            ->postJson('/cart/add', [
+                'product_id' => $product->id,
+                'so_luong' => 1,
+                'size' => '256GB xanh',
+            ])->assertOk();
+
+        $cartKey = $product->id.'_'.sha1('256GB xanh');
+        $this->assertSame('256GB xanh', session('cart')[$cartKey]['size']);
     }
 
     // Thêm SP thất bại - Trống tên
@@ -312,7 +454,7 @@ class ProductsTest extends TestCase
         $response = $this->actingAs($this->admin)->delete(route('products.destroy', $product_id));
         $response->assertRedirect();
 
-        $this->assertDatabaseMissing('products', [
+        $this->assertSoftDeleted('products', [
             'id' => $product_id,
         ]);
     }

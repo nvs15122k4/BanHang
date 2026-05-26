@@ -44,14 +44,14 @@ class CartController extends Controller
                 $subtotal = $discountedPrice * $item['so_luong'];
                 $total += $subtotal;
                 $items[] = [
-                    'cart_key'  => $cartKey,
-                    'product'   => $product,
-                    'so_luong'  => $item['so_luong'],
-                    'size'      => $item['size'] ?? 'default',
-                    'gia_goc'   => $product->gia,
-                    'gia_ban'   => $discountedPrice,
-                    'promo'     => $promo,
-                    'subtotal'  => $subtotal,
+                    'cart_key' => $cartKey,
+                    'product' => $product,
+                    'so_luong' => $item['so_luong'],
+                    'size' => $item['size'] ?? 'default',
+                    'gia_goc' => $product->gia,
+                    'gia_ban' => $discountedPrice,
+                    'promo' => $promo,
+                    'subtotal' => $subtotal,
                 ];
             }
         }
@@ -66,70 +66,79 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'so_luong'   => 'required|integer|min:1',
-            'size'       => 'nullable|string|max:10',
+            'so_luong' => 'required|integer|min:1',
+            'size' => 'nullable|string|max:255',
         ]);
 
         $product = Product::findOrFail($request->product_id);
-        $availableSizes = array_values($product->sizes ?? []);
+        $availableSizes = $product->variant_options;
         $requiresSize = count($availableSizes) > 0;
-        $requestedSize = $request->filled('size') ? strtoupper(trim($request->input('size'))) : null;
+        $requestedValue = $request->filled('size') ? trim($request->input('size')) : null;
+        $requestedSize = $requestedValue === null ? null : collect($availableSizes)->first(
+            fn ($availableSize) => mb_strtolower($availableSize) === mb_strtolower($requestedValue)
+        );
 
         if ($product->trang_thai !== 'con' || $product->so_luong <= 0) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Sản phẩm này hiện không còn hàng!'], 422);
             }
+
             return back()->with('error', 'Sản phẩm này hiện không còn hàng!');
         }
 
-        if ($requiresSize && ! $requestedSize) {
-            $msg = 'Sản phẩm này bắt buộc chọn size. Vui lòng chọn size trước khi thêm vào giỏ hàng.';
+        if ($requiresSize && ! $requestedValue) {
+            $msg = 'Sản phẩm này bắt buộc chọn biến thể. Vui lòng chọn trước khi thêm vào giỏ hàng.';
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'message' => $msg,
+                    'variant_required' => true,
+                    'variants' => $availableSizes,
                     'size_required' => true,
                     'sizes' => $availableSizes,
                 ], 422);
             }
+
             return back()->with('error', $msg);
         }
 
         if ($requiresSize && ! in_array($requestedSize, $availableSizes, true)) {
-            $msg = 'Size đã chọn không hợp lệ cho sản phẩm này.';
+            $msg = 'Biến thể đã chọn không hợp lệ cho sản phẩm này.';
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => $msg], 422);
             }
+
             return back()->with('error', $msg);
         }
 
         $cart = $this->getCart();
         $size = $requiresSize ? $requestedSize : 'default';
-        $cartKey = "{$product->id}_{$size}";
-        $qty  = (int) $request->so_luong;
+        $cartKey = "{$product->id}_".sha1($size);
+        $qty = (int) $request->so_luong;
 
         $currentQty = isset($cart[$cartKey]) ? $cart[$cartKey]['so_luong'] : 0;
-        $newQty     = $currentQty + $qty;
+        $newQty = $currentQty + $qty;
 
         if ($newQty > $product->so_luong) {
             $msg = "Chỉ còn {$product->so_luong} sản phẩm trong kho!";
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => $msg], 422);
             }
+
             return back()->with('error', $msg);
         }
 
         $cart[$cartKey] = [
             'product_id' => $product->id,
-            'so_luong'   => $newQty,
-            'size'       => $size,
+            'so_luong' => $newQty,
+            'size' => $size,
         ];
         $this->saveCart($cart);
 
         if ($request->ajax()) {
             return response()->json([
-                'success'    => true,
-                'message'    => "Đã thêm \"{$product->ten_sp}\" vào giỏ hàng!",
+                'success' => true,
+                'message' => "Đã thêm \"{$product->ten_sp}\" vào giỏ hàng!",
                 'cart_count' => self::cartCount(),
             ]);
         }
@@ -146,7 +155,7 @@ class CartController extends Controller
 
         $cart = $this->getCart();
 
-        if (!isset($cart[$cartKey])) {
+        if (! isset($cart[$cartKey])) {
             return back()->with('error', 'Sản phẩm không tồn tại trong giỏ hàng!');
         }
 
@@ -182,6 +191,7 @@ class CartController extends Controller
     public function clear()
     {
         session()->forget('cart');
+
         return back()->with('success', 'Đã xóa toàn bộ giỏ hàng!');
     }
 
@@ -191,6 +201,7 @@ class CartController extends Controller
     public static function cartCount(): int
     {
         $cart = session('cart', []);
+
         return array_sum(array_column($cart, 'so_luong'));
     }
 }

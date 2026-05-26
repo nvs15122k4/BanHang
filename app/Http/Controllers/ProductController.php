@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\SanPhamExport;
 use App\Exports\ThongKeExport;
 use App\Models\AuditLog;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Promotion;
@@ -12,6 +13,8 @@ use App\Models\Review;
 use App\Services\ProductService;
 use App\Services\SizeRecommendationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -36,14 +39,14 @@ class ProductController extends Controller
         $totalValue = \DB::table('products')->sum('gia');
 
         // Lấy 8 sản phẩm mới nhất
-        $latestProducts = Product::where('trang_thai', 'con')
+        $latestProducts = Product::with(['productImages', 'variants'])->where('trang_thai', 'con')
             ->orderBy('created_at', 'desc')
             ->take(8)
             ->get();
 
         // Lấy danh sách sản phẩm có khuyến mãi
         $activePromotions = Promotion::currentlyActive()->with('items')->get();
-        $allProducts = Product::where('trang_thai', 'con')->with(['wishlists'])->limit(1000)->get();
+        $allProducts = Product::where('trang_thai', 'con')->with(['wishlists', 'productImages', 'variants'])->limit(1000)->get();
 
         $promoProducts = collect();
         foreach ($allProducts as $product) {
@@ -101,24 +104,41 @@ class ProductController extends Controller
 
         $request->validate([
             'ten_sp' => 'required|string|max:255',
-            'loai' => 'nullable|string|max:50',
+            'loai' => 'nullable|string|max:255|exists:categories,slug',
+            'new_category_name' => 'nullable|string|max:255',
+            'new_category_parent_id' => 'nullable|exists:categories,id',
+            'brand_name' => 'nullable|string|max:255',
             'mo_ta' => 'nullable|string',
             'gia' => 'required|integer|min:1',
             'so_luong' => 'required|integer|min:0',
             'trang_thai' => 'required|in:con,het',
             'anh_file' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'anh' => 'nullable|url|max:2048',
+            'image_files' => 'nullable|array',
+            'image_files.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'image_urls' => 'nullable|string',
+            'variants_text' => 'nullable|string',
             'sizes' => 'nullable|array',
-            'sizes.*' => 'string|in:XS,S,M,L,XL,XXL',
+            'sizes.*' => 'string|max:255',
         ]);
 
         try {
-            $data = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
-            $data['sizes'] = array_values($request->input('sizes', []));
+            $data = $request->only(['ten_sp', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
+            $data['loai'] = $this->resolveCategorySlug($request);
+            $data['brand_id'] = $this->resolveBrandId($request->input('brand_name'));
+            $variants = $this->parseVariants($request);
+            $galleryUrls = $this->parseImageUrls($request->input('image_urls'));
             $image = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
-            $product = $this->productService->createProduct($data, $image, $imageUrl);
+            $product = $this->productService->createProduct(
+                $data,
+                $image,
+                $imageUrl,
+                $variants,
+                $request->file('image_files', []),
+                $galleryUrls
+            );
             AuditLog::record('product_created', $product, "Created product {$product->ten_sp}", null, [
                 'ten_sp' => $product->ten_sp,
                 'gia' => $product->gia,
@@ -132,6 +152,8 @@ class ProductController extends Controller
             $redirect = $this->resolveRedirect($request->input('_ref'));
 
             return redirect($redirect)->with('success', 'Sản phẩm đã được tạo thành công!');
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
@@ -144,25 +166,33 @@ class ProductController extends Controller
     public function create()
     {
         $loaiList = Product::getLoaiList();
+        $categoryTree = Category::treeList();
+        $brands = Brand::orderBy('name')->get();
 
-        return view('admin.products.create', compact('loaiList'));
+        return view('admin.products.create', compact('loaiList', 'categoryTree', 'brands'));
     }
 
     public function show(Product $product)
     {
+        $product->loadMissing(['productImages', 'variants', 'brand', 'category']);
+
         if (request()->ajax() || request()->expectsJson()) {
             return response()->json([
                 'id' => $product->id,
                 'ten_sp' => $product->ten_sp,
                 'loai' => $product->loai,
                 'loai_label' => $product->loai_label,
+                'brand' => $product->brand?->name,
                 'mo_ta' => $product->mo_ta,
                 'gia' => $product->gia,
                 'so_luong' => $product->so_luong,
                 'trang_thai' => $product->trang_thai,
-                'sizes' => $product->sizes ?? [],
-                'requires_size' => count($product->sizes ?? []) > 0,
+                'variants' => $product->variant_options,
+                'sizes' => $product->variant_options,
+                'requires_variant' => count($product->variant_options) > 0,
+                'requires_size' => count($product->variant_options) > 0,
                 'image_path' => $product->image_path,
+                'images' => $product->productImages->pluck('image_url')->all(),
                 'created_at' => $product->created_at,
                 'updated_at' => $product->updated_at,
             ]);
@@ -170,6 +200,7 @@ class ProductController extends Controller
 
         $relatedProducts = Product::where('loai', $product->loai)
             ->where('id', '!=', $product->id)
+            ->with(['productImages', 'variants'])
             ->take(4)
             ->get();
 
@@ -231,7 +262,11 @@ class ProductController extends Controller
         $sizeRecommendation = null;
         if (auth()->check()) {
             $user = auth()->user();
-            if ($user->height && $user->weight) {
+            $hasClothingSize = collect($product->variant_options)->contains(
+                fn ($option) => preg_match('/\b(?:XS|S|M|L|XL|XXL)\b/i', $option)
+            );
+
+            if ($user->height && $user->weight && $hasClothingSize) {
                 $sizeService = new SizeRecommendationService;
                 $sizeRecommendation = $sizeService->recommendSize($user->height, $user->weight);
             }
@@ -258,23 +293,30 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        $product->loadMissing(['productImages', 'variants', 'brand']);
+
         if (request()->ajax() || request()->expectsJson()) {
             return response()->json([
                 'id' => $product->id,
                 'ten_sp' => $product->ten_sp,
                 'loai' => $product->loai,
+                'brand' => $product->brand?->name,
                 'mo_ta' => $product->mo_ta,
                 'gia' => $product->gia,
                 'so_luong' => $product->so_luong,
                 'trang_thai' => $product->trang_thai,
+                'variants' => $product->variant_options,
+                'images' => $product->productImages->pluck('image_url')->all(),
                 'image_path' => $product->image_path,
                 'created_at' => $product->created_at,
                 'updated_at' => $product->updated_at,
             ]);
         }
         $loaiList = Product::getLoaiList();
+        $categoryTree = Category::treeList();
+        $brands = Brand::orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'loaiList'));
+        return view('admin.products.edit', compact('product', 'loaiList', 'categoryTree', 'brands'));
     }
 
     public function update(Request $request, Product $product)
@@ -283,28 +325,51 @@ class ProductController extends Controller
 
         $request->validate([
             'ten_sp' => 'required|string|max:255',
-            'loai' => 'nullable|string|max:50',
+            'loai' => 'nullable|string|max:255|exists:categories,slug',
+            'new_category_name' => 'nullable|string|max:255',
+            'new_category_parent_id' => 'nullable|exists:categories,id',
+            'brand_name' => 'nullable|string|max:255',
             'mo_ta' => 'nullable|string',
             'gia' => 'required|integer|min:1',
             'so_luong' => 'required|integer|min:0',
             'trang_thai' => 'required|in:con,het',
             'anh_file' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'anh' => 'nullable|url|max:2048',
+            'image_files' => 'nullable|array',
+            'image_files.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'image_urls' => 'nullable|string',
+            'variants_text' => 'nullable|string',
             'sizes' => 'nullable|array',
-            'sizes.*' => 'string|in:XS,S,M,L,XL,XXL',
+            'sizes.*' => 'string|max:255',
         ]);
 
         try {
-            $data = $request->only(['ten_sp', 'loai', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
-            $data['sizes'] = array_values($request->input('sizes', []));
+            $data = $request->only(['ten_sp', 'mo_ta', 'gia', 'so_luong', 'trang_thai']);
+            $data['loai'] = $this->resolveCategorySlug($request);
+            $data['brand_id'] = $request->has('brand_name')
+                ? $this->resolveBrandId($request->input('brand_name'))
+                : $product->brand_id;
+            $variants = $request->has('variants_text') || $request->has('sizes')
+                ? $this->parseVariants($request)
+                : $product->variant_options;
+            $galleryUrls = $this->parseImageUrls($request->input('image_urls'));
             $image = $request->hasFile('anh_file') ? $request->file('anh_file') : null;
             $imageUrl = $request->filled('anh') ? trim($request->input('anh')) : null;
 
-            $oldValues = $product->only(['ten_sp', 'loai', 'gia', 'so_luong', 'trang_thai']);
-            $updatedProduct = $this->productService->updateProduct($product, $data, $image, $imageUrl);
+            $oldValues = $product->only(['ten_sp', 'loai', 'brand_id', 'gia', 'so_luong', 'trang_thai']);
+            $updatedProduct = $this->productService->updateProduct(
+                $product,
+                $data,
+                $image,
+                $imageUrl,
+                $variants,
+                $request->file('image_files', []),
+                $galleryUrls
+            );
             AuditLog::record('product_updated', $updatedProduct, "Updated product {$updatedProduct->ten_sp}", $oldValues, [
                 'ten_sp' => $updatedProduct->ten_sp,
                 'loai' => $updatedProduct->loai,
+                'brand_id' => $updatedProduct->brand_id,
                 'gia' => $updatedProduct->gia,
                 'so_luong' => $updatedProduct->so_luong,
                 'trang_thai' => $updatedProduct->trang_thai,
@@ -317,6 +382,8 @@ class ProductController extends Controller
             $redirect = $this->resolveRedirect($request->input('_ref'));
 
             return redirect($redirect)->with('success', 'Sản phẩm đã được cập nhật thành công!');
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
@@ -376,6 +443,70 @@ class ProductController extends Controller
 
         $price = preg_replace('/\D+/', '', (string) $request->input('gia'));
         $request->merge(['gia' => $price]);
+    }
+
+    private function resolveBrandId(?string $brandName): ?int
+    {
+        $brandName = trim((string) $brandName);
+
+        if ($brandName === '') {
+            return null;
+        }
+
+        $slug = Str::slug($brandName) ?: 'brand';
+
+        return Brand::firstOrCreate(
+            ['slug' => $slug],
+            ['name' => $brandName]
+        )->id;
+    }
+
+    private function resolveCategorySlug(Request $request): ?string
+    {
+        $categoryName = trim((string) $request->input('new_category_name'));
+
+        if ($categoryName !== '') {
+            return Category::create([
+                'name' => $categoryName,
+                'slug' => Category::generateUniqueSlug($categoryName),
+                'parent_id' => $request->integer('new_category_parent_id') ?: null,
+                'icon' => 'fas fa-tag',
+                'is_new' => true,
+            ])->slug;
+        }
+
+        return $request->filled('loai') ? (string) $request->input('loai') : null;
+    }
+
+    private function parseVariants(Request $request): array
+    {
+        if ($request->filled('variants_text')) {
+            return collect(preg_split('/\R/u', (string) $request->input('variants_text')))
+                ->map(fn ($variant) => ltrim(trim($variant), "-* \t"))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+        }
+
+        return array_values($request->input('sizes', []));
+    }
+
+    private function parseImageUrls(?string $value): array
+    {
+        $urls = collect(preg_split('/\R/u', (string) $value))
+            ->map(fn ($url) => trim($url))
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($urls->contains(fn ($url) => ! filter_var($url, FILTER_VALIDATE_URL))) {
+            throw ValidationException::withMessages([
+                'image_urls' => 'Mỗi dòng ảnh bổ sung phải là một URL hợp lệ.',
+            ]);
+        }
+
+        return $urls->all();
     }
 
     /**

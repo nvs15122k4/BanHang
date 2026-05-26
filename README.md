@@ -51,7 +51,7 @@ Dự án phù hợp cho:
 
 | Nhóm chức năng | Chi tiết |
 | --- | --- |
-| Tài khoản | Đăng ký, đăng nhập, đăng xuất, đổi mật khẩu |
+| Tài khoản | Đăng ký, xác nhận email, đăng nhập, đăng xuất, đặt lại/đổi mật khẩu |
 | Hồ sơ | Cập nhật thông tin cá nhân, ảnh đại diện, chiều cao, cân nặng |
 | Địa chỉ | Thêm, sửa, xóa và đặt địa chỉ giao hàng mặc định |
 | Sản phẩm | Xem danh sách, tìm kiếm, lọc, xem chi tiết, xem tồn kho |
@@ -77,6 +77,7 @@ Dự án phù hợp cho:
 | Khuyến mãi | Quản lý chương trình khuyến mãi |
 | Kho hàng | Nhập kho, xuất kho, điều chỉnh tồn kho, xem lịch sử kho |
 | Báo cáo | Xuất danh sách sản phẩm và thống kê ra Excel |
+| Nhật ký thao tác | Xem audit log các thay đổi đã được hệ thống ghi nhận |
 
 ---
 
@@ -147,7 +148,7 @@ Ghi lịch sử tồn kho
 | Database | MySQL |
 | Authentication | Custom Laravel authentication |
 | Authorization | Middleware kiểm tra quyền admin |
-| API authentication | Laravel Sanctum |
+| API authentication | Laravel Sanctum đã cài; `routes/api.php` hiện chưa được bootstrap nạp |
 | Lưu trữ hình ảnh | Cloudinary, local storage fallback |
 | Export dữ liệu | Maatwebsite Excel |
 | Dev environment | Docker, Nginx, PHP-FPM, MySQL, Node/Vite |
@@ -169,15 +170,15 @@ database/
 
 resources/
   views/                Giao diện Blade
-  css/                  CSS giao diện
-  js/                   JavaScript frontend
 
 routes/
   web.php               Route giao diện web
-  api.php               Route API
+  api.php               Định nghĩa API dự kiến, hiện chưa được bootstrap nạp
 
 public/
   images/               Hình ảnh public
+  css/                  CSS được Vite build
+  js/                   JavaScript frontend được Vite build
 
 docker/
   nginx/                Cấu hình Nginx cho Docker
@@ -193,8 +194,8 @@ docker/
 | --- | --- |
 | PHP | 8.3+ |
 | Composer | 2.x |
-| Node.js | 20+ hoặc 22+ |
-| npm | Theo Node.js |
+| Node.js | 22.12.0+ |
+| npm | 10+ |
 | MySQL | 8.x |
 
 ### Chạy bằng Docker
@@ -280,7 +281,7 @@ http://localhost:5173
 
 ## Tài khoản admin mẫu
 
-Dự án có seeder tạo tài khoản admin mẫu. Sau khi cấu hình database và chạy migration, có thể tạo tài khoản admin bằng lệnh:
+Dự án có seeder tạo tài khoản admin mẫu cho môi trường phát triển trống. Lệnh seed có ghi dữ liệu vào database; không chạy trên database đang cần bảo toàn dữ liệu/admin khi chưa kiểm tra và xác nhận theo `AGENTS.md`.
 
 ```bash
 php artisan db:seed
@@ -333,6 +334,8 @@ docker compose --env-file .env.docker down
 
 > Không chạy các lệnh reset database trên môi trường có dữ liệu thật nếu chưa sao lưu.
 
+- `supportAiAgent/` chứa bản đồ module đã đối chiếu code ngày 2026-05-26, nhưng thư mục này hiện bị `.gitignore` loại trừ.
+- `routes/api.php` tồn tại dưới dạng định nghĩa dự kiến; kiểm tra ngày 2026-05-26 bằng `php artisan route:list` cho kết quả không có route `/api/*`.
 - Các file `.env` thật không nên đưa lên Git.
 - File `.env.docker.example` chỉ là file mẫu để tạo cấu hình Docker riêng.
 - Lệnh `docker compose down -v` sẽ xóa volume MySQL của Docker.

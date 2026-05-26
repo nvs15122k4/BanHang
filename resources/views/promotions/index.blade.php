@@ -82,7 +82,7 @@
                                             </div>
                                         @endif
 
-                                        @if($product->anh)
+                                        @if($product->anh || $product->productImages->isNotEmpty())
                                             <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="product-img">
                                         @else
                                             <div class="product-img d-flex align-items-center justify-content-center bg-light">
@@ -108,9 +108,9 @@
                                     <div class="product-actions">
                                         @if($product->so_luong > 0)
                                             <form action="{{ route('cart.add') }}" method="POST" class="w-full"
-                                                  data-requires-size="{{ count($product->sizes ?? []) > 0 ? '1' : '0' }}"
+                                                  data-requires-size="{{ count($product->variant_options) > 0 ? '1' : '0' }}"
                                                   data-product-name="{{ $product->ten_sp }}"
-                                                  data-size-options='@json($product->sizes ?? [])'>
+                                                  data-size-options="{{ json_encode($product->variant_options, JSON_UNESCAPED_UNICODE) }}">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                 <input type="hidden" name="so_luong" value="1">

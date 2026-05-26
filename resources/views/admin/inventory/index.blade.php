@@ -99,7 +99,7 @@
                     <tr class="{{ $product->so_luong === 0 ? 'table-danger' : ($product->so_luong < 10 ? 'table-warning' : '') }}">
                         <td class="font-medium-custom">#{{ $product->id }}</td>
                         <td>
-                            @if($product->anh)
+                            @if($product->anh || $product->productImages->isNotEmpty())
                                 <img src="{{ $product->image_path }}"
                                      class="w-50-px-custom h-50-px-custom object-cover">
                             @else

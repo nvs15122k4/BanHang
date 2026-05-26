@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-2">
             <select name="loai" class="form-select">
-                <option value="">-- Loại SP --</option>
+                <option value="">-- Danh mục --</option>
                 @foreach(\App\Models\Product::getLoaiList() as $key => $label)
                     <option value="{{ $key }}" {{ request('loai') === $key ? 'selected' : '' }}>{{ $label }}</option>
                 @endforeach
@@ -63,7 +63,7 @@
                     <th class="uix-d4260d2a3e">ID</th>
                     <th class="uix-1b3b307987">Ảnh</th>
                     <th>Tên sản phẩm</th>
-                    <th class="uix-9ed99d3bca">Loại</th>
+                    <th class="uix-9ed99d3bca">Danh mục</th>
                     <th class="uix-3b33845933">Giá</th>
                     <th class="uix-807e51198d">Số lượng</th>
                     <th class="uix-9ed99d3bca">Tồn kho</th>

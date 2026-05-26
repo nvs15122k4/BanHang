@@ -104,7 +104,7 @@
     <div class="col-lg-6">
         <div class="chart-card">
             <div class="chart-header">
-                <h3 class="chart-title"><i class="fas fa-box-open me-2"></i>Phân loại sản phẩm</h3>
+                <h3 class="chart-title"><i class="fas fa-box-open me-2"></i>Sản phẩm theo danh mục</h3>
             </div>
             <div class="chart-container">
                 <canvas id="categoryPie"></canvas>

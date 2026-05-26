@@ -302,11 +302,33 @@ docker compose --env-file .env.docker exec app php artisan db:seed
 
 ## Lệnh hữu ích
 
+### Testing
+
+Test suite sử dụng MySQL database riêng `banhang_testing` theo cấu hình trong `phpunit.xml`.
+Các test dùng `RefreshDatabase` / `DatabaseTruncation`, vì vậy không được trỏ testing vào database ứng dụng `banhang`.
+
+Tạo database testing một lần trên MySQL local:
+
+```sql
+CREATE DATABASE banhang_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Nếu chạy test trong Docker, tạo database testing trong MySQL container một lần:
+
+```bash
+docker compose --env-file .env.docker exec mysql sh -lc 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS banhang_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"'
+```
+
+Sau đó chạy test:
+
+```bash
+php artisan test
+```
+
 ### Laravel
 
 ```bash
 php artisan route:list
-php artisan test
 php artisan storage:link
 php artisan cache:clear
 php artisan config:clear

@@ -42,7 +42,7 @@
                             <tr>
                                 <td class="td-product" data-label="Product">
                                     <div class="d-flex align-items-center gap-3">
-                                        @if($product->anh)
+                                        @if($product->anh || $product->productImages->isNotEmpty())
                                             <img src="{{ $product->image_path }}" class="cart-item-img" alt="{{ $product->ten_sp }}">
                                         @else
                                             <div class="cart-item-img d-flex align-items-center justify-content-center">

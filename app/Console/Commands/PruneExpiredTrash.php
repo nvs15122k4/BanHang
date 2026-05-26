@@ -20,10 +20,15 @@ class PruneExpiredTrash extends Command
 
         $deletedProducts = 0;
         Product::onlyTrashed()
+            ->with('productImages')
             ->where('deleted_at', '<=', $expiredBefore)
             ->chunkById(100, function ($products) use ($cloudinary, &$deletedProducts): void {
                 foreach ($products as $product) {
-                    $this->deleteProductImage($product->anh, $cloudinary);
+                    collect([$product->anh])
+                        ->merge($product->productImages->pluck('image_url'))
+                        ->filter()
+                        ->unique()
+                        ->each(fn ($image) => $this->deleteProductImage($image, $cloudinary));
                     $product->forceDelete();
                     $deletedProducts++;
                 }

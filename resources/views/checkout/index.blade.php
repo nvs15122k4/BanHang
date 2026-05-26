@@ -110,7 +110,7 @@
                         @foreach($items as $item)
                             @php $product = $item['product']; @endphp
                             <div class="order-item">
-                                @if($product->anh)
+                                @if($product->anh || $product->productImages->isNotEmpty())
                                     <img src="{{ $product->image_path }}" class="item-img" alt="{{ $product->ten_sp }}">
                                 @else
                                     <div class="item-img d-flex align-items-center justify-content-center border">

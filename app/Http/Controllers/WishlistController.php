@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wishlist;
 use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,27 +15,27 @@ class WishlistController extends Controller
     public function toggle(Request $request, int $productId)
     {
         $product = Product::findOrFail($productId);
-        $user    = Auth::user();
+        $user = Auth::user();
 
         $existing = Wishlist::where('user_id', $user->id)
-                            ->where('product_id', $productId)
-                            ->first();
+            ->where('product_id', $productId)
+            ->first();
 
         if ($existing) {
             $existing->delete();
             $inWishlist = false;
-            $message    = "Đã xóa \"{$product->ten_sp}\" khỏi danh sách yêu thích!";
+            $message = "Đã xóa \"{$product->ten_sp}\" khỏi danh sách yêu thích!";
         } else {
             Wishlist::create(['user_id' => $user->id, 'product_id' => $productId]);
             $inWishlist = true;
-            $message    = "Đã thêm \"{$product->ten_sp}\" vào danh sách yêu thích!";
+            $message = "Đã thêm \"{$product->ten_sp}\" vào danh sách yêu thích!";
         }
 
         if ($request->ajax()) {
             return response()->json([
-                'success'     => true,
+                'success' => true,
                 'in_wishlist' => $inWishlist,
-                'message'     => $message,
+                'message' => $message,
             ]);
         }
 
@@ -49,7 +49,7 @@ class WishlistController extends Controller
     {
         $wishlists = Auth::user()
             ->wishlists()
-            ->with(['product'])
+            ->with(['product.productImages', 'product.variants'])
             ->latest()
             ->paginate(12);
 

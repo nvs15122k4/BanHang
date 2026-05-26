@@ -179,7 +179,7 @@
                     </a>
                     <form method="POST" action="{{ route('products.destroy', $product) }}" id="del-{{ $product->id }}">
                         @csrf @method('DELETE')
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="stConfirmDelete({title:'Chuyển sản phẩm vào thùng rác',pill:'{{ addslashes($product->ten_sp) }}',message:'Sản phẩm sẽ được lưu lại và có thể khôi phục trong 60 ngày.',onConfirm:()=>document.getElementById('del-{{ $product->id }}').submit()})">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="stConfirmDelete({title:'Chuyển sản phẩm vào thùng rác',pill:'{{ addslashes($product->ten_sp) }}',message:'Sản phẩm sẽ được ẩn khỏi catalog và chuyển vào thùng rác.',note:'Sản phẩm có thể được khôi phục trong 60 ngày.',confirmText:'CHUYỂN VÀO THÙNG RÁC',onConfirm:()=>document.getElementById('del-{{ $product->id }}').submit()})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </form>

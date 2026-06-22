@@ -35,7 +35,7 @@ class Product extends Model
 
     public static function generateUniqueSlug(string $name): string
     {
-        $baseSlug = Str::slug($name) ?: 'san-pham';
+        $baseSlug = Str::slug(Str::limit($name, 100, '')) ?: 'san-pham';
         $slug = $baseSlug;
         $suffix = 2;
 

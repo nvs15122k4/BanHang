@@ -24,7 +24,9 @@ class CategoryController extends Controller
         $totalProducts = Product::count();
         $inStockProducts = Product::where('trang_thai', 'con')->count();
         $outOfStockProducts = Product::where('trang_thai', 'het')->count();
+        $categories = Category::with('children')->whereNull('parent_id')->get();
         $loaiList = Product::getLoaiList();
+        $selectedCategoryModel = $category;
 
         return view('products.index', compact(
             'category',
@@ -32,6 +34,8 @@ class CategoryController extends Controller
             'totalProducts',
             'inStockProducts',
             'outOfStockProducts',
+            'categories',
+            'selectedCategoryModel',
             'loaiList'
         ));
     }

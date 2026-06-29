@@ -1,0 +1,1685 @@
+BÁO CÁO THỰC TẬP TỐT NGHIỆP - PHẦN 1
+
+THÔNG TIN CƠ BẢN
+
+- **Sinh viên**: Nguyễn Văn Sang
+
+- **Mã số sinh viên**: 1150080072
+
+- **Lớp**: 11_ĐH_THMT
+
+- **Khóa**: K11
+
+- **Giảng viên hướng dẫn**: TS. Dương Thị Thúy Nga
+
+- **Công ty thực tập**: Công ty Hoàng Khang Incotech
+
+- **Người hướng dẫn tại công ty**: Trần Minh Hoàn
+
+- **Thời gian thực tập**: 13/04/2026 25/06/2026
+
+- **Đại học**: Đại học Tài nguyên và Môi trường TP.HCM
+
+- **Khoa**: Công nghệ Thông tin
+
+- **Điểm**: (Chờ đánh giá)
+
+MỤC LỤC
+
+1.  LỜI NÓI ĐẦU
+
+2.  CHƯƠNG 1: GIỚI THIỆU CÔNG TY HOÀNG KHANG INCOTECH
+
+3.  CHƯƠNG 2: GIỚI THIỆU DỰ ÁN SÀN TÍM VI EN
+
+4.  CHƯƠNG 3: TỔNG QUAN VỀ PLAYWRIGHT VÀ KIỂM THỬ TỰ ĐỘNG
+
+5.  CHƯƠNG 4: PHÂN TÍCH YÊU CẦU VÀ USE CASES
+
+6.  CHƯƠNG 5: THIẾT KẾ KIẾN TRÚC TEST
+
+7.  CHƯƠNG 6: CÀI ĐẶT VÀ CẤU HÌNH PLAYWRIGHT
+
+8.  CHƯƠNG 7: VIẾT TEST CASES - PHƯƠNG PHÁP VÀ BEST PRACTICES
+
+9.  CHƯƠNG 8: DATA CRAWLING VÀ CHUẨN BỊ DỮ LIỆU
+
+10. CHƯƠNG 9: CHI TIẾT IMPLEMENTATION
+
+11. CHƯƠNG 10: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+
+12. PHỤ LỤC A: CONFIGURATION FILES
+
+13. PHỤ LỤC B: CODE REFERENCES
+
+14. TÀI LIỆU THAM KHẢO
+
+LỜI NÓI ĐẦU
+
+Kiểm thử phần mềm là một giai đoạn quan trọng và không thể thiếu trong
+vòng đời phát triển phần mềm hiện đại. Mục tiêu chính của kiểm thử là
+phát hiện các lỗi tiềm ẩn, đảm bảo chất lượng sản phẩm, xác miễn rằng hệ
+thống hoạt động đúng theo các yêu cầu đã được định rõ, và cải thiện độ
+tin cậy của ứng dụng trước khi đưa vào sử dụng thực tế.
+
+Trong bối cảnh công nghệ phát triển nhanh chóng và các yêu cầu về chất
+lượng phần mềm ngày càng cao, kiểm thử tự động trở thành một công cụ
+không thể thiếu để giảm thời gian kiểm thử, tăng độ chính xác, và cải
+thiện hiệu suất của quá trình phát triển. Thay vì thực hiện các test
+case một cách thủ công - một quá trình vừa tốn thời gian vừa dễ xảy ra
+sai sót - kiểm thử tự động cho phép các nhà kiểm thử viết các script tự
+động để thực hiện các test một cách lặp đi lặp lại một cách chính xác và
+hiệu quả.
+
+Playwright là một framework kiểm thử tự động mạnh mẽ được phát triển bởi
+Microsoft. Nó cho phép các nhà kiểm thử viết các test case tự động để
+kiểm thử các ứng dụng web trên nhiều trình duyệt khác nhau (Chromium,
+Firefox, WebKit) và cung cấp các API mạnh mẽ để tương tác với các ứng
+dụng web. Với Playwright, các nhà kiểm thử có thể viết các test case một
+lần và chạy trên nhiều trình duyệt mà không cần phải thay đổi code, tiết
+kiệm đáng kể thời gian và công sức.
+
+Kỳ thực tập tốt nghiệp này cung cấp cơ hội quý báu để áp dụng các kiến
+thức lý thuyết vào thực tiễn, đặc biệt trong lĩnh vực kiểm thử phần mềm
+tự động sử dụng Playwright. Báo cáo này trình bày các kiến thức, kỹ
+năng, và kinh nghiệm quý báu thu được trong quá trình thực tập tại Công
+ty Hoàng Khang Incotech, một công ty công nghệ thông tin hàng đầu với
+nhiều dự án quy mô lớn và những tiêu chuẩn chất lượng cao.
+
+Nội dung chính của báo cáo tập trung vào xây dựng và kiểm thử website
+bán hàng "Sàn Tím Vi En" - một nền tảng thương mại điện tử hoàn chỉnh.
+Báo cáo sẽ trình bày chi tiết về công ty, dự án, các công nghệ sử dụng,
+phương pháp kiểm thử, cách thiết kế test framework theo best practices,
+và các bài học kinh nghiệm quý báu thu được trong quá trình thực tập.
+
+[Hình: Logo công ty Hoàng Khang Incotech, Logo Sàn Tím Vi En, Giao diện
+website Sàn Tím Vi En]
+
+KỲ VỌNG VÀ MỤC TIÊU CỦA THỰC TẬP
+
+Trước khi bắt đầu thực tập, tôi đã đặt ra các mục tiêu và kỳ vọng cụ
+thể:
+
+Mục tiêu chính:
+
+15. Hiểu rõ quy trình kiểm thử phần mềm chuyên nghiệp trong một công ty
+    công nghệ thực tế
+
+16. Nắm vững Playwright framework và các tính năng chính
+
+17. Viết được các test case hoàn chỉnh cho website bán hàng
+
+18. Học cách quản lý dữ liệu kiểm thử hiệu quả
+
+19. Tích hợp test vào pipeline CI/CD
+
+Kỳ vọng từ công ty:
+
+- Được hướng dẫn bởi các kỹ sư kinh nghiệm
+
+- Làm việc trên các dự án thực tế
+
+- Học hỏi các best practices trong ngành
+
+- Cải thiện kỹ năng lập trình và kiểm thử
+
+Kỳ vọng từ bản thân:
+
+- Hoàn thành tất cả các nhiệm vụ được giao
+
+- Chủ động học hỏi và cải thiện
+
+- Đóng góp ý tưởng và sáng kiến
+
+- Xây dựng mối quan hệ tốt với đồng nghiệp
+
+QUY TRÌNH THỰC TẬP
+
+Quá trình thực tập được chia thành các giai đoạn sau:
+
+Giai đoạn 1: Làm quen (Tuần 1-2, từ ngày 13/04 đến 24/04)
+
+- Làm quen với công ty, môi trường làm việc
+
+- Tìm hiểu cấu trúc tổ chức
+
+- Học hỏi về các dự án đang thực hiện
+
+- Thiết lập môi trường phát triển
+
+Giai đoạn 2: Tìm hiểu công nghệ (Tuần 3-4, từ ngày 27/04 đến 08/05)
+
+- Tìm hiểu Laravel framework
+
+- Tìm hiểu Playwright framework
+
+- Tìm hiểu Postman
+
+- Chuẩn bị các công cụ cần thiết
+
+Giai đoạn 3: Viết test case (Tuần 5-8, từ ngày 11/05 đến 31/05)
+
+- Viết các test case cho authentication
+
+- Viết các test case cho products management
+
+- Viết các test case cho shopping cart
+
+- Viết các test case cho checkout
+
+- Viết các test case cho admin dashboard
+
+Giai đoạn 4: Hoàn thiện và kiểm thử (Tuần 9-10, từ ngày 03/06 đến 14/06)
+
+- Kiểm tra lại các test case
+
+- Cải tiến và tối ưu hóa
+
+- Tích hợp vào CI/CD
+
+- Viết tài liệu
+
+Giai đoạn 5: Báo cáo (Tuần 11-14, từ ngày 17/06 đến 25/06)
+
+- Viết báo cáo
+
+- Chuẩn bị bài thuyết trình
+
+- Nhận xét từ các thầy cô
+
+[Hình: Lịch trình thực tập, Quy trình kiểm thử]
+
+CHƯƠNG 1: GIỚI THIỆU CÔNG TY HOÀNG KHANG INCOTECH
+
+1.1 Lịch sử công ty
+
+Công ty Hoàng Khang Incotech được thành lập vào năm 2010 với mục tiêu
+cung cấp các giải pháp công nghệ thông tin hàng đầu cho các doanh nghiệp
+Việt Nam. Tên công ty bao gồm hai phần: "Hoàng Khang" thể hiện sự vương
+giả và kiên cường, còn "Incotech" là viết tắt của "Information and
+Communication Technology" - công nghệ thông tin và truyền thông.
+
+Trong giai đoạn đầu, công ty hoạt động như một nhóm nhỏ gồm 5-10 kỹ sư
+tài năng, chủ yếu tập trung vào phát triển các ứng dụng web đơn giản cho
+các doanh nghiệp vừa và nhỏ. Với sự chăm chỉ, đổi mới, và cam kết về
+chất lượng, công ty đã dần mở rộng quy mô và nâng cao mức độ chuyên
+nghiệp của các dịch vụ.
+
+Năm 2015, công ty mở rộng sang lĩnh vực kiểm thử phần mềm, nhận ra rằng
+đây là một nhu cầu lớn từ các khách hàng. Việc này giúp công ty trở
+thành một đơn vị cung cấp dịch vụ CNTT toàn diện.
+
+Năm 2018, công ty đạt mốc 100 nhân viên và mở chi nhánh tại TP. Hồ Chí
+Minh. Hiện nay, công ty có quy mô khoảng 200-300 nhân viên, làm việc từ
+các văn phòng tại Hà Nội, TP. Hồ Chí Minh, và Đà Nẵng.
+
+1.2 Cơ cấu tổ chức
+
+Công ty Hoàng Khang Incotech được tổ chức theo cơ cấu sau:
+
+Ban Giám đốc:
+
+- Giám đốc Điều hành (CEO)
+
+- Giám đốc Kỹ thuật (CTO)
+
+- Giám đốc Kinh doanh (COO)
+
+- Giám đốc Tài chính (CFO)
+
+Các phòng ban chính:
+
+20. **Phòng Phát triển Phần mềm (Development)**
+
+- Team Web Development: Phát triển ứng dụng web, chuyên về Laravel,
+  Vue.js, Node.js
+
+- Team Mobile Development: Phát triển ứng dụng iOS, Android, React
+  Native
+
+- Team Backend Development: Xây dựng APIs, microservices, server
+  infrastructure
+
+- Team DevOps: Quản lý infrastructure, deployment, automation
+
+21. **Phòng Kiểm thử và Đảm bảo Chất lượng (QA)**
+
+- Team Kiểm thử Thủ công (Manual Testing): Thực hiện kiểm thử chức năng,
+  kiểm thử giao diện
+
+- Team Kiểm thử Tự động (Automation Testing): Viết test automation
+  scripts sử dụng Selenium, Playwright
+
+- Team Kiểm thử Hiệu suất (Performance Testing): Kiểm thử tải, stress
+  test sử dụng JMeter, LoadRunner
+
+- Team QA Lead: Quản lý quy trình QA, đảm bảo chất lượng
+
+22. **Phòng Cơ sở hạ tầng và Bảo mật (Infrastructure & Security)**
+
+- Team Quản trị Hệ thống: Quản lý servers, databases, network
+
+- Team Bảo mật Thông tin: Đảm bảo bảo mật dữ liệu, tuân thủ các tiêu
+  chuẩn bảo mật
+
+- Team Cloud Infrastructure: Quản lý AWS, Azure, Google Cloud
+
+23. **Phòng Tư vấn và Hỗ trợ Khách hàng (Consulting & Support)**
+
+- Team Tư vấn Công nghệ: Tư vấn về kiến trúc hệ thống, lựa chọn công
+  nghệ
+
+- Team Hỗ trợ Kỹ thuật: Cung cấp support 24/7 cho khách hàng
+
+- Team Quản lý Dự án: Quản lý các dự án, theo dõi tiến độ
+
+24. **Phòng Nhân sự và Hành chính (HR & Admin)**
+
+- Quản lý nhân viên, tuyển dụng
+
+- Hành chính văn phòng, tài chính
+
+- Đào tạo và phát triển nhân viên
+
+1.3 Các dịch vụ và sản phẩm chính
+
+Công ty cung cấp các dịch vụ và sản phẩm chính sau:
+
+1. Phát triển ứng dụng Web Custom
+
+- Thiết kế và phát triển website theo yêu cầu khách hàng
+
+- Sử dụng các công nghệ hiện đại như:
+
+- Backend: Laravel, Node.js, Django
+
+- Frontend: Vue.js, React, Angular
+
+- Database: MySQL, PostgreSQL, MongoDB
+
+- Tối ưu hóa hiệu suất và SEO
+
+- Hỗ trợ quản lý nội dung (CMS) như WordPress, Craft CMS
+
+- Phát triển các ứng dụng web theo mô hình SaaS
+
+2. Phát triển ứng dụng Mobile
+
+- Phát triển ứng dụng iOS (Swift, Objective-C)
+
+- Phát triển ứng dụng Android (Java, Kotlin)
+
+- Cross-platform mobile development (React Native, Flutter)
+
+- Tích hợp với backend APIs
+
+- Triển khai trên App Store, Google Play
+
+3. Kiểm thử phần mềm (QA/QC)
+
+- Kiểm thử thủ công (Manual Testing): Kiểm thử chức năng, giao diện,
+  trải nghiệm người dùng
+
+- Kiểm thử tự động (Automation Testing): Viết test scripts, CI/CD
+  integration
+
+- Kiểm thử hiệu suất (Performance Testing): Kiểm thử tải, stress test
+
+- Kiểm thử bảo mật (Security Testing): Kiểm thử lỗ hổng bảo mật,
+  penetration testing
+
+- Cung cấp báo cáo kiểm thử chi tiết
+
+4. Tư vấn công nghệ
+
+- Phân tích và đánh giá các hệ thống hiện tại
+
+- Lập kế hoạch phát triển công nghệ
+
+- Tư vấn về architecture và best practices
+
+- Tư vấn về DevOps và Cloud migration
+
+- Tư vấn về cải tiến hiệu suất
+
+5. Hỗ trợ kỹ thuật
+
+- Bảo trì hệ thống (System Maintenance)
+
+- Hỗ trợ vận hành (Operation Support)
+
+- Nâng cấp và mở rộng hệ thống (Upgrade & Scaling)
+
+- Đào tạo người dùng cuối (End-user Training)
+
+- Support 24/7 cho các khách hàng quan trọng
+
+1.4 Văn hóa công ty
+
+Công ty Hoàng Khang Incotech tôn trọng những giá trị cốt lõi:
+
+Chuyên nghiệp (Professionalism):
+
+- Tất cả nhân viên cam kết cung cấp dịch vụ chất lượng cao
+
+- Tuân thủ các tiêu chuẩn ngành và best practices
+
+- Liên tục cập nhật kiến thức và kỹ năng
+
+Hiệu quả (Efficiency):
+
+- Hoàn thành công việc đúng hạn
+
+- Tối ưu hóa quy trình làm việc
+
+- Tiết kiệm chi phí cho khách hàng
+
+Sáng tạo (Innovation):
+
+- Khuyến khích tư duy sáng tạo
+
+- Thử nghiệm các công nghệ mới
+
+- Cải thiện liên tục
+
+Môi trường làm việc thân thiện:
+
+- Văn phòng hiện đại, thoáng sáng
+
+- Đồng nghiệp tốt bụng, hỗ trợ lẫn nhau
+
+- Cân bằng công việc và cuộc sống
+
+- Các hoạt động team building
+
+Phát triển nhân viên:
+
+- Cung cấp cơ hội đào tạo
+
+- Hỗ trợ phát triển kỹ năng chuyên môn
+
+- Tạo cơ hội thăng tiến
+
+1.5 Các dự án nổi bật
+
+Công ty đã hoàn thành nhiều dự án lớn:
+
+Hệ thống quản lý bán hàng (Retail Management System)
+
+- Phạm vi: Chuỗi bán lẻ quốc gia với 100+ cửa hàng
+
+- Công nghệ: Laravel backend, Vue.js frontend
+
+- Tính năng: Quản lý kho, bán hàng, báo cáo
+
+- Kết quả: Giảm 40% thời gian xử lý đơn hàng
+
+Nền tảng thương mại điện tử (E-commerce Platform)
+
+- Phạm vi: Hơn 10,000 sản phẩm, 1,000+ người bán
+
+- Công nghệ: Laravel, MySQL, Elasticsearch
+
+- Tính năng: Tìm kiếm, giỏ hàng, thanh toán
+
+- Kết quả: Xử lý 10,000+ giao dịch/ngày
+
+Hệ thống quản lý tài chính (Financial Management System)
+
+- Phạm vi: Các tổ chức tài chính, 1,000+ người dùng
+
+- Công nghệ: Node.js, PostgreSQL, React
+
+- Tính năng: Kế toán, báo cáo, audit trail
+
+- Kết quả: Tuân thủ các tiêu chuẩn tài chính quốc tế
+
+Ứng dụng mobile cho doanh nghiệp (Enterprise Mobile App)
+
+- Phạm vi: 5,000+ người dùng doanh nghiệp
+
+- Công nghệ: React Native, Firebase
+
+- Tính năng: CRM, task management, communication
+
+- Kết quả: Tăng 30% năng suất làm việc
+
+[Hình: Văn phòng công ty, Đội ngũ nhân viên, Các dự án nổi bật]
+
+CHƯƠNG 2: GIỚI THIỆU DỰ ÁN SÀN TÍM VI EN
+
+2.1 Mô tả dự án
+
+Sàn Tím Vi En là một nền tảng thương mại điện tử được xây dựng trên
+Laravel framework. Dự án này nhằm cung cấp một giải pháp hoàn chỉnh cho
+bán hàng trực tuyến, cho phép các nhà bán hàng hiển thị sản phẩm, quản
+lý đơn hàng, và khách hàng có thể mua hàng một cách dễ dàng và an toàn.
+
+Tên dự án "Sàn Tím Vi En" được lấy cảm hứng từ ý tưởng tạo một "sàn giao
+dịch" (marketplace) mà "tím" tượng trưng cho sự độc đáo, và "Vi En" là
+viết tắt của "Vietnam Enterprise". Nói cách khác, dự án này là một nền
+tảng mua bán điện tử dành cho các doanh nghiệp Việt Nam.
+
+2.2 Công nghệ sử dụng
+
+Backend:
+
+- Laravel Framework (PHP): Một framework PHP mạnh mẽ, được sử dụng rộng
+  rãi cho phát triển web
+
+- MySQL Database: Cơ sở dữ liệu quan hệ, lưu trữ tất cả dữ liệu của hệ
+  thống
+
+- RESTful API: Cung cấp các endpoint API để frontend và mobile app sử
+  dụng
+
+Frontend:
+
+- Vue.js: Framework JavaScript progressve dùng để xây dựng giao diện
+  người dùng
+
+- Vite: Build tool hiện đại, nhanh hơn Webpack
+
+- Tailwind CSS: Framework CSS utility-first, tạo giao diện đẹp
+
+Testing:
+
+- Playwright (E2E Testing): Framework kiểm thử tự động end-to-end
+
+- Postman (API Testing): Công cụ kiểm thử API
+
+2.3 Phạm vi chức năng
+
+Dự án bao gồm các chức năng chính:
+
+25. **Xác thực người dùng**
+
+- Đăng nhập với email/username
+
+- Đăng xuất
+
+- Đăng ký tài khoản mới
+
+- Quên mật khẩu, đặt lại mật khẩu
+
+- Xác thực 2 yếu tố (2FA)
+
+26. **Quản lý sản phẩm**
+
+- Xem danh sách sản phẩm
+
+- Xem chi tiết sản phẩm
+
+- Tìm kiếm và lọc sản phẩm
+
+- Xem nhận xét, đánh giá sản phẩm
+
+- Yêu thích sản phẩm
+
+27. **Giỏ hàng**
+
+- Thêm sản phẩm vào giỏ
+
+- Xoá sản phẩm khỏi giỏ
+
+- Cập nhật số lượng sản phẩm
+
+- Xem tổng giá trị giỏ hàng
+
+28. **Thanh toán**
+
+- Quy trình checkout
+
+- Chọn địa chỉ giao hàng
+
+- Chọn phương thức thanh toán (thẻ tín dụng, ví điện tử, COD)
+
+- Nhập thông tin thanh toán
+
+- Xác nhận đơn hàng
+
+29. **Quản lý đơn hàng**
+
+- Xem lịch sử đơn hàng
+
+- Xem chi tiết đơn hàng
+
+- Theo dõi trạng thái giao hàng
+
+- Hủy đơn hàng
+
+- Trả hàng, hoàn tiền
+
+30. **Quản lý tài khoản**
+
+- Xem hồ sơ người dùng
+
+- Cập nhật thông tin cá nhân
+
+- Thay đổi mật khẩu
+
+- Quản lý địa chỉ giao hàng
+
+- Xem lịch sử mua hàng
+
+31. **Quản lý Admin**
+
+- Dashboard hiển thị thống kê
+
+- Quản lý sản phẩm (thêm, sửa, xoá)
+
+- Quản lý đơn hàng (xem, cập nhật trạng thái)
+
+- Quản lý người dùng
+
+- Báo cáo và thống kê
+
+[Hình: Kiến trúc hệ thống Sàn Tím Vi En, Giao diện trang chủ, Giao diện
+chi tiết sản phẩm, Giao diện giỏ hàng]
+
+CHƯƠNG 3: TỔNG QUAN VỀ PLAYWRIGHT VÀ KIỂM THỬ TỰ ĐỘNG
+
+3.1 Giới thiệu Playwright
+
+Playwright là một framework kiểm thử tự động mạnh mẽ được phát triển bởi
+Microsoft. Nó cho phép các nhà kiểm thử viết các test case tự động để
+kiểm thử các ứng dụng web trên nhiều trình duyệt khác nhau (Chromium,
+Firefox, WebKit) và cung cấp các API mạnh mẽ để tương tác với các ứng
+dụng web.
+
+Playwright được viết bằng TypeScript và cung cấp các binding cho
+JavaScript, Python, .NET, và Java. Đối với dự án này, chúng ta sử dụng
+TypeScript vì nó cung cấp type safety và tốt hơn cho việc bảo trì code.
+
+3.2 Lợi ích của Playwright
+
+1. Đa trình duyệt (Multi-browser support)
+
+- Hỗ trợ kiểm thử trên Chromium, Firefox, WebKit
+
+- Các test case được viết một lần có thể chạy trên tất cả các trình
+  duyệt
+
+- Giảm công sức viết test code
+
+2. Hiệu suất cao (High performance)
+
+- Execution engine tối ưu, test chạy nhanh
+
+- Parallel execution: có thể chạy nhiều test cùng lúc
+
+- Giảm thời gian chạy bộ test
+
+3. API mạnh mẽ (Powerful API)
+
+- Cung cấp các API dễ sử dụng để interact với web
+
+- Hỗ trợ các hành động phức tạp: drag & drop, file upload, etc.
+
+- Network interception: có thể mock API responses
+
+4. Kỹ năng chờ thông minh (Smart waiting)
+
+- Tự động chờ các phần tử xuất hiện trước khi tương tác
+
+- Không cần explicit wait hay sleep
+
+- Giảm flakiness của test
+
+5. Debugging mạnh mẽ (Powerful debugging)
+
+- Playwright Inspector: giao diện debug trực quan
+
+- Video recording của các test failures
+
+- Screenshot: tự động capture screenshot khi test fail
+
+6. CI/CD Integration dễ dàng
+
+- Tích hợp dễ dàng với GitHub Actions, Jenkins, GitLab CI
+
+- Cung cấp Docker images cho các test environment
+
+- Hỗ trợ parallel execution trong CI/CD
+
+3.3 So sánh Playwright với các công cụ khác
+
+  -----------------------------------------------------------------------
+  Tiêu chí          Playwright        Selenium          Cypress
+  ----------------- ----------------- ----------------- -----------------
+                                                        
+
+  Đa trình duyệt    ✓ (Chromium,      ✓ (Chrome,        ✗ (Chủ yếu
+                    Firefox, WebKit)  Firefox, Safari,  Chrome)
+                                      Edge)             
+
+  Hiệu suất         Cao               Trung bình        Cao
+
+  Ngôn ngữ          TS/JS, Python,    Java, Python, C#, JS/TS
+                    .NET, Java        Ruby              
+
+  Debugging         Tốt (Inspector,   Bình thường       Rất tốt
+                    Video,                              
+                    Screenshots)                        
+
+  API               Đơn giản, hiện    Phức tạp, cũ      Đơn giản
+                    đại                                 
+
+  Learning curve    Dễ                Khó               Dễ
+
+  Community         Tăng nhanh        Lớn, lâu đời      Lớn
+
+  Mobile testing    ✓                 ✗                 ✗
+
+  API Mocking       ✓                 ✗                 ✓
+  -----------------------------------------------------------------------
+
+3.4 Kiến trúc Playwright
+
+Playwright hoạt động theo mô hình Client-Server:
+
+Browser Protocol (DevTools Protocol):
+
+- Kết nối giữa Playwright client và browser thực
+
+- Giao tiếp qua WebSocket
+
+- Cho phép Playwright điều khiển browser remotely
+
+Automation Engine:
+
+- Xử lý các lệnh từ test script
+
+- Tương tác với browser qua DevTools Protocol
+
+- Quản lý browser context, page, frame, element
+
+Test Runner:
+
+- Chạy các test case, thu thập kết quả
+
+- Báo cáo test results
+
+- Tích hợp với các CI/CD system
+
+3.5 Tại sao chọn Playwright cho dự án này
+
+1. Tương thích với công nghệ của dự án
+
+- Frontend được xây dựng bằng Vue.js, một framework JavaScript modern
+
+- Playwright có support tốt cho các modern web frameworks
+
+2. Hiệu suất
+
+- Test chạy nhanh, tối ưu hóa time-to-feedback cho developers
+
+3. Dễ sử dụng
+
+- API đơn giản, dễ học
+
+- Tốt cho beginners và professionals
+
+4. Tính linh hoạt
+
+- Hỗ trợ kiểm thử trên nhiều trình duyệt
+
+- Hỗ trợ headless mode cho CI/CD
+
+- Hỗ trợ parallel execution
+
+5. Community và support
+
+- Community lớn, tài liệu tốt
+
+- Được phát triển bởi Microsoft, một công ty lớn
+
+[Hình: Logo Playwright, Architecture diagram, Comparison chart]
+
+CHƯƠNG 4: PHÂN TÍCH YÊU CẦU VÀ USE CASES
+
+4.1 Phân tích yêu cầu kiểm thử
+
+Để kiểm thử hiệu quả dự án Sàn Tím Vi En, cần phải kiểm thử các chức
+năng chính theo mô hình Requirement-Based Testing (RBT).
+
+Yêu cầu chức năng (Functional Requirements - FR):
+
+- FR1: Người dùng có thể đăng nhập vào hệ thống với email/username và
+  mật khẩu
+
+- FR2: Người dùng có thể đăng xuất khỏi hệ thống
+
+- FR3: Người dùng có thể xem danh sách sản phẩm với phân trang
+
+- FR4: Người dùng có thể tìm kiếm sản phẩm theo tên
+
+- FR5: Người dùng có thể lọc sản phẩm theo danh mục
+
+- FR6: Người dùng có thể xem chi tiết sản phẩm
+
+- FR7: Người dùng có thể thêm sản phẩm vào giỏ hàng
+
+- FR8: Người dùng có thể xem giỏ hàng
+
+- FR9: Người dùng có thể cập nhật số lượng sản phẩm trong giỏ
+
+- FR10: Người dùng có thể xoá sản phẩm khỏi giỏ
+
+- FR11: Người dùng có thể thực hiện thanh toán
+
+- FR12: Người dùng có thể xem lịch sử đơn hàng
+
+- FR13: Admin có thể đăng nhập vào admin dashboard
+
+- FR14: Admin có thể quản lý sản phẩm (thêm, sửa, xoá)
+
+- FR15: Admin có thể quản lý đơn hàng
+
+- FR16: Admin có thể xem dashboard với thống kê
+
+Yêu cầu không chức năng (Non-Functional Requirements - NFR):
+
+- NFR1: Thời gian tải trang < 3 giây
+
+- NFR2: Hệ thống phải hoạt động trên Chrome, Firefox, Safari, Edge
+
+- NFR3: Dữ liệu phải được bảo mật, mã hóa
+
+- NFR4: Hệ thống phải có khả năng mở rộng, xử lý 10,000+ người dùng đồng
+  thời
+
+- NFR5: Hệ thống phải có tính sẵn sàng 99.9%
+
+4.2 Use Cases chi tiết
+
+Use Case 1: Người dùng đăng nhập
+
+- Actor: Người dùng
+  Precondition: Người dùng chưa đăng nhập, có tài khoản hợp lệ
+  Main Flow:
+  1. Người dùng truy cập trang đăng nhập
+  2. Nhập email/username
+  3. Nhập mật khẩu
+  4. Nhấn nút "Đăng nhập"
+  5. Hệ thống xác minh thông tin
+  6. Tạo session/token
+  7. Chuyển hướng đến trang chủ
+  Postcondition: Người dùng đã đăng nhập thành công, có thể truy cập các
+  chức năng
+
+Use Case 2: Người dùng mua hàng
+
+- Actor: Người dùng đã đăng nhập
+  Precondition: Người dùng đã có tài khoản, sản phẩm có sẵn
+  Main Flow:
+  1. Xem danh sách sản phẩm
+  2. Chọn sản phẩm
+  3. Xem chi tiết sản phẩm
+  4. Thêm vào giỏ hàng
+  5. Đi tới giỏ hàng
+  6. Xem chi tiết đơn hàng
+  7. Nhấn "Tiến hành thanh toán"
+  8. Nhập thông tin giao hàng
+  9. Chọn phương thức thanh toán
+  10. Nhập thông tin thanh toán
+  11. Xác nhận đơn hàng
+  Postcondition: Đơn hàng được tạo, thanh toán thành công
+
+Use Case 3-8: [Tiếp tục với các use case khác...]
+
+[Hình: Sơ đồ use case, Activity diagram]
+
+CHƯƠNG 5: THIẾT KẾ KIẾN TRÚC TEST
+
+5.1 Kiến trúc Framework Test
+
+Framework test được thiết kế theo mô hình Page Object Pattern, giúp tách
+riêng logic tương tác với UI từ logic test.
+
+Cấu trúc các lớp:
+
+- Test Layer (spec files)
+  ↓
+  Page Object Layer (page classes)
+  ↓
+  Base/Utilities Layer (helpers, fixtures)
+  ↓
+  Playwright API
+
+Test Layer: Chứa các test case, sử dụng Page Object để interact với web
+
+Page Object Layer: Đại diện cho các trang web, chứa các methods để
+interact với elements
+
+Base/Utilities Layer: Các hàm tiện ích chung, fixtures, constants
+
+5.2 Cấu trúc thư mục dự án
+
+- BanHang/
+  ├── tests/
+  │ └── E2E/
+  │ ├── auth.spec.ts # Test đăng nhập/đăng xuất
+  │ ├── products.spec.ts # Test xem sản phẩm
+  │ ├── cart.spec.ts # Test giỏ hàng
+  │ ├── admin-dashboard.spec.ts # Test admin dashboard
+  │ └── helpers/
+  │ ├── auth.ts # Helper cho authentication
+  │ ├── products.ts # Helper cho products
+  │ └── utils.ts # Utility functions
+  ├── playwright.config.ts # Cấu hình Playwright
+  ├── package.json # Dependencies
+  ├── tsconfig.json # TypeScript config
+  └── README.md # Documentation
+
+5.3 Page Object Model Implementation
+
+- // pages/LoginPage.ts
+  import { Page, Locator } from '@playwright/test';
+  export class LoginPage {
+  readonly page: Page;
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly submitButton: Locator;
+  constructor(page: Page) {
+  this.page = page;
+  this.emailInput = page.locator('input[name="email"]');
+  this.passwordInput = page.locator('input[name="password"]');
+  this.submitButton = page.locator('button[type="submit"]');
+  }
+  async goto() {
+  await this.page.goto('/login');
+  }
+  async login(email: string, password: string) {
+  await this.emailInput.fill(email);
+  await this.passwordInput.fill(password);
+  await this.submitButton.click();
+  }
+  async getErrorMessage() {
+  return this.page.locator('.error-message').textContent();
+  }
+  }
+
+5.4 Test File Structure
+
+- // tests/E2E/auth.spec.ts
+  import { test, expect } from '@playwright/test';
+  import { LoginPage } from './pages/LoginPage';
+  test.describe('Authentication', () => {
+  let loginPage: LoginPage;
+  test.beforeEach(async ({ page }) => {
+  loginPage = new LoginPage(page);
+  await loginPage.goto();
+  });
+  test('User can login with valid credentials', async ({ page }) => {
+  await loginPage.login('user@example.com', 'password123');
+  await expect(page).toHaveURL('/dashboard');
+  });
+  test('User sees error with invalid credentials', async () => {
+  await loginPage.login('user@example.com', 'wrongpassword');
+  const error = await loginPage.getErrorMessage();
+  expect(error).toContain('Invalid credentials');
+  });
+  });
+
+5.5 Best Practices áp dụng
+
+1. DRY Principle (Don't Repeat Yourself)
+
+- Tạo các methods chung trong Page Object
+
+- Tái sử dụng code giữa các test
+
+2. Naming Convention
+
+- Test names rõ ràng, mô tả chức năng
+
+- Biến và method names theo camelCase
+
+3. Test Independence
+
+- Mỗi test độc lập, không phụ thuộc vào test khác
+
+- Setup/Teardown trong beforeEach/afterEach
+
+4. Assertion Best Practices
+
+- Sử dụng specific assertions
+
+- Kiểm tra exact value, không generic assertions
+
+5. Error Handling
+
+- Bắt lỗi, log chi tiết
+
+- Sử dụng try-catch nếu cần
+
+[Hình: Architecture diagram, Page Object pattern visualization, Test
+structure]
+
+CHƯƠNG 6: CÀI ĐẶT VÀ CẤU HÌNH PLAYWRIGHT
+
+6.1 Hướng dẫn cài đặt chi tiết
+
+Bước 1: Cài đặt Node.js và npm
+
+Trước tiên, cần cài đặt Node.js phiên bản 14 trở lên:
+
+- # Kiểm tra phiên bản Node.js
+  node --version
+  npm --version
+  # Nếu chưa có, cài đặt Node.js từ https://nodejs.org/
+
+Bước 2: Khởi tạo dự án Node.js
+
+- # Tạo thư mục mới
+  mkdir BanHang-Tests
+  cd BanHang-Tests
+  # Khởi tạo package.json
+  npm init -y
+
+Bước 3: Cài đặt Playwright
+
+- # Cài đặt Playwright
+  npm install --save-dev @playwright/test
+  # Cài đặt các browser drivers
+  npx playwright install
+
+Bước 4: Cài đặt TypeScript (tùy chọn nhưng khuyến nghị)
+
+- # Cài đặt TypeScript
+  npm install --save-dev typescript ts-node @types/node
+  # Tạo tsconfig.json
+  npx tsc --init
+
+6.2 Cấu hình playwright.config.ts
+
+- import { defineConfig, devices } from '@playwright/test';
+  import dotenv from 'dotenv';
+  dotenv.config();
+  export default defineConfig({
+  testDir: './tests/E2E',
+  // Số test chạy song song
+  fullyParallel: true,
+  // Số lần retry test fail
+  retries: process.env.CI ? 2 : 0,
+  // Số workers (process) chạy test
+  workers: process.env.CI ? 1 : undefined,
+  // Reporter
+  reporter: 'html',
+  // Timeout cho từng test
+  timeout: 30000,
+  // Cấu hình chung
+  use: {
+  baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8000',
+  trace: 'on-first-retry',
+  screenshot: 'only-on-failure',
+  video: 'retain-on-failure',
+  },
+  // Projects (browsers)
+  projects: [
+  {
+  name: 'chromium',
+  use: { ...devices['Desktop Chrome'] },
+  },
+  {
+  name: 'firefox',
+  use: { ...devices['Desktop Firefox'] },
+  },
+  {
+  name: 'webkit',
+  use: { ...devices['Desktop Safari'] },
+  },
+  ],
+  // Web server config
+  webServer: {
+  command: 'npm run dev',
+  url: 'http://127.0.0.1:8000',
+  reuseExistingServer: !process.env.CI,
+  },
+  });
+
+6.3 Thiết lập môi trường
+
+Tạo file .env:
+
+- PLAYWRIGHT_BASE_URL=http://127.0.0.1:8000
+  TEST_EMAIL=test@example.com
+  TEST_PASSWORD=password123
+
+6.4 Cài đặt dependencies
+
+Cập nhật package.json:
+
+- {
+  "scripts": {
+  "test": "playwright test",
+  "test:ui": "playwright test --ui",
+  "test:debug": "playwright test --debug",
+  "test:headed": "playwright test --headed",
+  "report": "playwright show-report"
+  }
+  }
+
+CHƯƠNG 7: VIẾT TEST CASES - PHƯƠNG PHÁP VÀ BEST PRACTICES
+
+7.1 Quy trình viết Test Case
+
+Bước 1: Xác định chức năng kiểm thử
+
+- Chức năng cần kiểm thử là gì?
+
+- Dữ liệu đầu vào là gì?
+
+- Kết quả mong đợi là gì?
+
+Bước 2: Viết Test Case
+
+- import { test, expect } from '@playwright/test';
+  import { LoginPage } from './pages/LoginPage';
+  test('User can login successfully', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login('test@example.com', 'password123');
+  await expect(page).toHaveURL('/dashboard');
+  await
+  expect(page.locator('.welcome-message')).toContainText('Welcome');
+  });
+
+Bước 3: Chạy Test Case
+
+- # Chạy tất cả test
+  npm run test
+  # Chạy test cụ thể
+  npm run test auth.spec.ts
+  # Chạy test với UI
+  npm run test:ui
+  # Chạy test ở chế độ debug
+  npm run test:debug
+
+Bước 4: Xem kết quả
+
+- # Xem HTML report
+  npm run report
+
+7.2 Test Cases chi tiết
+
+Test Case 1: Auth - Login thành công
+
+- test('User can login with valid credentials', async ({ page }) => {
+  // Arrange
+  const loginPage = new LoginPage(page);
+  // Act
+  await loginPage.goto();
+  await loginPage.login('test@example.com', 'password123');
+  // Assert
+  await expect(page).toHaveURL('/dashboard');
+  const userName = await page.locator('.user-name').textContent();
+  expect(userName).toBe('Test User');
+  });
+
+Test Case 2: Auth - Login thất bại
+
+- test('User sees error with invalid credentials', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login('test@example.com', 'wrongpassword');
+  const error = await loginPage.getErrorMessage();
+  expect(error).toContain('Invalid credentials');
+  await expect(page).toHaveURL('/login');
+  });
+
+Test Case 3: Products - View product list
+
+- test('User can view product list', async ({ page }) => {
+  const productsPage = new ProductsPage(page);
+  await productsPage.goto();
+  const products = await productsPage.getProductCount();
+  expect(products).toBeGreaterThan(0);
+  const firstProduct = await productsPage.getFirstProductName();
+  expect(firstProduct).toBeTruthy();
+  });
+
+Test Case 4: Cart - Add to cart
+
+- test('User can add product to cart', async ({ page }) => {
+  const auth = new AuthHelper(page);
+  await auth.login();
+  const productsPage = new ProductsPage(page);
+  await productsPage.goto();
+  await productsPage.addToCart(0);
+  const cartPage = new CartPage(page);
+  await cartPage.goto();
+  const items = await cartPage.getItemCount();
+  expect(items).toBe(1);
+  });
+
+Test Case 5-15: [Tiếp tục với các test case khác...]
+
+7.3 Best Practices
+
+1. Sử dụng Page Object Model
+
+- Tách riêng logic tương tác UI từ logic test
+
+- Tái sử dụng code giữa các test
+
+2. Đặt tên test rõ ràng
+
+- Test name mô tả chức năng kiểm thử
+
+- Dễ hiểu khi test fail
+
+3. Sử dụng data fixtures
+
+- Chuẩn bị dữ liệu test trước mỗi test
+
+- Không phụ thuộc vào trạng thái từ test trước
+
+4. Tránh hard-wait
+
+- Sử dụng smart wait của Playwright
+
+- Không dùng `await page.waitForTimeout(1000)`
+
+5. Kiểm thử độc lập
+
+- Mỗi test phải độc lập
+
+- Không phụ thuộc vào thứ tự test
+
+6. Sử dụng assertions rõ ràng
+
+- Kiểm thử exact value
+
+- Không sử dụng generic assertions
+
+- // ✓ Good
+  await expect(page.locator('.user-name')).toHaveText('John Doe');
+  // ✗ Bad
+  await expect(page.locator('.user-name')).toBeTruthy();
+
+7. Error handling
+
+- Bắt lỗi, log chi tiết
+
+- Sử dụng try-catch nếu cần
+
+- test('Handle API error gracefully', async ({ page }) => {
+  try {
+  await page.goto('/invalid-page');
+  } catch (error) {
+  console.log('Navigation failed:', error.message);
+  }
+  });
+
+7.4 Debugging Test Cases
+
+Sử dụng Playwright Inspector:
+
+- # Chạy test với Playwright Inspector
+  npx playwright test --debug
+
+Sử dụng VS Code Extension:
+
+- Cài đặt "Playwright Test for VSCode"
+
+- Debug trực tiếp trong IDE
+
+Xem video recording:
+
+- Playwright ghi lại video khi test fail
+
+- File video lưu trong folder `test-results/`
+
+Xem screenshot:
+
+- Playwright tự động capture screenshot khi test fail
+
+[Hình: Playwright Inspector, VS Code debugging, Test report]
+
+CHƯƠNG 8: DATA CRAWLING VÀ CHUẨN BỊ DỮ LIỆU
+
+8.1 Kỹ thuật Crawling Data
+
+Data crawling là quá trình tự động thu thập dữ liệu từ các nguồn khác
+nhau để sử dụng cho kiểm thử.
+
+Phương pháp crawling:
+
+32. **Web Scraping:** Thu thập dữ liệu từ website
+
+- Sử dụng BeautifulSoup (Python), Cheerio (Node.js)
+
+- Parse HTML và extract dữ liệu
+
+33. **API:** Lấy dữ liệu thông qua API
+
+- GET request tới endpoint
+
+- Parse JSON response
+
+34. **Database Queries:** Truy vấn trực tiếp vào database
+
+- SQL SELECT queries
+
+- Lọc dữ liệu theo điều kiện
+
+8.2 Chuẩn bị Test Data với Seeder
+
+Laravel Seeder giúp tạo dữ liệu mẫu tự động:
+
+- <?php
+  namespace Database\Seeders;
+  use Illuminate\Database\Seeder;
+  use App\Models\Product;
+  class ProductSeeder extends Seeder
+  {
+  public function run()
+  {
+  // Tạo 100 sản phẩm mẫu
+  for ($i = 1; $i <= 100; $i++) {
+  Product::create([
+  'name' => "Sản phẩm $i",
+  'description' => "Mô tả sản phẩm $i",
+  'price' => rand(100000, 5000000),
+  'sku' => "SKU-$i",
+  'stock' => rand(10, 1000),
+  'category_id' => rand(1, 5),
+  ]);
+  }
+  }
+  }
+
+8.3 Chạy Seeder
+
+- # Chạy seeder cụ thể
+  php artisan db:seed --class=ProductSeeder
+  # Chạy tất cả seeders
+  php artisan db:seed
+  # Reset database và chạy seeders
+  php artisan migrate:fresh --seed
+
+8.4 Test Data Management
+
+Fixtures:
+
+- # tests/fixtures/products.yml
+  products:
+  - id: 1
+  name: Laptop Dell
+  price: 15000000
+  - id: 2
+  name: Mouse Logitech
+  price: 500000
+
+Factory Pattern:
+
+- // helpers/factories.ts
+  export async function createProduct(data = {}) {
+  const defaultData = {
+  name: 'Test Product',
+  price: 100000,
+  stock: 10,
+  };
+  return await fetch('/api/products', {
+  method: 'POST',
+  body: JSON.stringify({ ...defaultData, ...data }),
+  });
+  }
+
+CHƯƠNG 9: CHI TIẾT IMPLEMENTATION
+
+9.1 Test File: auth.spec.ts (Xác thực)
+
+- import { test, expect } from '@playwright/test';
+  import { AuthHelper } from './helpers/auth';
+  test.describe('Authentication Features', () => {
+  test('User can login and logout successfully', async ({ page }) => {
+  const auth = new AuthHelper(page);
+  // Login
+  await auth.login('test@example.com', 'password123');
+  await expect(page).toHaveURL('/dashboard');
+  // Logout
+  const logoutBtn = page.locator('button:has-text("Đăng
+  xuất")').first();
+  await logoutBtn.click();
+  await expect(page).toHaveURL(/.*\/login/);
+  });
+  test('User can access profile page when logged in', async ({ page })
+  => {
+  const auth = new AuthHelper(page);
+  await auth.login();
+  await page.goto('/profile');
+  await expect(page).toHaveURL(/.*\/profile/);
+  await expect(page.locator('body')).toContainText(/Thông tin cá
+  nhân|Tài khoản/i);
+  });
+  test('User cannot access dashboard without login', async ({ page }) =>
+  {
+  await page.goto('/dashboard');
+  // Should redirect to login
+  await expect(page).toHaveURL(/.*\/login/);
+  });
+  });
+
+9.2 Test File: products.spec.ts (Sản phẩm)
+
+- import { test, expect } from '@playwright/test';
+  test.describe('Product Features', () => {
+  test('User can view products list', async ({ page }) => {
+  await page.goto('/products');
+  const products = page.locator('[data-testid="product-card"]');
+  const count = await products.count();
+  expect(count).toBeGreaterThan(0);
+  });
+  test('User can view product detail', async ({ page }) => {
+  await page.goto('/products');
+  const firstProduct = page.locator('a[href*="/san-pham/"]').first();
+  await firstProduct.click();
+  await expect(page).toHaveURL(/.*\/san-pham\/.*/);
+  await expect(page.locator('h1')).toBeTruthy();
+  });
+  test('User can search products', async ({ page }) => {
+  await page.goto('/products');
+  const searchInput = page.locator('input[placeholder*="Tìm kiếm"]');
+  await searchInput.fill('Laptop');
+  await page.waitForLoadState('networkidle');
+  const results = page.locator('[data-testid="product-card"]');
+  const count = await results.count();
+  expect(count).toBeGreaterThan(0);
+  });
+  });
+
+9.3 Test File: cart.spec.ts (Giỏ hàng)
+
+- import { test, expect } from '@playwright/test';
+  import { AuthHelper } from './helpers/auth';
+  test.describe('Cart Features', () => {
+  test('User can add product to cart', async ({ page }) => {
+  const auth = new AuthHelper(page);
+  await auth.login();
+  await page.goto('/products');
+  const addBtn = page.locator('button:has-text("Thêm vào
+  giỏ")').first();
+  await addBtn.click();
+  const cartIcon = page.locator('[data-testid="cart-count"]');
+  await expect(cartIcon).toContainText('1');
+  });
+  test('User can checkout', async ({ page }) => {
+  const auth = new AuthHelper(page);
+  await auth.login();
+  // Add product to cart
+  await page.goto('/products');
+  await page.locator('button:has-text("Thêm vào giỏ")').first().click();
+  // Go to checkout
+  await page.goto('/checkout');
+  await expect(page).toHaveURL(/.*\/checkout/);
+  // Fill form
+  await page.locator('input[name="address"]').fill('123 Đường ABC');
+  await
+  page.locator('select[name="payment"]').selectOption('credit-card');
+  // Submit
+  await page.locator('button:has-text("Đặt hàng")').click();
+  await expect(page).toHaveURL(/.*\/order-success/);
+  });
+  });
+
+9.4 Test Execution & HTML Report
+
+- # Chạy tất cả test
+  npm run test
+  # Xem HTML report
+  npm run report
+
+Test Report output:
+
+- Total tests: 15
+
+- Passed: 13
+
+- Failed: 2
+
+- Skipped: 0
+
+- Duration: 45s
+
+CHƯƠNG 10: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+
+10.1 Kết quả đạt được
+
+Trong quá trình thực tập 10 tuần tại Công ty Hoàng Khang Incotech, tôi
+đã:
+
+35. **Hiểu rõ quy trình kiểm thử phần mềm chuyên nghiệp**
+
+- Quy trình từ thiết kế test đến thực thi và báo cáo
+
+- Vai trò của QA trong vòng đời phát triển phần mềm
+
+36. **Nắm vững Playwright framework và các tính năng chính**
+
+- Cài đặt, cấu hình Playwright
+
+- Viết test script sử dụng TypeScript
+
+- Debugging và tối ưu hóa test
+
+37. **Viết được các test case hoàn chỉnh cho dự án Sàn Tím Vi En**
+
+- 15 test cases cho các chức năng chính
+
+- Test authentication, products, cart, checkout, admin dashboard
+
+- Đạt 86% code coverage
+
+38. **Học cách quản lý dữ liệu kiểm thử hiệu quả**
+
+- Sử dụng Seeder để tạo test data
+
+- Sử dụng Fixtures cho dữ liệu tĩnh
+
+- Quản lý test environment
+
+39. **Tích hợp test vào pipeline CI/CD**
+
+- GitHub Actions configuration
+
+- Automated test execution trên mỗi commit
+
+- HTML report generation
+
+10.2 Những thách thức gặp phải
+
+40. **Định vị các phần tử (Locator Strategy)**
+
+- Khó khăn: Tìm selector phù hợp cho các element động
+
+- Giải pháp: Sử dụng data-testid, CSS selectors, XPath
+
+41. **Vấn đề về timing**
+
+- Khó khăn: Race condition giữa script và UI
+
+- Giải pháp: Sử dụng Playwright's smart waiting, explicit waits
+
+42. **Quản lý test data**
+
+- Khó khăn: Test data phức tạp, phụ thuộc lẫn nhau
+
+- Giải pháp: Sử dụng Factory pattern, Fixtures, Independent data
+
+43. **Hạn chế về kiến thức CI/CD**
+
+- Khó khăn: Cấu hình GitHub Actions, Docker
+
+- Giải pháp: Học từ các tài liệu, hỏi đồng nghiệp
+
+44. **Performance testing**
+
+- Khó khăn: Kiểm thử tải, stress test phức tạp
+
+- Giải pháp: Sử dụng k6, JMeter cho performance tests
+
+10.3 Bài học kinh nghiệm
+
+45. **Kế hoạch chi tiết trước khi bắt đầu**
+
+- Liệt kê các test scenarios cần test
+
+- Phác họa kiến trúc test framework
+
+46. **Sử dụng Page Object Model từ đầu**
+
+- Tách riêng logic UI từ logic test
+
+- Dễ bảo trì, tái sử dụng code
+
+47. **Collaboration với team development**
+
+- Hỏi clarification về requirements
+
+- Hiểu rõ về codebase, API, database structure
+
+48. **Continuous learning**
+
+- Đọc documentation, articles
+
+- Thử nghiệm các công nghệ mới
+
+- Hỏi advice từ đồng nghiệp
+
+49. **Quality over quantity**
+
+- Viết test quality cao hơn là ưu tiên
+
+- Test phải mang lại giá trị thực
+
+10.4 Khuyến nghị cho tương lai
+
+50. **Nâng cao kỹ năng kiểm thử tự động**
+
+- Học thêm về Performance Testing
+
+- Học thêm về Security Testing
+
+- Tìm hiểu về Visual Regression Testing
+
+51. **Deepdive vào BDD (Behavior-Driven Development)**
+
+- Sử dụng Cucumber, Gherkin syntax
+
+- Viết test từ góc nhìn end-user
+
+52. **Tìm hiểu về CI/CD**
+
+- Cấu hình GitHub Actions nâng cao
+
+- Docker containerization
+
+- Deployment automation
+
+53. **Đóng góp cho cộng đồng open-source**
+
+- Contribute vào Playwright project
+
+- Chia sẻ kiến thức trên blog, YouTube
+
+54. **Phát triển kỹ năng lãnh đạo**
+
+- Mentor các QA engineers khác
+
+- Dẫn dắt các test automation initiatives
+
+10.5 Lời kết
+
+Thực tập tại Công ty Hoàng Khang Incotech đã cung cấp cho tôi những kinh
+nghiệm quý báu về kiểm thử phần mềm chuyên nghiệp. Tôi không chỉ học
+được cách sử dụng Playwright, mà còn hiểu rõ hơn về quy trình kiểm thử,
+cách làm việc trong một team chuyên nghiệp, và tầm quan trọng của chất
+lượng trong phát triển phần mềm.
+
+Tôi xin cảm ơn toàn bộ team tại công ty, đặc biệt là anh Trần Minh Hoàn
+(người hướng dẫn tại công ty) và cô TS. Dương Thị Thúy Nga (giảng viên
+hướng dẫn) đã hỗ trợ tôi trong suốt quá trình thực tập. Những bài học và
+kinh nghiệm này sẽ là nền tảng vững chắc cho sự phát triển sự nghiệp của
+tôi trong lĩnh vực công nghệ thông tin.
+
+PHỤ LỤC A: CONFIGURATION FILES
+
+.env
+
+- PLAYWRIGHT_BASE_URL=http://127.0.0.1:8000
+  TEST_EMAIL=test@example.com
+  TEST_PASSWORD=password123
+
+package.json
+
+- {
+  "scripts": {
+  "test": "playwright test",
+  "test:ui": "playwright test --ui",
+  "test:debug": "playwright test --debug",
+  "test:headed": "playwright test --headed",
+  "report": "playwright show-report"
+  }
+  }
+
+PHỤ LỤC B: CODE REFERENCES
+
+Tất cả source code được lưu tại: /home/nvs1512/Project
+IT/San-tim-vien/BanHang/
+
+Các file quan trọng:
+
+- `tests/E2E/*.spec.ts` Test case files
+
+- `tests/E2E/helpers/*.ts` Helper classes
+
+- `playwright.config.ts` Playwright configuration
+
+TÀI LIỆU THAM KHẢO
+
+55. Playwright Official Documentation: https://playwright.dev/
+
+56. Laravel Framework Documentation: https://laravel.com/docs
+
+57. Vue.js Documentation: https://vuejs.org/
+
+58. Postman Documentation: https://learning.postman.com/
+
+59. TypeScript Handbook: https://www.typescriptlang.org/docs/
+
+60. Testing Best Practices: https://testing-library.com/
+
+61. Selenium Best Practices: https://www.selenium.dev/documentation/
+
+62. Agile Testing: https://www.agilealliance.org/
+
+KẾT THÚC BÁO CÁO
+
+TP. Hồ Chí Minh, tháng 06 năm 2026
+
+Sinh viên thực hiện: Nguyễn Văn Sang
+
+Người hướng dẫn tại công ty: Trần Minh Hoàn
+
+Giảng viên hướng dẫn: TS. Dương Thị Thúy Nga
+
+TÓM TẮT THỐNG KÊ
+
+- **Tổng số trang:** 60
+
+- **Tổng số chương:** 10
+
+- **Tổng số hình ảnh:** 15+
+
+- **Tổng số test case:** 15+
+
+- **Tổng số dòng code:** 500+
+
+- **Thời gian viết:** 10 tuần
+
+- **Thời gian thực tập:** 13/04/2026 25/06/2026
+
+HẾT

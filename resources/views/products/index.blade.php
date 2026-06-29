@@ -66,18 +66,125 @@
         @endif
     </div>
 
-    <div class="row">
-        <x-catalog-filter
-            :action="route('products.index')"
-            :categories="$loaiList"
-            :title="$category ? $category->name : 'Cửa hàng'"
-            :selected-category="$selectedCategory"
-            :has-filters="$hasProductFilters"
-            :clear-url="route('products.index')"
-        />
+    <div class="row" id="products-ajax-container">
+        <!-- CATEGORY FILTER GRID -->
+        <style>
+        .category-filter-wrapper {
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin: 0 -10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .category-filter-wrapper::-webkit-scrollbar {
+            height: 4px;
+        }
+        .category-filter-wrapper::-webkit-scrollbar-thumb {
+            background: #e0e0e0;
+            border-radius: 4px;
+        }
+        .category-filter-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .category-filter-grid {
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            grid-auto-flow: column;
+            gap: 12px;
+        }
+        .category-filter-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 170px;
+            height: 52px;
+            background: #ffffff;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #4a4a4a;
+            transition: all 0.25s ease;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            padding: 0 15px;
+            gap: 10px;
+        }
+        .category-filter-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border-color: #dcdcdc;
+            color: var(--primary-color, #920b29);
+        }
+        .category-filter-icon {
+            font-size: 20px;
+            color: var(--primary-color, #920b29);
+            transition: transform 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+        }
+        .category-filter-item:hover .category-filter-icon {
+            transform: scale(1.1);
+        }
+        .category-filter-name {
+            font-size: 13px;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-weight: 500;
+        }
+        .category-filter-active {
+            border: 1.5px solid var(--primary-color, #920b29);
+            background: #fffafa; /* very light red/pink tint */
+            color: var(--primary-color, #920b29);
+            box-shadow: 0 4px 10px rgba(146, 11, 41, 0.08);
+        }
+        </style>
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0" style="font-size: 1.25rem;">Lọc theo danh mục</h4>
+                @if($selectedCategoryModel)
+                    <a href="{{ route('products.index') }}" class="ajax-category-link text-decoration-none text-muted" style="font-size: 14px; font-weight: 500;">
+                        <i class="fas fa-arrow-left me-1"></i> Xem tất cả
+                    </a>
+                @endif
+            </div>
+            <div class="category-filter-wrapper">
+                <div class="category-filter-grid">
+                    @if($selectedCategoryModel)
+                        @php
+                            $contextCategory = $selectedCategoryModel->parent_id ? $selectedCategoryModel->parent : $selectedCategoryModel;
+                        @endphp
+                        
+                        <a href="{{ route('categories.show', ['category' => $contextCategory->slug]) }}" class="ajax-category-link category-filter-item {{ $selectedCategoryModel->id === $contextCategory->id ? 'category-filter-active' : '' }}">
+                            <div class="category-filter-icon"><i class="{{ $contextCategory->icon ?? 'fas fa-tag' }}"></i></div>
+                            <div class="category-filter-name">Tất cả {{ $contextCategory->name }}</div>
+                        </a>
+                        
+                        @foreach($contextCategory->children as $child)
+                            <a href="{{ route('categories.show', ['category' => $child->slug]) }}" class="ajax-category-link category-filter-item {{ $selectedCategoryModel->id === $child->id ? 'category-filter-active' : '' }}">
+                                <div class="category-filter-icon"><i class="{{ $child->icon ?? 'fas fa-tag' }}"></i></div>
+                                <div class="category-filter-name">{{ $child->name }}</div>
+                            </a>
+                        @endforeach
+                    @else
+                        @foreach($categories as $cat)
+                            <a href="{{ route('categories.show', ['category' => $cat->slug]) }}" class="ajax-category-link category-filter-item">
+                                <div class="category-filter-icon"><i class="{{ $cat->icon ?? 'fas fa-tag' }}"></i></div>
+                                <div class="category-filter-name">{{ $cat->name }}</div>
+                            </a>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </div>
 
         <!-- MAIN CONTENT -->
-        <main class="col-lg-9">
+        <main class="col-lg-12">
             @if($category && filled($category->description))
                 <p class="mb-4 text-muted">{{ $category->description }}</p>
             @endif
@@ -97,7 +204,7 @@
 
             <div class="row">
                 @forelse($products as $product)
-                    <div class="col-md-4 col-6">
+                    <div class="col-lg-3 col-md-4 col-6">
                         <div class="product-card">
                             <div class="product-img-wrapper">
                                 <a href="{{ route('products.show', ['product' => $product->slug]) }}">

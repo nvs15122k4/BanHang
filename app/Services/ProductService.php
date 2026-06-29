@@ -20,7 +20,14 @@ class ProductService
         }
 
         if (! empty($filters['loai_filter'])) {
-            $query->where('loai', $filters['loai_filter']);
+            $categorySlugs = [$filters['loai_filter']];
+            $categoryModel = \App\Models\Category::with('children')->where('slug', $filters['loai_filter'])->first();
+            if ($categoryModel) {
+                foreach ($categoryModel->children as $child) {
+                    $categorySlugs[] = $child->slug;
+                }
+            }
+            $query->whereIn('loai', $categorySlugs);
         }
 
         if (! empty($filters['min_price'])) {

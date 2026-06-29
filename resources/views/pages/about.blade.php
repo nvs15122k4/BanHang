@@ -23,7 +23,7 @@
 
 @section('content')
 <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
-<section class="about-hero">
+<section class="about-hero" style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184439/santimvien/assets/ykyqkp8drljs2k8nurqm.jpg') center/cover no-repeat;">
     <div class="container">
         <nav class="content-breadcrumb" aria-label="breadcrumb"><a href="{{ route('home') }}">Trang chủ</a> / Về chúng tôi</nav>
         <span class="content-eyebrow">Sàn Tím Vi En</span>

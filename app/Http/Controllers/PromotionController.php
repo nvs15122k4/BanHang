@@ -273,8 +273,16 @@ class PromotionController extends Controller
             $productsQuery->where('ten_sp', 'like', '%'.$search.'%');
         }
 
+        $selectedCategoryModel = null;
         if ($categoryFilter !== '') {
-            $productsQuery->where('loai', $categoryFilter);
+            $categorySlugs = [$categoryFilter];
+            $selectedCategoryModel = \App\Models\Category::with('children')->where('slug', $categoryFilter)->first();
+            if ($selectedCategoryModel) {
+                foreach ($selectedCategoryModel->children as $child) {
+                    $categorySlugs[] = $child->slug;
+                }
+            }
+            $productsQuery->whereIn('loai', $categorySlugs);
         }
 
         $allProducts = $productsQuery->limit(1000)->get();
@@ -350,9 +358,9 @@ class PromotionController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        $categories = Product::getLoaiList();
+        $categories = \App\Models\Category::with('children')->whereNull('parent_id')->get();
         $bannerPromos = Promotion::currentlyActive()->orderByDesc('gia_tri')->take(3)->get();
 
-        return view('promotions.index', compact('paginated', 'categories', 'bannerPromos', 'activePromotions'));
+        return view('promotions.index', compact('paginated', 'categories', 'bannerPromos', 'activePromotions', 'selectedCategoryModel'));
     }
 }

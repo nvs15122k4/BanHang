@@ -29,7 +29,7 @@ class ProductController extends Controller
     /**
      * Trang chủ dashboard
      */
-    public function home()
+    public function home(Request $request)
     {
         $totalProducts = Product::count();
         $inStockProducts = Product::where('trang_thai', 'con')->count();
@@ -38,15 +38,34 @@ class ProductController extends Controller
         // Sử dụng raw SQL để tránh cast issue
         $totalValue = \DB::table('products')->sum('gia');
 
+        // Lấy danh mục để hiển thị
+        $categories = Category::with('children')->whereNull('parent_id')->get();
+        $selectedCategoryId = $request->input('category_id');
+        $selectedCategory = $selectedCategoryId ? Category::with('children')->find($selectedCategoryId) : null;
+
+        $categorySlugs = [];
+        if ($selectedCategory) {
+            $categorySlugs[] = $selectedCategory->slug;
+            foreach ($selectedCategory->children as $child) {
+                $categorySlugs[] = $child->slug;
+            }
+        }
+
         // Lấy 8 sản phẩm mới nhất
-        $latestProducts = Product::with(['productImages', 'variants'])->where('trang_thai', 'con')
-            ->orderBy('created_at', 'desc')
-            ->take(8)
-            ->get();
+        $latestProductsQuery = Product::with(['productImages', 'variants'])->where('trang_thai', 'con');
+        if (!empty($categorySlugs)) {
+            $latestProductsQuery->whereIn('loai', $categorySlugs);
+        }
+        $latestProducts = $latestProductsQuery->orderBy('created_at', 'desc')->take(8)->get();
 
         // Lấy danh sách sản phẩm có khuyến mãi
         $activePromotions = Promotion::currentlyActive()->with('items')->get();
-        $allProducts = Product::where('trang_thai', 'con')->with(['wishlists', 'productImages', 'variants'])->limit(1000)->get();
+        
+        $allProductsQuery = Product::where('trang_thai', 'con')->with(['wishlists', 'productImages', 'variants'])->limit(1000);
+        if (!empty($categorySlugs)) {
+            $allProductsQuery->whereIn('loai', $categorySlugs);
+        }
+        $allProducts = $allProductsQuery->get();
 
         $promoProducts = collect();
         foreach ($allProducts as $product) {
@@ -72,7 +91,7 @@ class ProductController extends Controller
         // Sắp xếp giảm nhiều nhất và lấy 8 sản phẩm
         $promoProducts = $promoProducts->sortByDesc(fn ($p) => $p->gia - $p->promo_price)->take(8);
 
-        return view('home.index', compact('latestProducts', 'promoProducts', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'totalValue'));
+        return view('home.index', compact('latestProducts', 'promoProducts', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'totalValue', 'categories', 'selectedCategory'));
     }
 
     public function index(Request $request)
@@ -93,9 +112,14 @@ class ProductController extends Controller
         $totalProducts = Product::count();
         $inStockProducts = Product::where('trang_thai', 'con')->count();
         $outOfStockProducts = Product::where('trang_thai', 'het')->count();
+        $categories = Category::with('children')->whereNull('parent_id')->get();
         $loaiList = Product::getLoaiList();
+        $selectedCategoryModel = null;
+        if ($request->filled('loai_filter')) {
+            $selectedCategoryModel = Category::where('slug', (string) $request->string('loai_filter'))->first();
+        }
 
-        return view('products.index', compact('products', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'loaiList'));
+        return view('products.index', compact('products', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'categories', 'selectedCategoryModel', 'loaiList'));
     }
 
     public function store(Request $request)

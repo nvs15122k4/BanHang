@@ -16,9 +16,9 @@
 <section class="hero-section">
     <div class="hero-bg" id="heroSlider">
         <!-- Bạn có thể thêm 2-3 ảnh tùy ý tại đây -->
-        <div class="hero-bg-item active uix-920b296261"></div>
-        <div class="hero-bg-item uix-2452cd6dde"></div>
-        <div class="hero-bg-item uix-e9a5c72b17"></div>
+        <div class="hero-bg-item active" style="background-image: url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184415/santimvien/assets/ubyplekaaxjry7xihqmw.jpg')"></div>
+        <div class="hero-bg-item" style="background-image: url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184418/santimvien/assets/whzqdu9jphyykpyjafro.jpg')"></div>
+        <div class="hero-bg-item" style="background-image: url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184422/santimvien/assets/hou4wjkuk1tnddxugfvj.jpg')"></div>
     </div>
     <div class="container">
         <div class="hero-content">
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="category-card">
-                    <div class="category-img uix-0746f10362"></div>
+                    <div class="category-img" style="background-image: url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184427/santimvien/assets/yasgrjanwrnswwk5oxg9.jpg')"></div>
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nữ</h3>
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="col-md-4">
                 <div class="category-card">
-                    <div class="category-img uix-21e6820b00"></div>
+                    <div class="category-img" style="background-image: url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184430/santimvien/assets/moxcvgjovqebnew3bf8x.jpg')"></div>
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nam</h3>
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="col-md-4">
                 <div class="category-card">
-                    <div class="category-img uix-77f8847808"></div>
+                    <div class="category-img" style="background-image: url('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184434/santimvien/assets/gdxd5e1ck3x3jewovluz.jpg')"></div>
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Trẻ em & Thể thao</h3>

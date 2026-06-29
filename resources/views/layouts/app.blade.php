@@ -664,7 +664,6 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchNotifications();
     setInterval(fetchNotifications, 5000);
 
-
     // Mark all read
     document.getElementById('markAllRead')?.addEventListener('click', function(e) {
         e.preventDefault();
@@ -682,6 +681,62 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchNotifications();
     });
     @endauth
+
+    /* ── AJAX CATEGORY FILTERING & PAGINATION ── */
+    document.body.addEventListener('click', function(e) {
+        const link = e.target.closest('.ajax-category-link, .pagination a');
+        if (!link) return;
+
+        e.preventDefault();
+        const url = link.href;
+
+        let container = document.getElementById('products-ajax-container') || document.getElementById('home-ajax-container');
+        if (!container) return; // Fallback if no container found
+
+        // Show loading state
+        container.style.opacity = '0.5';
+        container.style.transition = 'opacity 0.2s';
+        container.style.pointerEvents = 'none';
+
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'text/html' } })
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContainer = doc.getElementById(container.id);
+            
+            if (newContainer) {
+                // Update the page title if possible
+                const newTitle = doc.querySelector('title');
+                if (newTitle) document.title = newTitle.innerText;
+
+                // Replace the contents
+                container.innerHTML = newContainer.innerHTML;
+                
+                // Update URL
+                window.history.pushState({ path: url }, '', url);
+            } else {
+                // If container not found in new page (e.g. redirect), just navigate
+                window.location.href = url;
+            }
+        })
+        .catch(err => {
+            console.error('AJAX Load Error:', err);
+            window.location.href = url; // fallback
+        })
+        .finally(() => {
+            if (container) {
+                container.style.opacity = '1';
+                container.style.pointerEvents = 'auto';
+            }
+        });
+    });
+
+    window.addEventListener('popstate', function() {
+        if (window.location.pathname.includes('/products') || window.location.pathname === '/') {
+            window.location.reload();
+        }
+    });
 });
 </script>
     @auth

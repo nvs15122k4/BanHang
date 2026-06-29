@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
-    public const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt0.jpg';
+    public const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dqfqgzrgx/image/upload/v1782184442/santimvien/assets/oirujipgubsiy6rceqq5.jpg';
     public const AVATAR_BASE_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt';
 
     /**

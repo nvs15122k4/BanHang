@@ -22,8 +22,10 @@ git push origin main
 2. **Import**: `nvs15122k4/BanHang`
 3. **Configure**:
    - Framework: **Other**
-   - Build Command: `./build.sh`
+   - Root Directory: `BanHang`
+   - Build Command: **(Để trống - dùng vercel.json)**
    - Output Directory: `public`
+   - Install Command: **(Để trống - dùng vercel.json)**
 
 4. **Environment Variables** (Copy-paste tất cả):
 ```env

@@ -1,6 +1,7 @@
 {
   "version": 2,
   "buildCommand": "echo 'No build needed - assets pre-committed'",
+  "outputDirectory": "public",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.5.2",

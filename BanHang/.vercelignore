@@ -13,3 +13,4 @@ tests
 .vscode
 *.md
 !README.md
+public/index.php

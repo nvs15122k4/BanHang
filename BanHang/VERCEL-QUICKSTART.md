@@ -33,7 +33,7 @@ APP_NAME=BanHang
 APP_ENV=production
 APP_KEY=base64:rC2RMoIEmkZ3Gz6lMAxA6f5iJFGK23l7rYeom+8nF88=
 APP_DEBUG=false
-APP_URL=https://your-project.vercel.app
+APP_URL=https://banhang.vnsang.io.vn
 DB_CONNECTION=pgsql
 DB_HOST=db.zegdcaqmhvydyxgxrjvt.supabase.co
 DB_PORT=5432

@@ -1,0 +1,98 @@
+{
+  "public/css/admin.css": {
+    "file": "assets/admin-CSf9SMkr.css",
+    "src": "public/css/admin.css",
+    "isEntry": true
+  },
+  "public/css/admin_common.css": {
+    "file": "assets/admin_common-XDHqj8UK.css",
+    "src": "public/css/admin_common.css",
+    "isEntry": true
+  },
+  "public/css/admin_layout.css": {
+    "file": "assets/admin_layout-DUpV5V3K.css",
+    "src": "public/css/admin_layout.css",
+    "isEntry": true
+  },
+  "public/css/airbnb-style.css": {
+    "file": "assets/airbnb-style-DW_Cls2k.css",
+    "src": "public/css/airbnb-style.css",
+    "isEntry": true
+  },
+  "public/css/app.css": {
+    "file": "assets/app-B8pfxjmS.css",
+    "src": "public/css/app.css",
+    "isEntry": true
+  },
+  "public/css/auth.css": {
+    "file": "assets/auth-BGJpxAzW.css",
+    "src": "public/css/auth.css",
+    "isEntry": true
+  },
+  "public/css/extracted-inline.css": {
+    "file": "assets/extracted-inline-_dxQs35U.css",
+    "src": "public/css/extracted-inline.css",
+    "isEntry": true
+  },
+  "public/css/products.css": {
+    "file": "assets/products-BydsCEUR.css",
+    "src": "public/css/products.css",
+    "isEntry": true
+  },
+  "public/css/views/cart.css": {
+    "file": "assets/cart-CCeZNDGy.css",
+    "src": "public/css/views/cart.css",
+    "isEntry": true
+  },
+  "public/css/views/checkout.css": {
+    "file": "assets/checkout-Cll9EGVE.css",
+    "src": "public/css/views/checkout.css",
+    "isEntry": true
+  },
+  "public/css/views/home.css": {
+    "file": "assets/home-CRY87KWE.css",
+    "src": "public/css/views/home.css",
+    "isEntry": true
+  },
+  "public/css/views/notifications.css": {
+    "file": "assets/notifications-B3izvN-m.css",
+    "src": "public/css/views/notifications.css",
+    "isEntry": true
+  },
+  "public/css/views/order_index.css": {
+    "file": "assets/order_index-CRhWgaPM.css",
+    "src": "public/css/views/order_index.css",
+    "isEntry": true
+  },
+  "public/css/views/order_show.css": {
+    "file": "assets/order_show-CHCoNUF3.css",
+    "src": "public/css/views/order_show.css",
+    "isEntry": true
+  },
+  "public/css/views/product_index.css": {
+    "file": "assets/product_index-Br3Y2K4S.css",
+    "src": "public/css/views/product_index.css",
+    "isEntry": true
+  },
+  "public/css/views/product_show.css": {
+    "file": "assets/product_show-OE0GL2xj.css",
+    "src": "public/css/views/product_show.css",
+    "isEntry": true
+  },
+  "public/css/views/profile.css": {
+    "file": "assets/profile-BtfyfrX4.css",
+    "src": "public/css/views/profile.css",
+    "isEntry": true
+  },
+  "public/css/views/static_pages.css": {
+    "file": "assets/static_pages-BFXfvxR3.css",
+    "src": "public/css/views/static_pages.css",
+    "isEntry": true
+  },
+  "public/js/app.js": {
+    "file": "assets/app-DK1JfN_T.js",
+    "name": "app",
+    "src": "public/js/app.js",
+    "isEntry": true
+  }
+}

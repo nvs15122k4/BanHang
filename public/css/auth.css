@@ -27,7 +27,7 @@ body {
 
 .login-img {
     flex: 1;
-    background-image: url('https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1778634216/wug2aeesprt4ghjksljq.png');
+    background-image: url('/images/fashion-login-bg.jpg');
     background-size: cover;
     background-position: center;
     background-color: #F5F3FF;

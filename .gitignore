@@ -1,5 +1,8 @@
-# Ignore markdown files
-*.md
+# Ignore specific markdown files (not deployment guides)
+/BanHang/AGENTS.md
+/BanHang/docs/**/*.md
+/BanHang/.github/**/*.md
+DEPLOYMENT-GUIDE.md
 
 # Ignore document files
 *.pdf

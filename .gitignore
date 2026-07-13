@@ -14,7 +14,6 @@ DEPLOYMENT-GUIDE.md
 /vendor
 
 # Build files
-/public/build
 /public/hot
 /public/storage
 /storage/*.key

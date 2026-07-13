@@ -3,8 +3,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "vercel-build": "vite build"
+        "build": "vite build"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.3.2",

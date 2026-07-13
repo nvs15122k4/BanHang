@@ -1,8 +1,6 @@
 .env
 .env.*
 !.env.example
-package.json
-package-lock.json
 node_modules
 storage/*.key
 .phpunit.result.cache

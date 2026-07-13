@@ -20,12 +20,12 @@ git push origin main
 
 1. **Truy cập**: https://vercel.com/new
 2. **Import**: `nvs15122k4/BanHang`
-3. **Configure**:
-   - Framework: **Other**
-   - Root Directory: `BanHang`
-   - Build Command: **(Để trống - dùng vercel.json)**
-   - Output Directory: `public`
-   - Install Command: **(Để trống - dùng vercel.json)**
+3. **Configure Project Settings**:
+   - **Root Directory**: `BanHang` ⚠️ **BẮT BUỘC!**
+   - **Framework Preset**: `Other`
+   - **Build Command**: `bash build.sh`
+   - **Output Directory**: **(Để trống)**
+   - **Install Command**: `composer install --no-dev --optimize-autoloader`
 
 4. **Environment Variables** (Copy-paste tất cả):
 ```env

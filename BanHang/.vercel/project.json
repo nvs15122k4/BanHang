@@ -1,0 +1,7 @@
+{
+  "framework": null,
+  "devCommand": null,
+  "buildCommand": "bash build.sh",
+  "installCommand": "composer install --no-dev --optimize-autoloader",
+  "outputDirectory": null
+}

@@ -1,0 +1,262 @@
+CH L
+M VI
+a Sinh vi
+i th
+n sinh vi
+n: Nguy
+n Sang	
+p: C
+ng Ty Ho
+ng Khang Icotech	
+n ng
+ng d
+p): Tr
+n Minh Ho
+i gian th
+y 13 th
+ng 04 n
+m 2026 
+n ng
+y 25 th
+ng 06 n
+m 2026
+i dung 
+ng vi
+c giao
+n th
+CB h
+ng d
+CB h
+ng d
+y 13/04
+n ng
+y 17/04
+m hi
+ Laravel g
+u tr
+n, m
+nh MVC, route, controller, model, migration, seeder, file .env, Artisan command v
+ch l
+m vi
+i database.
+y 20/04
+n ng
+y 24/04
+m hi
+u Seeder trong Laravel 
+ng cho database, ph
+nh ki
+m th
+ng c
+n nh
+u th
+y 27/04
+n ng
+y 01/05
+m hi
+u Playwright 
+m th
+ng website, g
+ng c
+, vi
+t test case c
+n, s
+ng locator, thao t
+c form, ki
+m tra d
+u hi
+n th
+ trang t
+i xong.
+y 04/05 
+n ng
+y 08/05
+m hi
+ch vi
+o test case, g
+nh ch
+ng c
+n ki
+m th
+c th
+c hi
+n, d
+o, k
+t qu
+ mong mu
+n, k
+t qu
+, tr
+ng th
+i Pass/Fail v
+ch m
+i khi ph
+t sinh.
+y 11/05
+n ng
+y 15/05
+ng website b
+n gi
+n Vi En, g
+c ch
+ng c
+n nh
+n th
+n ph
+m, xem chi ti
+n ph
+m, t
+m ki
+m, gi
+ng, 
+ng nh
+ng k
+y 18/05
+n ng
+y 22/05
+ng th
+c ch
+ng cho website S
+n Vi En nh
+ trang qu
+n tr
+ admin, ch
+ng thanh to
+n, danh s
+ch s
+n ph
+u th
+ch v
+n ph
+ng t
+m ki
+m, mua h
+ng v
+ng thu
+n ti
+y 25/05
+n ng
+y 29/05
+Tham gia v
+n th
+ng ty v
+c hi
+n ki
+m th
+ng. N
+i dung c
+ng vi
+m ki
+m tra c
+c ch
+ng tr
+ng, ghi nh
+i ph
+t sinh, m
+t qu
+i, k
+t qu
+ mong mu
+o ch
+ng s
+n ph
+y 01/06
+n ng
+y 05/06
+ch s
+ng Playwright 
+ng v
+o ki
+m th
+ng trong d
+ng ty, g
+m vi
+t test case, thao t
+i giao di
+n, ki
+m tra d
+u hi
+n th
+m th
+c ch
+ng tr
+y 08/06
+n ng
+y 12/06
+ch s
+ng Playwright 
+m th
+ API, g
+i request, ki
+m tra status code, ki
+m tra d
+u tr
+i chi
+t qu
+ API v
+y 15/06
+n ng
+y 19/06
+c th
+c hi
+n ki
+m th
+c ch
+ng trong d
+n, ki
+m tra giao di
+n, lu
+ng x
+u tr
+ng th
+i ghi nh
+t qu
+m th
+y 22/06
+n ng
+y 26/06
+	TP. H
+ Minh, ng
+y 26 th
+ng 06 n
+m 2026
+	Sinh Vi
+Normal
+	Heading 1
+Default Paragraph Font
+Table Normal
+Heading 1 Char
+Body Text 2
+Body Text 2 Char
+Footer
+Header
+Page Number
+Table Grid
+No Spacing
+Times New Roman
+SimSun
+Droid Sans Fallback
+Tahoma
+DejaVu Sans
+.VnTime
+Noto Sans CJK HK
+Arial
+Times New Roman
+n Ch
+u Ph
+nvs1512
+P!),.:;?]}
+n Ch
+u Ph
+nvs1512
+WPS Office_11.1.0.11723_F1E327BC-269C-435d-A152-05C5408002CA
+KSOProductBuildVer
+1033-11.1.0.11723
+CE71D7E27DF94CDABC2BD202F9BDC238_12
+Root Entry
+WordDocument
+0Table
+Data
+WpsCustomData
+SummaryInformation
+DocumentSummaryInformation

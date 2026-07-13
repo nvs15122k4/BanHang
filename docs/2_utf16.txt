@@ -1,0 +1,1004 @@
+Root Entry
+SummaryInformation
+DocumentSummaryInformation
+WordDocument
+n Ch
+u Ph
+n Ch
+u Ph
+WPS Office_12.2.0.23196_F1E327BC-269C-435d-A152-05C5408002CA
+KSOProductBuildVer
+1033-12.2.0.23196
+E7805744E6C24906A6E27ADD53251CBB_12
+0Table
+Data
+WpsCustomData
+I NGUY
+I TR
+NG TP.HCM
+NG H
+I CH
+ NGH
+A VI
+T NAM
+p - T
+ do - H
+nh ph
+KHOA C
+NG NGH
+NG TIN
+NG D
+NH B
+O TH
+T NGHI
+P (TTTN)
+ng nh
+ch tr
+nh b
+o th
+t nghi
+p, Khoa h
+ng d
+ khi vi
+nh b
+o nh
+ sau:
+Trang b
+a (xem m
+m theo) h
+nh th
+c: b
+ng m
+u xanh
+Trang b
+a trong (tr
+nh b
+y gi
+ng trang b
+Trang 
+ (kh
+nh s
+ trang, xem m
+m theo)
+t ng
+ do ch
+i, m
+ch th
+p, t
+nh h
+nh th
+p, ph
+m vi v
+  ph
+ng ph
+p th
+p, k
+Trang 
+: (kh
+nh s
+ trang, xem m
+m theo)
+Trang 
+a gi
+ng vi
+ng d
+ (kh
+nh s
+ trang, xem m
+m theo). Gi
+ng vi
+ng d
+n nh
+u, ph
+ng ph
+p tr
+nh b
+nh th
+c ti
+ng d
+ng c
+o TTTN
+t qu
+o? (ho
+c kh
+t), kh
+ng cho 
+o trang nh
+Trang 
+a ng
+i ph
+n bi
+ (kh
+nh s
+ trang, xem m
+m theo)
+n th
+ quan 
+a ng
+i ph
+n bi
+ng cho 
+o trang nh
+Trang L
+ch l
+m vi
+c (kh
+nh s
+ trang, xem m
+m theo)
+Trang 
+ (kh
+nh s
+ trang, xem m
+m theo)
+Trang 
+Danh m
+ng bi
+u, s
+nh s
+ trang, xem m
+m theo).
+o sau trang cu
+ng c
+a ch
+ng cu
+ng c
+n, (xem m
+m theo)
+ quan n
+i th
+c ni
+m phong. Khi n
+o, ph
+nh k
+m phong b
+ng nh
+ch th
+o  (xem c
+m theo)
+nh s
+ trang t
+ trang 
+u ti
+a Ch
+ng 1
+o, vi
+t tr
+n kh
+y  A4
+i gi
+ng kh
+y A4, m
+u xanh
+t theo ch
+ng, m
+c, c
+c ti
+i trang 
+c tr
+nh b
+y theo quy 
+nh  (xem m
+m theo), 
+i li
+u tham kh
+t bu
+c ph
+i ghi, 
+o sau ph
+c, x
+p theo th
+ abc,
+ng b
+inh b
+m, b
+y, kh
+ng b
+ng l
+ xo - 
+c trang c
+ size 13, Font Times New Roman, kh
+ng c
+c ki
+u ch
+ng th
+c tr
+ch c
+c ng
+, th
+nh ng
+ng c
+c hoa v
+n, h
+nh v
+ trang tr
+i trang, m
+i ch
+ng, m
+ in m
+en, h
+nh v
+a tr
+ in m
+c ch
+ch ph
+nh s
+t ghi ch
+i trang.
+n ch
+t, n
+u ph
+i vi
+t ph
+ ngo
+ng ngo
+i ngh
+a ngay t
+c ch
+u ti
+n, sau 
+nh trang, 
+o sau c
+c trang Danh m
+ng bi
+u, s
+nh s
+c ch
+ng m
+c, ti
+c ph
+i theo quy 
+nh (xem m
+m theo)
+nh d
+ng v
+i dung s
+ng Font: Times New Roman, Size: 13, c
+c ti
+ Size 16 
+y A4, in 1 m
+ trang in: 	Top: 2.0 cm; Bottom: 2.0cm; Left: 3 cm; Right: 2.0 cm
+ trang 
+n ph
+i trang.
+Line Spacing: 1,5 lines
+u trang (Header): T
+i canh tr
+i, T
+n Gi
+ng vi
+ng d
+n canh ph
+n cu
+i trang (Footer): T
+n nh
+m th
+c hi
+n canh tr
+i (ho
+c nh
+m), s
+ trang trang canh ph
+i dung c
+c ch
+ng m
+c trong b
+o TTTN 
+ng 1: T
+ng quan
+y th
+ng tr
+nh b
+ng quan bao g
+i thi
+ quan th
+p: s
+i th
+p, b
+t qu
+m hi
+ quan n
+i th
+p, b
+t qu
+m  hi
+c ho
+ng chuy
+n ng
+nh v
+i tr
+ng l
+m vi
+ quan n
+i th
+i thi
+i dung c
+ng vi
+c giao th
+p: N
+i dung v
+c gi
+i quy
+t th
+c ai gi
+i quy
+t ch
+u, v
+o, k
+t qu
+ ra sao, c
+n nh
+ng t
+i ho
+n to
+n th
+ ghi l
+i, ch
+c gi
+i quy
+t bao gi
+.   
+m vi c
+i: X
+nh ch
+nh x
+c, ph
+m vi, m
+n gi
+i quy
+t. Ph
+m vi c
+t ra ho
+c ch
+n trong v
+ng 2: C
+ thuy
+ thuy
+t: Tr
+nh b
+ thuy
+i quy
+p nh
+ thu
+t to
+ thuy
+a ng
+i tr
+ng c
+c gi
+ thu
+t: Tr
+nh b
+ thu
+i quy
+p nh
+n ng
+, ph
+ng, framework, c
+ng c
+, ph
+ng, v...v
+ng v
+ng d
+ng 3: C
+t th
+ nghi
+ng ph
+p nghi
+u/ h
+ng gi
+i quy
+n ph
+ng ph
+p nghi
+ thuy
+t, th
+c nghi
+u tra
+i quy
+t ra. 
+ chi ti
+t ph
+ng ph
+p th
+c hi
+n, c
+c thi
+c gi
+i ph
+c hi
+n ph
+a ch
+nh. 
+t qu
+c (c
+c ch
+ng ch
+nh c
+n ph
+m/ ch
+ng tr
+nh, c
+c module ch
+u, ph
+n th
+n th
+nh qu
+a sinh vi
+n quan tr
+ng nh
+t, c
+t qu
+c do ch
+nh sinh vi
+m ra 
+c th
+nh gi
+ng 4: K
+t lu
+nh gi
+t qu
+ng n
+i dung ki
+n th
+ thuy
+ng c
+ng k
+ng th
+nh n
+ng kinh nghi
+m th
+c ti
+ch lu
+Chi ti
+t qu
+ng vi
+ng  g
+p cho c
+ quan n
+i th
+o lu
+t qu
+u nh
+ng v
+c gi
+i quy
+t lu
+ng vi
+c th
+ ngh
+t ra t
+t qu
+ng vi
+m ti
+t tri
+i ti
+i th
+p trong t
+ng lai.
+c: Ph
+ng ho
+c. Trong tr
+ng h
+ nhi
+u ph
+c, ph
+i chia ra th
+nh ph
+c 1, ph
+c ph
+o nh
+ng d
+ng s
+n ph
+m, ch
+ng tr
+nh; m
+ ngu
+n ch
+ng tr
+i li
+u tham kh
+Danh m
+i li
+u tham kh
+t ph
+n kh
+ng th
+ thi
+u trong c
+o khoa h
+c. Ph
+i li
+u tham kh
+nh b
+y theo m
+u sau, m
+i li
+u tham kh
+c tr
+nh b
+y trong m
+n (paragraph) bao g
+i li
+t trong c
+u ngo
+c vu
+ng, v
+ [1], [2]
+ 3 ph
+ng ph
+p th
+i li
+u tham kh
+o: C
+ch th
+p theo th
+m xu
+i li
+u xu
+m 2003 s
+c li
+i li
+u xu
+m 2002. C
+ch th
+ hai l
+p theo m
+ tham kh
+o, ngh
+i li
+c tham kh
+o nhi
+c li
+c. C
+ch th
+ ba l
+p theo th
+ alphabet c
+c gi
+. Trong b
+ch d
+i li
+u tham kh
+o th
+n ph
+i li
+u tham kh
+o ngay sau c
+u tr
+ch d
+n. V
+u tr
+u + Gi
+i thu
+t = Ch
+ng tr
+ [10] (trang 120) ch
+ ra r
+ng c
+u tr
+ch d
+y trong trang 120 c
+i li
+nh s
+ [10] trong danh m
+i li
+u tham kh
+o.  
+c gi
+c gi
+, th
+c in 
+i li
+u th
+c in nghi
+ ghi th
+y (n
+i li
+ nhi
+p), nh
+ng ch
+ng n
+o (n
+u ch
+ tham kh
+ng), t
+ trang 
+n trang (n
+u ch
+ tham kh
+c trang 
+n nh
+n, n
+m xu
+a ch
+ Website n
+[1] 
+inh M
+nh T
+ng. C
+u tr
+u & Thu
+t to
+n. Ch
+ng 1 v
+ 8. Nh
+n khoa h
+ thu
+t. H
+i, 2001.  
+[2] Aho A.V. , Hopcroft J.E. and Ullman J.D. Data Structures and Algorithms. Pages: 200-345. Addison-Wesley. London, 1983. 
+u trang b
+ trang b
+I NGUY
+I TR
+NG TP.HCM
+(Bold, size 16)
+KHOA: C
+NG NGH
+NG TIN 
+(Bold, size 14)
+O TH
+T NGHI
+NH: 
+(Bold, size 16)
+: NGHI
+NG D
+NG M
+NG VPN
+          (Bold, size 18-30, t
+y theo s
+ng vi
+ng d
+n : TS. Tr
+n Nam (Bold, size 14)
+Sinh vi
+n th
+c hi
+n:    Nguy
+n Th
+ Kim Hoa
+c Di
+p       :    
+(Bold, in hoa, size 14)
+     :    .
+........(Bold, in hoa, size 14)
+TP. H
+ Minh, th
+m 202  (Bold, size 13)
+u trang b
+I NGUY
+I TR
+NG TP.HCM
+(Bold, size 16)
+KHOA: C
+NG NGH
+NG TIN 
+(Bold, size 14)
+O TH
+T NGHI
+NH: 
+(Bold, size 16)
+: NGHI
+NG D
+NG M
+NG VPN
+          (Bold, size 18-30, t
+y theo s
+ng vi
+ng d
+n : TS. Tr
+n Nam (Bold, size 14)
+Sinh vi
+n th
+c hi
+n:    Nguy
+n Th
+ Kim Hoa
+c Di
+p       :    
+(Bold, in hoa, size 14)
+     :    .
+........(Bold, in hoa, size 14)
+TP. H
+ Minh, th
+m 202   (Bold, size 13)
+(Bold, size 14, x
+p sau trang l
+( bold, size 14, x
+p sau trang l
+ng d
+(Bold, size14, x
+p sau trang l
+size13....................................................................................................................... 
+a gi
+ng vi
+ng d
+i Khoa)
+(Bold, size14, x
+p sau trang l
+size13....................................................................................................................... 
+t lu
+c Kh
+ cho sinh vi
+o th
+a gi
+ng vi
+n ph
+n bi
+(Bold, size14, x
+p sau trang nh
+a GVHD)
+size13....................................................................................................................... 
+CH L
+M VI
+a Sinh vi
+i th
+n sinh vi
+n ng
+ng d
+p):	
+i gian th
+m 202 
+n ng
+m 202
+i dung 
+ng vi
+c giao
+n th
+CB h
+ng d
+CB h
+ng d
+n ng
+n ng
+n ng
+n ng
+n ng
+n ng
+n ng
+n ng
+	TP. H
+ Minh, ng
+m 202
+	Sinh Vi
+                                                ( Bold, size 14)
+u: (size 13)								         								        Trang 
+ng 1...................................................			
+1.1................................................................				1 
+           1.1.1	
+1.1.2
+1.1.3............................................................
+......................................................................				
+1.2 								                       7
+1.2.1		
+1.2.2
+.................................
+1.3........................................
+...............................................					           22	         						           				
+ng 2.......................................................							
+2.1.1
+2.1.2
+ng 3		        							50   
+3.1.1
+3.1.2
+T LU
+N 								       	120
+C								      	121
+DANH M
+I LI
+U THAM KH
+O				130
+Ghi ch
+ in hoa  ti
+c ch
+ng, m
+t ch
+ 2 ch
+c trong ch
+c ti
+DANH M
+NG, S
+(In 
+m, in hoa, size14)
+NG 1.1 (size 13)...................................................................................................
+NG 1.2.................................................................................................................
+..........................................................................................................................
+..........................................................................................................................
+..........................................................................................................................
+ 1.1  
+..........................................................................................................................
+..........................................................................................................................
+..........................................................................................................................
+NH 1.1 
+.........................................................................................................................
+.........................................................................................................................
+Ghi ch
+-     X
+p sau trang M
+t ch
+n ch
+ hai ch
+ng bi
+u, s
+trong m
+i ch
+ng bi
+u, s
+trong m
+i ch
+ng ph
+ ghi ch
+, gi
+i th
+ch, n
+ ngu
+n tr
+ch ho
+c sao ch
+T (size 14)
+p sau trang Danh m
+ng, s
+SXKD: (size 13)				S
+n xu
+t kinh doanh	
+CTM	:					Ch
+QTKD
+.				Qu
+n tr
+ kinh doanh
+Ghi ch
+t vi
+c ch
+u thay ch
+c vi
+t li
+n nhau, 
+ thay cho m
+ ngh
+a th
+p nhi
+n trong v
+n ho
+i ng
+c nhi
+n ch
+p nh
+nh b
+i trang c
+nh s
+ trang t
+ng 1, in 
+m ti
+c ch
+ng, c
+nh s
+ trang tr
+n header, t
+n GVHD v
+ SVTH tr
+n Footer) size 12
+ng 1: size 13	
+...........................................................................................................................
+.......................................................................................................
+............................................................................
+               (M
+C (k
+m theo)
+y bao g
+m nh
+ng n
+i dung c
+n thi
+t nh
+m minh h
+a ho
+ cho n
+i dung 
+n nh
+u, m
+u bi
+u, tranh 
+c kh
+n ph
+n ch
+nh c
+DANH M
+I LI
+U THAM KH
+ng Vi
+[1] 
+inh M
+nh T
+ng. C
+u tr
+u & Thu
+t to
+n. Ch
+ng 1 v
+ 8. Nh
+n khoa h
+ thu
+t. H
+i, 2001.  
+ng Anh:
+[1] Aho A.V. , Hopcroft J.E. and Ullman J.D. Data Structures and Algorithms. Pages: 200-345. Addison-Wesley. London, 1983. 
+Ghi ch
+Danh m
+i li
+u tham kh
+o ph
+p theo abc t
+c gi
+i li
+u, n
+m ph
+p theo t
+c gi
+p abc theo h
+, sau 
+i li
+u, n
+m ph
+Danh m
+i li
+u tham kh
+p cu
+ng, sau c
+c trang ph
+                                                      
+            					
+ PAGE   \* MERGEFORMAT 
+nh minh h
+nh minh h
+     size 13, 
+size 13 
+.., ng
+NG D
+C NH
+ QUAN
+ng d
+.., ng
+NG D
+.., ng
+I NH
+Normal
+	Heading 1
+Default Paragraph Font
+Table Normal
+Heading 1 Char
+Body Text 2
+Body Text 2 Char
+Footer
+Footer Char
+Header
+Page Number
+Table Grid
+No Spacing
+Times New Roman
+Tahoma
+.VnTime
+Arial
+Wingdings
+Symbol
+Courier New
+n Ch
+u Ph
+n Ch
+u Ph
+f!),.:;?]}
+  docshape2
+Text Box 11
+Text Box 14
+Lines 29
+Text Box 46
+Text Box 47
+Text Box 49
+Text Box 50
+AutoShape 32
+AutoShape 32
+Picture 5
+Picture 5
+AutoShape 59
+AutoShape 60

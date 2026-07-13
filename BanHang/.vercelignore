@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+node_modules
+vendor
+storage/*.key
+.phpunit.result.cache
+npm-debug.log
+yarn-error.log
+tests
+.git
+.github
+.vscode
+*.md
+!README.md

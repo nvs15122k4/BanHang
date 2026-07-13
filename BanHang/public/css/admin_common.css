@@ -1,0 +1,296 @@
+/* Admin Common Styles (Dashboard, Statistics, Users, Products) */
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* Statistics Cards */
+.stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: var(--glass-border);
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: 0 10px 25px rgba(124, 58, 237, 0.1);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--gradient-brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Filter Section */
+.filter-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+/* Admin Tables */
+.admin-table {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: var(--glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem;
+}
+
+.admin-table .card-header {
+    background: rgba(0,0,0,0.02);
+    padding: 1.25rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-table .table thead th {
+    background: rgba(0,0,0,0.01);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1rem 1.5rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.admin-table .table tbody td {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+    vertical-align: middle;
+    color: var(--text-main);
+    border-bottom: 1px dashed rgba(0,0,0,0.05);
+}
+
+.admin-table .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table .table tbody tr:hover td {
+    background: rgba(124, 58, 237, 0.02);
+}
+
+/* Badges */
+.badge-role-admin {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.badge-role-user {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.badge-status-active, .badge-status-con {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.badge-status-inactive, .badge-status-het {
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+/* Admin Modals */
+.admin-modal-content {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: var(--glass-border);
+    border-radius: 24px;
+    background: var(--glass-bg);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.admin-modal-header {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 1.25rem 1.5rem;
+}
+
+.admin-modal-title {
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-main);
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.admin-modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 1.25rem 1.5rem;
+}
+
+.admin-btn-rounded {
+    border-radius: 12px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+}
+
+/* Address Cards in User Detail Modal */
+.admin-address-card {
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    background: #f8f9fa;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.admin-address-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.admin-address-card.is-default {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.02);
+}
+
+.admin-address-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.75rem;
+}
+
+/* Extracted from resources/views/admin/statistics.blade.php */
+.chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+        .chart-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            margin-bottom: 2rem;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .chart-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+
+/* Extracted from resources/views/admin/promotions/create.blade.php */
+.pham-vi-card { border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px; cursor: pointer; transition: all .2s; }
+.pham-vi-card:hover, .pham-vi-card.selected { border-color: #6366f1; background: #eef2ff; }
+.pham-vi-card input[type=radio] { accent-color: #6366f1; }
+.step-badge { width:28px; height:28px; border-radius:50%; background:#6366f1; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+.product-checkbox-item { border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; margin-bottom:6px; display:flex; align-items:center; gap:10px; cursor:pointer; }
+.product-checkbox-item:hover { background:#f9fafb; }
+.product-checkbox-item input { accent-color:#6366f1; }
+
+
+/* Extracted from resources/views/admin/promotions/edit.blade.php */
+.pham-vi-card { border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px; cursor: pointer; transition: all .2s; }
+.pham-vi-card:hover, .pham-vi-card.selected { border-color: #6366f1; background: #eef2ff; }
+.pham-vi-card input[type=radio] { accent-color: #6366f1; }
+.step-badge { width:28px; height:28px; border-radius:50%; background:#6366f1; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+.product-checkbox-item { border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; margin-bottom:6px; display:flex; align-items:center; gap:10px; cursor:pointer; }
+.product-checkbox-item:hover { background:#f9fafb; }
+.product-checkbox-item input { accent-color:#6366f1; }
+
+
+/* Extracted from resources/views/admin/promotions/index.blade.php */
+.promo-status-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.promo-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background:#f59e0b; color:#fff; font-weight:700; letter-spacing:1px; }
+.scope-pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; background:#e0e7ff; color:#3730a3; font-weight:600; }
+.discount-val { font-size: 22px; font-weight: 800; color:#e11d48; }
+.table-promo td { vertical-align: middle; }
+
+
+/* Extracted from resources/views/admin/products/create.blade.php */
+.step-badge { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e0e7ff; color:#3730a3; border-radius:50%; font-size:12px; font-weight:bold; }
+
+
+/* Extracted from resources/views/admin/products/edit.blade.php */
+.step-badge { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e0e7ff; color:#3730a3; border-radius:50%; font-size:12px; font-weight:bold; }
+
+
+/* Extracted from resources/views/admin/products/index.blade.php */
+.product-img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid #eee; }
+.product-img-placeholder { width: 48px; height: 48px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.table-product td { vertical-align: middle; }
+.badge-status-con { background: #d1fae5; color: #065f46; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: none; }
+.badge-status-het { background: #fee2e2; color: #b91c1c; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: none; }
+.price-val { font-size: 15px; font-weight: 700; color: #111; }
+.loai-pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #e0e7ff; color: #3730a3; font-weight: 600; }
+

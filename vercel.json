@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "framework": null,
+  "buildCommand": "./vercel-build.sh",
+  "installCommand": "npm install --production=false axios",
   "build": {
     "env": {
       "NODE_ENV": "production"

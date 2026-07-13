@@ -23,9 +23,9 @@ git push origin main
 3. **Configure Project Settings**:
    - **Root Directory**: `BanHang` ⚠️ **BẮT BUỘC!**
    - **Framework Preset**: `Other`
-   - **Build Command**: `bash build.sh`
+   - **Build Command**: **(Để trống - sử dụng vercel.json)**
    - **Output Directory**: **(Để trống)**
-   - **Install Command**: `composer install --no-dev --optimize-autoloader`
+   - **Install Command**: **(Để trống - sử dụng vercel.json)**
 
 4. **Environment Variables** (Copy-paste tất cả):
 ```env

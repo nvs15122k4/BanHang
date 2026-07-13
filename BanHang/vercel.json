@@ -1,27 +1,27 @@
 {
   "version": 2,
-  "framework": null,
-  "buildCommand": "composer install --optimize-autoloader --no-dev && php artisan config:cache && php artisan route:cache && php artisan view:cache && npm ci && npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": "public",
-  "functions": {
-    "api/*.php": {
-      "runtime": "vercel-php@0.6.0",
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "/api/index.php",
+      "use": "vercel-php@0.7.2"
+    },
+    {
+      "src": "/public/**",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(css|js|images|fonts|storage|build)/(.*)",
-      "dest": "/$1/$2"
+      "dest": "/public/$1/$2"
     },
     {
       "src": "/favicon.ico",
-      "dest": "/favicon.ico"
+      "dest": "/public/favicon.ico"
     },
     {
       "src": "/robots.txt",
-      "dest": "/robots.txt"
+      "dest": "/public/robots.txt"
     },
     {
       "src": "/(.*)",
@@ -33,6 +33,8 @@
     "APP_DEBUG": "false",
     "LOG_CHANNEL": "stderr",
     "SESSION_DRIVER": "cookie",
-    "CACHE_DRIVER": "array"
+    "CACHE_DRIVER": "array",
+    "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
+    "CACHE_PATH": "/tmp/storage/framework/cache"
   }
 }

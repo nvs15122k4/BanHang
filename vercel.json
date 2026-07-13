@@ -6,7 +6,6 @@
       "maxDuration": 30
     }
   },
-  "buildCommand": "composer install --no-dev --optimize-autoloader --no-interaction && bash build-assets.sh && php artisan config:cache && php artisan route:cache && php artisan view:cache",
   "routes": [
     {
       "src": "^/css/(.*)",

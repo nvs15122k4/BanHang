@@ -1,8 +1,6 @@
 .env
 .env.*
 !.env.example
-node_modules
-vendor
 storage/*.key
 .phpunit.result.cache
 npm-debug.log
@@ -13,4 +11,3 @@ tests
 .vscode
 *.md
 !README.md
-public/index.php

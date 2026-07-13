@@ -1,13 +1,6 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "./vercel-build.sh",
-  "installCommand": "npm install --production=false axios",
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2",

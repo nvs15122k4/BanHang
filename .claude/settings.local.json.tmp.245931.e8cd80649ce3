@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(composer --version)",
+      "Bash(npm run *)",
+      "Bash(composer install *)",
+      "Bash(composer update *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Fix Vercel deployment: remove hardcoded secrets, fix PHP compatibility, update build config *)",
+      "Bash(git commit -m 'Fix launcher.launcher ESM error: remove '\\\\''type: module'\\\\'' from package.json *)"
+    ]
+  }
+}

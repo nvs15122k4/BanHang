@@ -3,9 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite",
-        "vercel-build": "npm install && npm run build",
+        "build": "npx vite build",
+        "dev": "npx vite",
+        "vercel-build": "npm install && npx vite build",
         "validate:env": "node scripts/validate-env.mjs",
         "test:e2e": "playwright test",
         "test:e2e:ui": "playwright test --ui"

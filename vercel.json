@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "composer install --no-dev --optimize-autoloader && npm ci && npm run build && php artisan config:cache && php artisan route:cache && php artisan view:cache",
+  "buildCommand": "bash build.sh",
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
@@ -54,30 +54,5 @@
       "src": "^/(.*)",
       "dest": "/api/index.php"
     }
-  ],
-  "env": {
-    "APP_NAME": "BanHang",
-    "APP_ENV": "production",
-    "APP_KEY": "base64:rC2RMoIEmkZ3Gz6lMAxA6f5iJFGK23l7rYeom+8nF88=",
-    "APP_DEBUG": "false",
-    "APP_URL": "@APP_URL",
-    "LOG_CHANNEL": "stderr",
-    "DB_CONNECTION": "pgsql",
-    "DB_HOST": "@DB_HOST",
-    "DB_PORT": "@DB_PORT",
-    "DB_DATABASE": "@DB_DATABASE",
-    "DB_USERNAME": "@DB_USERNAME",
-    "DB_PASSWORD": "@DB_PASSWORD",
-    "CACHE_DRIVER": "array",
-    "SESSION_DRIVER": "cookie",
-    "SESSION_LIFETIME": "120",
-    "QUEUE_CONNECTION": "sync",
-    "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
-    "CACHE_PATH": "/tmp/storage/framework/cache",
-    "CLOUDINARY_CLOUD_NAME": "@CLOUDINARY_CLOUD_NAME",
-    "CLOUDINARY_API_KEY": "@CLOUDINARY_API_KEY",
-    "CLOUDINARY_API_SECRET": "@CLOUDINARY_API_SECRET",
-    "NEXT_PUBLIC_SUPABASE_URL": "@NEXT_PUBLIC_SUPABASE_URL",
-    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "@NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
-  }
+  ]
 }

@@ -16,9 +16,14 @@ COPY public ./public
 COPY postcss.config.js tailwind.config.js vite.config.js ./
 RUN npm run build
 
-FROM php:8.3-fpm AS app
+FROM php:8.3-apache AS app
 
 WORKDIR /var/www/html
+
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN a2enmod rewrite
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -53,11 +58,7 @@ COPY --from=assets /app/public/build ./public/build
 
 RUN composer dump-autoload --optimize \
     && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-CMD ["php-fpm"]
-
-FROM nginx:1.27-alpine AS web
-
-COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=app /var/www/html/public /var/www/html/public
+EXPOSE 80

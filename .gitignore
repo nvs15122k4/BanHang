@@ -66,3 +66,4 @@ supportAiAgent/
 replace_light.js
 test_results/
 /storage/framework/cache/data/*
+.vercel

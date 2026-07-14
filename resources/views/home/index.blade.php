@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nữ</h3>
-                        <a href="{{ route('categories.show', ['category' => 'women']) }}" class="btn-shop-now">Khám phá</a>
+                        <a href="{{ route('categories.show', ['category' => 'thoi-trang-nu']) }}" class="btn-shop-now">Khám phá</a>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="category-overlay"></div>
                     <div class="category-content">
                         <h3 class="category-name">Thời trang Nam</h3>
-                        <a href="{{ route('categories.show', ['category' => 'men']) }}" class="btn-shop-now">Khám phá</a>
+                        <a href="{{ route('categories.show', ['category' => 'thoi-trang-nam']) }}" class="btn-shop-now">Khám phá</a>
                     </div>
                 </div>
             </div>

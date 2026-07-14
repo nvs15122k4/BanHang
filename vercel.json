@@ -1,8 +1,10 @@
 {
   "version": 2,
+  "buildCommand": "npm ci --production=false && npm run build",
+  "outputDirectory": "public",
   "functions": {
     "api/index.php": {
-      "runtime": "vercel-php@0.5.2",
+      "runtime": "vercel-php",
       "maxDuration": 30
     }
   },

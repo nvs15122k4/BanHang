@@ -79,8 +79,6 @@ class AuthController extends Controller
                 'required', 
                 'confirmed', 
                 'min:8',
-                'regex:/[a-z]/',      // phải có chữ thường
-                'regex:/[A-Z]/',      // phải có chữ hoa
             ],
         ], [
             'name.required' => 'Vui lòng nhập họ tên',
@@ -90,8 +88,7 @@ class AuthController extends Controller
             'email.unique' => 'Email này đã được sử dụng',
             'password.required' => 'Vui lòng nhập mật khẩu',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự và có chữ hoa, chữ thường',
-            'password.regex' => 'Mật khẩu phải có ít nhất 8 ký tự và có chữ hoa, chữ thường',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
         ]);
 
         $user = User::create([
@@ -101,11 +98,11 @@ class AuthController extends Controller
             'role' => 'user', // Mặc định là user
         ]);
 
-        $user->sendEmailVerificationNotification();
+        Auth::login($user);
 
         return redirect()
-            ->route('verification.notice', ['email' => $user->email])
-            ->with('status', 'Vui lòng kiểm tra email và nhấn "Chấp nhận" để hoàn tất đăng ký.');
+            ->route('home')
+            ->with('success', 'Đăng ký tài khoản thành công!');
     }
 
     /**

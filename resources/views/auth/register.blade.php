@@ -26,7 +26,7 @@
             <a href="{{ route('home') }}" class="back-link"><i class="fas fa-arrow-left me-2"></i>Về trang chủ</a>
             
             <h1 class="login-title">Tạo tài khoản</h1>
-            <p class="text-muted mb-4">Bắt đầu hành trình thời trang của bạn. Bạn sẽ xác nhận đăng ký qua email.</p>
+            <p class="text-muted mb-4">Bắt đầu hành trình thời trang của bạn.</p>
             
             <form method="POST" action="{{ route('register') }}">
                 @csrf

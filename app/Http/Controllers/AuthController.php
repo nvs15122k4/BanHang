@@ -39,15 +39,6 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
-            if (! $user->hasVerifiedEmail()) {
-                Auth::logout();
-                $request->session()->regenerateToken();
-
-                return redirect()
-                    ->route('verification.notice', ['email' => $user->email])
-                    ->with('status', 'Vui lòng xác nhận email trước khi đăng nhập.');
-            }
-
             $message = $user->isAdmin() ? 'Chào mừng Admin!' : 'Đăng nhập thành công!';
 
             $redirect = Auth::user()->isAdmin() ? route('home') : route('home');

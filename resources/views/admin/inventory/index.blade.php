@@ -101,9 +101,9 @@
                         <td>
                             @if($product->anh || $product->productImages->isNotEmpty())
                                 <img src="{{ $product->image_path }}"
-                                     class="w-50-px-custom h-50-px-custom object-cover">
+                                     class="product-img">
                             @else
-                                <div class="w-50-px-custom h-50-px-custom bg-gray-light-custom d-flex align-items-center justify-content-center">
+                                <div class="product-img-placeholder">
                                     <i class="fas fa-image text-muted"></i>
                                 </div>
                             @endif

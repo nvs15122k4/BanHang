@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "true",
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {

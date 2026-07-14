@@ -29,11 +29,13 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
         default-mysql-client \
+        postgresql-client \
         git \
         libfreetype6-dev \
         libicu-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
+        libpq-dev \
         libzip-dev \
         unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -44,6 +46,7 @@ RUN apt-get update \
         intl \
         pcntl \
         pdo_mysql \
+        pdo_pgsql \
         zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

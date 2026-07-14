@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (request()->getHost() === 'banhang.vnsang.io.vn') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         Vite::prefetch(concurrency: 3);
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url): MailMessage {

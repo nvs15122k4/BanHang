@@ -183,8 +183,8 @@
             <a href="{{ route('home') }}" class="list-group-item list-group-item-action py-3 border-0 fw-600">TRANG CHỦ</a>
             <a href="{{ route('products.index') }}" class="list-group-item list-group-item-action py-3 border-0">SẢN PHẨM</a>
             <a href="{{ route('promotions.index') }}" class="list-group-item list-group-item-action py-3 border-0 text-danger fw-bold">KHUYẾN MÃI</a>
-            <a href="{{ route('categories.show', ['category' => 'men']) }}" class="list-group-item list-group-item-action py-3 border-0">NAM</a>
-            <a href="{{ route('categories.show', ['category' => 'women']) }}" class="list-group-item list-group-item-action py-3 border-0">NỮ</a>
+            <a href="{{ route('categories.show', ['category' => 'thoi-trang-nam']) }}" class="list-group-item list-group-item-action py-3 border-0">NAM</a>
+            <a href="{{ route('categories.show', ['category' => 'thoi-trang-nu']) }}" class="list-group-item list-group-item-action py-3 border-0">NỮ</a>
             <a href="{{ route('pages.blog') }}" class="list-group-item list-group-item-action py-3 border-0">BLOG</a>
             <a href="{{ route('guides.size') }}" class="list-group-item list-group-item-action py-3 border-0">HƯỚNG DẪN CHỌN SIZE</a>
             <a href="{{ route('support.faq') }}" class="list-group-item list-group-item-action py-3 border-0">HỖ TRỢ</a>
@@ -226,8 +226,8 @@
                 <ul class="footer-links">
                     <li><a href="{{ route('products.index') }}">Tất cả sản phẩm</a></li>
                     <li><a href="{{ route('promotions.index') }}">Khuyến mãi</a></li>
-                    <li><a href="{{ route('categories.show', ['category' => 'men']) }}">Nam</a></li>
-                    <li><a href="{{ route('categories.show', ['category' => 'women']) }}">Nữ</a></li>
+                    <li><a href="{{ route('categories.show', ['category' => 'thoi-trang-nam']) }}">Nam</a></li>
+                    <li><a href="{{ route('categories.show', ['category' => 'thoi-trang-nu']) }}">Nữ</a></li>
                 </ul>
             </div>
 

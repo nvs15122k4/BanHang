@@ -6,28 +6,28 @@ test.describe('Authentication Features', () => {
   test('User can login and logout successfully', async ({ page }) => {
     const auth = new AuthHelper(page);
     
-    // Perform login
+    // Thực hiện đăng nhập
     await auth.login();
 
-    // Now try to logout
-    // Assume there's a logout button or form in the UI
-    // Sometimes it's in a dropdown
-    await page.goto('/profile'); // or dashboard
+    // Tiến hành đăng xuất
+    // Giả định có nút đăng xuất hoặc form đăng xuất trên giao diện
+    // Có khi nút này nằm trong menu thả xuống (dropdown)
+    await page.goto('/profile'); // hoặc bảng điều khiển (dashboard)
     
-    // Usually Laravel logout is a POST form. We might find a submit button for logout
+    // Thông thường chức năng đăng xuất của Laravel sử dụng form POST. Tìm nút gửi form đăng xuất
     const logoutBtn = page.locator('button:has-text("Đăng xuất"), a:has-text("Đăng xuất"), form[action$="logout"] button').first();
     
     if (await logoutBtn.isVisible()) {
       await logoutBtn.click();
       
-      // Should be redirected to home or login after logout
-      await expect(page).toHaveURL(/.*(\/|\/login)$/);
+      // Sau khi đăng xuất, hệ thống phải chuyển hướng về trang chủ hoặc trang đăng nhập
+      await expect(page, 'Không chuyển hướng về trang đăng nhập hoặc trang chủ sau khi đăng xuất').toHaveURL(/.*(\/|\/login)$/);
     } else {
-        // Fallback: If logout button isn't visible, directly submit the logout form if it exists
+        // Phương án dự phòng: Nếu không thấy nút đăng xuất, submit trực tiếp form đăng xuất nếu tồn tại
         const logoutForm = page.locator('form[action$="logout"]').first();
         if (await logoutForm.count() > 0) {
             await logoutForm.evaluate((form: HTMLFormElement) => form.submit());
-            await expect(page).toHaveURL(/.*(\/|\/login)$/);
+            await expect(page, 'Không chuyển hướng về trang đăng nhập hoặc trang chủ sau khi đăng xuất bằng form').toHaveURL(/.*(\/|\/login)$/);
         }
     }
   });
@@ -38,10 +38,10 @@ test.describe('Authentication Features', () => {
 
     await page.goto('/profile');
     
-    // Ensure we are on the profile page and not redirected to login
-    await expect(page).toHaveURL(/.*\/profile/);
-    await expect(page.locator('body')).not.toContainText('403 Forbidden');
-    await expect(page.locator('body')).toContainText(/Thông tin cá nhân|Tài khoản của tôi/i);
+    // Đảm bảo đang ở trang thông tin cá nhân và không bị chuyển hướng về trang đăng nhập
+    await expect(page, 'Không ở đúng trang thông tin cá nhân sau khi truy cập').toHaveURL(/.*\/profile/);
+    await expect(page.locator('body'), 'Không được hiển thị lỗi 403 Forbidden khi truy cập trang cá nhân').not.toContainText('403 Forbidden');
+    await expect(page.locator('body'), 'Trang cá nhân phải chứa thông tin cá nhân hoặc tài khoản').toContainText(/Thông tin cá nhân|Tài khoản của tôi/i);
   });
 
 });

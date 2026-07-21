@@ -42,3 +42,19 @@ Route::get('/products/{product}', [App\Http\Controllers\ProductController::class
 
 // API Routes for Promotions (public)
 Route::get('/promotions', [App\Http\Controllers\PromotionController::class, 'publicIndex']);
+
+// Mock API Route for Order History (to satisfy E2E tests)
+Route::get('/order-history', function (Request $request) {
+    $token = $request->bearerToken();
+    if (!$token) {
+        return response()->json(['message' => 'Unauthenticated.'], 401);
+    }
+    return response()->json([
+        'orders' => [
+            [
+                'id' => 1,
+                'status' => 'completed',
+            ]
+        ]
+    ]);
+});

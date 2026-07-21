@@ -13,25 +13,25 @@ test.describe('Cart and Checkout Flow', () => {
       const addToCartBtn = page.locator('button:has-text("Thêm vào giỏ"), button:has-text("Add to cart")').first();
       await addToCartBtn.click();
       
-      // Usually there is a toast message or an update to the cart icon.
-      // Wait a moment or navigate to the cart explicitly.
+      // Thông thường sẽ xuất hiện thông báo toast hoặc biểu tượng giỏ hàng được cập nhật.
+      // Chờ một lát hoặc điều hướng trực tiếp tới trang giỏ hàng.
       await page.goto('/cart');
       
-      // Ensure we are on the cart page
-      await expect(page).toHaveURL(/.*\/cart/);
+      // Đảm bảo đang ở trang giỏ hàng
+      await expect(page, 'Không chuyển hướng đến trang giỏ hàng').toHaveURL(/.*\/cart/);
       
-      // Ensure the checkout button exists
+      // Đảm bảo nút thanh toán tồn tại
       const checkoutBtn = page.locator('a[href*="/checkout"], button:has-text("Thanh toán")').first();
-      // It might be empty or have products. We just verify the UI loads.
-      await expect(page.locator('body')).not.toContainText('404 Not Found');
+      // Giỏ hàng có thể trống hoặc có sản phẩm. Chỉ cần xác nhận giao diện tải thành công.
+      await expect(page.locator('body'), 'Trang giỏ hàng bị lỗi 404').not.toContainText('404 Not Found');
     }
   });
 
   test('User can reach the checkout page if logged in', async ({ page }) => {
     const auth = new AuthHelper(page);
-    await auth.login(); // Logs in as a normal user
+    await auth.login(); // Đăng nhập bằng tài khoản người dùng thông thường
 
-    // Add a product to cart first so checkout doesn't redirect
+    // Thêm trước một sản phẩm vào giỏ hàng để tránh bị chuyển hướng khi vào trang thanh toán
     await page.goto('/products');
     const productLinks = page.locator('a[href*="/san-pham/"]').first();
     if (await productLinks.isVisible()) {
@@ -41,9 +41,9 @@ test.describe('Cart and Checkout Flow', () => {
     }
 
     await page.goto('/checkout');
-    await expect(page).toHaveURL(/.*(\/checkout|\/cart)/);
-    await expect(page.locator('body')).not.toContainText('403 Forbidden');
-    await expect(page.locator('body')).not.toContainText('login');
+    await expect(page, 'Không ở trang thanh toán hoặc trang giỏ hàng').toHaveURL(/.*(\/checkout|\/cart)/);
+    await expect(page.locator('body'), 'Không được hiển thị lỗi 403 Forbidden khi truy cập trang thanh toán').not.toContainText('403 Forbidden');
+    await expect(page.locator('body'), 'Không được yêu cầu đăng nhập lại khi đã đăng nhập').not.toContainText('login');
   });
 
 });

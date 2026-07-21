@@ -2,19 +2,19 @@ import { test, expect } from '@playwright/test';
 import { AuthHelper } from './helpers/auth';
 
 /**
- * What does this file do?
- * Verifies that an admin user can successfully log in and access the admin management dashboard.
- * Primary purpose is a basic happy-path smoke test from user login to admin panel.
+ * File này làm nhiệm vụ gì?
+ * Xác minh tài khoản quản trị viên (admin) đăng nhập thành công và truy cập được vào trang quản trị admin.
+ * Mục đích chính là kiểm thử nhanh (smoke test) luồng hoạt động chuẩn từ lúc đăng nhập đến trang quản trị.
  */
 
 test.describe('Admin Authentication and Dashboard Access', () => {
     test('User logs in and navigates to admin dashboard', async ({ page }) => {
         const auth = new AuthHelper(page);
 
-        // Act: Login as Admin
+        // Bước: Đăng nhập với vai trò Admin
         await auth.loginAsAdmin();
 
-        // Act: Navigate explicitly to the admin dashboard
+        // Bước: Điều hướng trực tiếp tới trang quản trị admin
         await auth.navigateToAdminDashboard();
     });
 });

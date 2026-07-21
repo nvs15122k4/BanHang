@@ -9,3 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('trash:prune-expired')->daily();
+Schedule::command('test:cleanup-users')->hourly();
+

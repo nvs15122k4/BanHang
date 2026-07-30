@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -18,36 +19,40 @@ class CheckoutController extends Controller
             'ten_nguoi_nhan' => 'required|string|max:255',
             'sdt_nguoi_nhan' => 'required|string|max:20',
             'dia_chi_giao_hang' => 'required|string',
-            'phuong_thuc_thanh_toan' => 'required|in:cod,bank_transfer,vietqr',
+            'phuong_thuc_thanh_toan' => 'required|in:cod,bank_transfer,vietqr,vnpay',
             'ghi_chu' => 'nullable|string|max:1000',
         ]);
 
-        $cart = session('cart', []);
-        if (empty($cart)) {
+        $cartItems = CartItem::where('user_id', Auth::id())
+            ->with('product')
+            ->get();
+
+        if ($cartItems->isEmpty()) {
             return response()->json(['message' => 'Giỏ hàng trống!'], 400);
         }
 
         $user = Auth::user();
 
-        $order = DB::transaction(function () use ($request, $cart, $user) {
+        $order = DB::transaction(function () use ($request, $cartItems, $user) {
             $items = [];
             $total = 0;
 
-            foreach ($cart as $cartKey => $item) {
-                $productId = $item['product_id'] ?? explode('_', $cartKey)[0];
-                $product = Product::findOrFail($productId);
+            foreach ($cartItems as $cartItem) {
+                $product = $cartItem->product;
+                if (!$product) continue;
+
                 $promo = $product->getActivePromotion();
                 $price = $promo ? $promo->getDiscountedPrice($product) : (int) $product->gia;
-                $subtotal = $price * $item['so_luong'];
+                $subtotal = $price * $cartItem->so_luong;
                 $total += $subtotal;
 
                 $items[] = [
                     'product_id' => $product->id,
                     'ten_san_pham' => $product->ten_sp,
                     'gia' => $price,
-                    'so_luong' => $item['so_luong'],
+                    'so_luong' => $cartItem->so_luong,
                     'thanh_tien' => $subtotal,
-                    'size' => $item['size'] ?? null,
+                    'size' => $cartItem->size,
                 ];
             }
 
@@ -71,7 +76,8 @@ class CheckoutController extends Controller
                 $order->orderItems()->create($item);
             }
 
-            session()->forget('cart');
+            // Clear cart
+            CartItem::where('user_id', $user->id)->delete();
 
             return $order->load('orderItems');
         });

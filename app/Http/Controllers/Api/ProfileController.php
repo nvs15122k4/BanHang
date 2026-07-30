@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\User;
+use App\Services\CloudinaryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,24 @@ class ProfileController extends Controller
         return response()->json(Auth::user()->load('addresses'));
     }
 
+    public function uploadAvatar(Request $request): JsonResponse
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $url = (new CloudinaryService)->uploadImage($request->file('avatar'));
+
+        $user = Auth::user();
+        $user->update(['avatar' => $url]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cập nhật ảnh đại diện thành công!',
+            'data' => $user->fresh(),
+        ]);
+    }
+
     public function update(Request $request): JsonResponse
     {
         $user = Auth::user();
@@ -29,7 +48,7 @@ class ProfileController extends Controller
             'birthday' => 'nullable|date',
             'height' => 'nullable|integer|min:100|max:300',
             'weight' => 'nullable|numeric|min:20|max:300',
-            'avatar' => ['nullable', 'string', Rule::in(array_merge([User::DEFAULT_AVATAR_URL], User::avatarOptions()))],
+            'avatar' => ['nullable', 'string', 'url', 'max:2048'],
         ]);
 
         $user->update($validated);

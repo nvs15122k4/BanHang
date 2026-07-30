@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile', [App\Http\Controllers\Api\ProfileController::class, 'update']);
     Route::put('/profile/password', [App\Http\Controllers\Api\ProfileController::class, 'updatePassword']);
 
+    // Avatar upload
+    Route::post('/profile/avatar', [App\Http\Controllers\Api\ProfileController::class, 'uploadAvatar']);
+
     // Addresses
     Route::get('/profile/addresses', [App\Http\Controllers\Api\ProfileController::class, 'addresses']);
     Route::post('/profile/addresses', [App\Http\Controllers\Api\ProfileController::class, 'storeAddress']);
@@ -65,7 +68,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/orders', [App\Http\Controllers\Api\AdminController::class, 'orders']);
         Route::put('/admin/orders/{order}/status', [App\Http\Controllers\Api\AdminController::class, 'updateOrderStatus']);
     });
+
+    // VNPay
+    Route::post('/payment/vnpay/create', [App\Http\Controllers\Api\VnPayController::class, 'createPayment']);
 });
+
+// VNPay return (public — VNPay redirects here)
+Route::get('/payment/vnpay/return', [App\Http\Controllers\Api\VnPayController::class, 'handleReturn']);
 
 // Public
 Route::get('/products', [App\Http\Controllers\Api\ProductController::class, 'index']);

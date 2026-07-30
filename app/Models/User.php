@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'email', 'password', 'role', 'phone', 'gender', 'birthday', 'is_active', 'height', 'weight', 'avatar'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     public const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/***REMOVED***/image/upload/v1782184442/santimvien/assets/oirujipgubsiy6rceqq5.jpg';
     public const AVATAR_BASE_URL = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779240859/avt';

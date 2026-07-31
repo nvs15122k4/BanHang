@@ -93,7 +93,10 @@ class ProductController extends Controller
         }
 
         // Sắp xếp giảm nhiều nhất và lấy 8 sản phẩm
-        $promoProducts = $promoProducts->sortByDesc(fn ($p) => $p->gia - $p->promo_price)->take(8);
+        $promoProducts = $promoProducts
+            ->filter(fn ($p) => $p->promo_price !== null)
+            ->sortByDesc(fn ($p) => (float) $p->gia - (float) $p->promo_price)
+            ->take(8);
 
         // Chỉ load ảnh + variants cho đúng sản phẩm hiển thị
         $displayProductIds = $latestProducts->pluck('id')

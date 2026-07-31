@@ -74,4 +74,4 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/products', [App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{product}', [App\Http\Controllers\Api\ProductController::class, 'show']);
 Route::get('/categories', [App\Http\Controllers\Api\CategoryController::class, 'index']);
-Route::get('/promotions', [App\Http\Controllers\PromotionController::class, 'publicIndex']);
+Route::get('/promotions', [App\Http\Controllers\Api\PromotionController::class, 'index']);

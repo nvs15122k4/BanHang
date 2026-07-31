@@ -43,8 +43,15 @@ class OrderController extends Controller
             return response()->json(['message' => 'Không có quyền'], 403);
         }
 
-        if ($order->trang_thai !== Order::STATUS_PENDING) {
-            return response()->json(['message' => 'Chỉ có thể hủy đơn hàng đang chờ duyệt'], 400);
+        if (!in_array($order->trang_thai, [Order::STATUS_PENDING, Order::STATUS_CONFIRMED], true)) {
+            return response()->json(['message' => 'Chỉ có thể hủy đơn hàng đang chờ duyệt hoặc đang chuẩn bị hàng'], 400);
+        }
+
+        // Nếu đơn đã duyệt (confirmed), hoàn lại stock đã trừ
+        if ($order->trang_thai === Order::STATUS_CONFIRMED) {
+            foreach ($order->orderItems as $item) {
+                $item->product?->increment('so_luong', $item->so_luong);
+            }
         }
 
         $order->update(['trang_thai' => Order::STATUS_CANCELLED]);

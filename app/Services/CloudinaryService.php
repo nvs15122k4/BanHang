@@ -66,7 +66,7 @@ class CloudinaryService
      * Trích xuất public_id từ Cloudinary URL.
      *
      * Ví dụ URL:
-     * https://res.cloudinary.com/dxvml3sji/image/upload/v1234567890/banhang/products/abc123.jpg
+     * https://res.cloudinary.com/dqfqgzrgx/image/upload/v1234567890/banhang/products/abc123.jpg
      * → public_id: banhang/products/abc123
      */
     public static function extractPublicId(string $url): ?string

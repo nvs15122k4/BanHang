@@ -120,10 +120,15 @@ class Product extends Model
         if (preg_match('#^(https?://res\.cloudinary\.com/[^/]+/image/upload)/(.*)$#', $image, $m)) {
             $rest = $m[2];
 
-            // Đã có transform (segment chứa _ và không phải version v\d+...) → giữ nguyên
+            // Đã có transform (segment chứa _, không phải version v\d+...) → giữ nguyên
             $firstSeg = explode('/', $rest)[0];
             if (str_contains($firstSeg, '_') && ! preg_match('/^v\d+_/', $firstSeg)) {
                 return $image;
+            }
+
+            // Đặt transform TRƯỚC version segment (v\d+...) để Cloudinary parse đúng
+            if (preg_match('/^(v\d+\/.*)$/', $rest, $v)) {
+                return $m[1].'/w_600,q_auto,f_auto/'.$rest;
             }
 
             return $m[1].'/w_600,q_auto,f_auto/'.$rest;

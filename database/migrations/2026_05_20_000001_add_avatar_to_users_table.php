@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'avatar')) {
-                $table->string('avatar')->default('https://res.cloudinary.com/dxvml3sji/image/upload/v1779240859/avt0.jpg')->after('weight');
+                $table->string('avatar')->default('https://res.cloudinary.com/dqfqgzrgx/image/upload/v1779240859/avt0.jpg')->after('weight');
             }
         });
     }

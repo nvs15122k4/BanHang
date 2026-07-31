@@ -5,7 +5,7 @@
         $defaultSeoTitle = 'Sàn Tím Vi En - Thời trang Việt phong cách';
         $defaultSeoDescription = 'Sàn Tím Vi En mang đến thời trang Việt hiện đại, chất lượng, giúp bạn tự tin thể hiện phong cách riêng qua những bộ sưu tập tinh tế mỗi ngày.';
         $defaultSeoCanonical = 'https://santimvien.vn' . (request()->path() === '/' ? '/' : '/' . request()->path());
-        $defaultSeoImage = 'https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png';
+        $defaultSeoImage = 'https://res.cloudinary.com/dqfqgzrgx/image/upload/q_auto/f_auto/v1779381084/title.png';
     @endphp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://res.cloudinary.com">
-    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqfqgzrgx/image/upload/q_auto/f_auto/v1779381084/title.png">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->

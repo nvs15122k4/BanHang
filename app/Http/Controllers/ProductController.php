@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Review;
+use App\Models\Wishlist;
 use App\Services\ProductService;
 use App\Services\SizeRecommendationService;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class ProductController extends Controller
         }
 
         // Lấy 8 sản phẩm mới nhất
-        $latestProductsQuery = Product::with(['productImages', 'variants'])->where('trang_thai', 'con');
+        $latestProductsQuery = Product::where('trang_thai', 'con');
         if (!empty($categorySlugs)) {
             $latestProductsQuery->whereIn('loai', $categorySlugs);
         }
@@ -60,8 +61,11 @@ class ProductController extends Controller
 
         // Lấy danh sách sản phẩm có khuyến mãi
         $activePromotions = Promotion::currentlyActive()->with('items')->get();
-        
-        $allProductsQuery = Product::where('trang_thai', 'con')->with(['wishlists', 'productImages', 'variants'])->limit(1000);
+
+        // Duyệt 1000 sản phẩm nhưng chỉ cần cột tính giảm giá — không kéo ảnh/variants/wishlists
+        $allProductsQuery = Product::where('trang_thai', 'con')
+            ->select(['id', 'ten_sp', 'slug', 'loai', 'gia', 'so_luong', 'trang_thai', 'anh', 'created_at'])
+            ->limit(1000);
         if (!empty($categorySlugs)) {
             $allProductsQuery->whereIn('loai', $categorySlugs);
         }
@@ -91,7 +95,53 @@ class ProductController extends Controller
         // Sắp xếp giảm nhiều nhất và lấy 8 sản phẩm
         $promoProducts = $promoProducts->sortByDesc(fn ($p) => $p->gia - $p->promo_price)->take(8);
 
-        return view('home.index', compact('latestProducts', 'promoProducts', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'totalValue', 'categories', 'selectedCategory'));
+        // Chỉ load ảnh + variants cho đúng sản phẩm hiển thị
+        $displayProductIds = $latestProducts->pluck('id')
+            ->concat($promoProducts->pluck('id'))
+            ->unique()
+            ->all();
+
+        if ($displayProductIds) {
+            $loadedById = Product::with(['productImages', 'variants'])
+                ->whereKey($displayProductIds)
+                ->get()
+                ->keyBy('id');
+
+            foreach ($latestProducts as $product) {
+                if ($loaded = $loadedById->get($product->id)) {
+                    $product->setRelation('productImages', $loaded->productImages);
+                    $product->setRelation('variants', $loaded->variants);
+                }
+            }
+
+            foreach ($promoProducts as $product) {
+                if ($loaded = $loadedById->get($product->id)) {
+                    $product->setRelation('productImages', $loaded->productImages);
+                    $product->setRelation('variants', $loaded->variants);
+                }
+            }
+        }
+
+        // Wishlist ids của user để tránh N+1 hasInWishlist trong view
+        $userWishlistIds = [];
+        if (auth()->check()) {
+            $userWishlistIds = Wishlist::where('user_id', auth()->id())
+                ->whereIn('product_id', $displayProductIds)
+                ->pluck('product_id')
+                ->all();
+        }
+
+        return view('home.index', compact(
+            'latestProducts',
+            'promoProducts',
+            'totalProducts',
+            'inStockProducts',
+            'outOfStockProducts',
+            'totalValue',
+            'categories',
+            'selectedCategory',
+            'userWishlistIds'
+        ));
     }
 
     public function index(Request $request)
@@ -109,9 +159,6 @@ class ProductController extends Controller
 
         $products = $this->productService->getFilteredProducts($filters, $perPage);
 
-        $totalProducts = Product::count();
-        $inStockProducts = Product::where('trang_thai', 'con')->count();
-        $outOfStockProducts = Product::where('trang_thai', 'het')->count();
         $categories = Category::with('children')->whereNull('parent_id')->get();
         $loaiList = Product::getLoaiList();
         $selectedCategoryModel = null;
@@ -119,7 +166,15 @@ class ProductController extends Controller
             $selectedCategoryModel = Category::where('slug', (string) $request->string('loai_filter'))->first();
         }
 
-        return view('products.index', compact('products', 'totalProducts', 'inStockProducts', 'outOfStockProducts', 'categories', 'selectedCategoryModel', 'loaiList'));
+        // Wishlist ids của user để tránh N+1 hasInWishlist trong view
+        $userWishlistIds = [];
+        if (auth()->check()) {
+            $userWishlistIds = Wishlist::where('user_id', auth()->id())
+                ->pluck('product_id')
+                ->all();
+        }
+
+        return view('products.index', compact('products', 'categories', 'selectedCategoryModel', 'loaiList', 'userWishlistIds'));
     }
 
     public function store(Request $request)
@@ -228,6 +283,15 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
+        // Wishlist ids của user để tránh N+1 hasInWishlist trong view
+        $userWishlistIds = [];
+        if (auth()->check()) {
+            $userWishlistIds = Wishlist::where('user_id', auth()->id())
+                ->whereIn('product_id', $relatedProducts->pluck('id'))
+                ->pluck('product_id')
+                ->all();
+        }
+
         // Load approved reviews với user info
         $reviews = $product->approvedReviews()
             ->with('user')
@@ -306,7 +370,8 @@ class ProductController extends Controller
             'canReview',
             'sizeRecommendation',
             'productOriginalPrice',
-            'productCurrentPrice'
+            'productCurrentPrice',
+            'userWishlistIds'
         ));
     }
 

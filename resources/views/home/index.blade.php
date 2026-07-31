@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 @endif
                                 @if($product->anh || $product->productImages->isNotEmpty())
-                                    <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="product-img">
+                                    <img src="{{ $product->image_thumb }}" alt="{{ $product->ten_sp }}" class="product-img" loading="lazy" decoding="async">
                                 @else
                                     <div class="product-img d-flex align-items-center justify-content-center bg-light">
                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             @auth
                                 <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
                                     @csrf
-                                    <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($product->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($product->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                                    <button type="submit" class="wishlist-btn-float {{ in_array($product->id, $userWishlistIds ?? [], true) ? 'active' : '' }}" title="{{ in_array($product->id, $userWishlistIds ?? [], true) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
                                         <i class="fas fa-heart"></i>
                                     </button>
                                 </form>
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="product-badge">Mới</div>
                                 @endif
                                 @if($product->anh || $product->productImages->isNotEmpty())
-                                    <img src="{{ $product->image_path }}" alt="{{ $product->ten_sp }}" class="product-img">
+                                    <img src="{{ $product->image_thumb }}" alt="{{ $product->ten_sp }}" class="product-img" loading="lazy" decoding="async">
                                 @else
                                     <div class="product-img d-flex align-items-center justify-content-center bg-light">
                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             @auth
                                 <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
                                     @csrf
-                                    <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($product->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($product->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                                    <button type="submit" class="wishlist-btn-float {{ in_array($product->id, $userWishlistIds ?? [], true) ? 'active' : '' }}" title="{{ in_array($product->id, $userWishlistIds ?? [], true) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
                                         <i class="fas fa-heart"></i>
                                     </button>
                                 </form>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\PromotionItem;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -267,7 +268,7 @@ class PromotionController extends Controller
         $search = trim((string) $request->input('search', ''));
 
         // Lấy danh sách sản phẩm (giới hạn 1000 để tránh tràn bộ nhớ nếu database quá lớn)
-        $productsQuery = Product::where('trang_thai', 'con')->with(['wishlists', 'productImages', 'variants']);
+        $productsQuery = Product::where('trang_thai', 'con')->with(['productImages', 'variants']);
 
         if ($search !== '') {
             $productsQuery->where('ten_sp', 'like', '%'.$search.'%');
@@ -361,6 +362,15 @@ class PromotionController extends Controller
         $categories = \App\Models\Category::with('children')->whereNull('parent_id')->get();
         $bannerPromos = Promotion::currentlyActive()->orderByDesc('gia_tri')->take(3)->get();
 
-        return view('promotions.index', compact('paginated', 'categories', 'bannerPromos', 'activePromotions', 'selectedCategoryModel'));
+        // Wishlist ids của user để tránh N+1 hasInWishlist trong view
+        $userWishlistIds = [];
+        if (auth()->check()) {
+            $userWishlistIds = Wishlist::where('user_id', auth()->id())
+                ->whereIn('product_id', $paginated->pluck('id'))
+                ->pluck('product_id')
+                ->all();
+        }
+
+        return view('promotions.index', compact('paginated', 'categories', 'bannerPromos', 'activePromotions', 'selectedCategoryModel', 'userWishlistIds'));
     }
 }

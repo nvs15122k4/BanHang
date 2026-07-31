@@ -22,6 +22,11 @@
     <meta property="og:image" content="@yield('og_image', $defaultSeoImage)">
     <meta name="twitter:card" content="summary_large_image">
     @stack('head')
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com">
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dxvml3sji/image/upload/q_auto/f_auto/v1779381084/title.png">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -660,9 +665,25 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch {}
     }
 
-    // Initial fetch + poll every 5s (update liên tục, không cần load trang mới)
-    fetchNotifications();
-    setInterval(fetchNotifications, 5000);
+    // Initial fetch + poll every 30s — tab ẩn thì tạm dừng để giảm tải server
+    let notifPolling = null;
+    function startNotifPolling() {
+        if (notifPolling) return;
+        fetchNotifications();
+        notifPolling = setInterval(fetchNotifications, 30000);
+    }
+    function stopNotifPolling() {
+        clearInterval(notifPolling);
+        notifPolling = null;
+    }
+    startNotifPolling();
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            stopNotifPolling();
+        } else {
+            startNotifPolling();
+        }
+    });
 
     // Mark all read
     document.getElementById('markAllRead')?.addEventListener('click', function(e) {

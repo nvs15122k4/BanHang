@@ -108,6 +108,30 @@ class Product extends Model
         return $this->image_path;
     }
 
+    /**
+     * URL ảnh thu nhỏ (dùng cho card/list) — Cloudinary resize tự động.
+     * Ảnh ngoài Cloudinary giữ nguyên URL.
+     */
+    public function getImageThumbAttribute(): string
+    {
+        $image = $this->image_path;
+
+        // Chỉ resize URL Cloudinary (res.cloudinary.com/.../image/upload/...)
+        if (preg_match('#^(https?://res\.cloudinary\.com/[^/]+/image/upload)/(.*)$#', $image, $m)) {
+            $rest = $m[2];
+
+            // Đã có transform (segment chứa _ và không phải version v\d+...) → giữ nguyên
+            $firstSeg = explode('/', $rest)[0];
+            if (str_contains($firstSeg, '_') && ! preg_match('/^v\d+_/', $firstSeg)) {
+                return $image;
+            }
+
+            return $m[1].'/w_600,q_auto,f_auto/'.$rest;
+        }
+
+        return $image;
+    }
+
     public function getIsImageUrlAttribute(): bool
     {
         return ! empty($this->anh) && (

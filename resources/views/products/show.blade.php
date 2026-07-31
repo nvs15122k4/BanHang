@@ -151,9 +151,10 @@
 
                 {{-- Wishlist Toggle --}}
                 @auth
+                @php $isWished = auth()->user()->hasInWishlist($product->id); @endphp
                 <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST" class="d-inline">
                     @csrf
-                    <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($product->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($product->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                    <button type="submit" class="wishlist-btn-float {{ $isWished ? 'active' : '' }}" title="{{ $isWished ? 'Bỏ yêu thích' : 'Yêu thích' }}">
                         <i class="fas fa-heart"></i>
                     </button>
                 </form>
@@ -517,7 +518,7 @@
                 <div class="product-img-wrapper">
                     <a href="{{ route('products.show', ['product' => $rp->slug]) }}">
                         @if($rp->anh || $rp->productImages->isNotEmpty())
-                        <img src="{{ $rp->image_path }}" alt="{{ $rp->ten_sp }}" class="product-img">
+                        <img src="{{ $rp->image_thumb }}" alt="{{ $rp->ten_sp }}" class="product-img" loading="lazy" decoding="async">
                         @else
                         <div class="product-img d-flex align-items-center justify-content-center bg-light">
                             <i class="fas fa-image fa-2x text-muted"></i>
@@ -529,7 +530,7 @@
                     @auth
                     <form action="{{ route('wishlist.toggle', $rp->id) }}" method="POST" class="d-inline">
                         @csrf
-                        <button type="submit" class="wishlist-btn-float {{ auth()->user()->hasInWishlist($rp->id) ? 'active' : '' }}" title="{{ auth()->user()->hasInWishlist($rp->id) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                        <button type="submit" class="wishlist-btn-float {{ in_array($rp->id, $userWishlistIds ?? [], true) ? 'active' : '' }}" title="{{ in_array($rp->id, $userWishlistIds ?? [], true) ? 'Bỏ yêu thích' : 'Yêu thích' }}">
                             <i class="fas fa-heart"></i>
                         </button>
                     </form>

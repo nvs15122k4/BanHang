@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\PromotionItem;
+use App\Models\Wishlist;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,22 +22,25 @@ class CategoryController extends Controller
         $perPage = $request->integer('per_page', 12);
 
         $products = $this->productService->getFilteredProducts($filters, $perPage);
-        $totalProducts = Product::count();
-        $inStockProducts = Product::where('trang_thai', 'con')->count();
-        $outOfStockProducts = Product::where('trang_thai', 'het')->count();
         $categories = Category::with('children')->whereNull('parent_id')->get();
         $loaiList = Product::getLoaiList();
         $selectedCategoryModel = $category;
 
+        // Wishlist ids của user để tránh N+1 hasInWishlist trong view
+        $userWishlistIds = [];
+        if (auth()->check()) {
+            $userWishlistIds = Wishlist::where('user_id', auth()->id())
+                ->pluck('product_id')
+                ->all();
+        }
+
         return view('products.index', compact(
             'category',
             'products',
-            'totalProducts',
-            'inStockProducts',
-            'outOfStockProducts',
             'categories',
             'selectedCategoryModel',
-            'loaiList'
+            'loaiList',
+            'userWishlistIds'
         ));
     }
 

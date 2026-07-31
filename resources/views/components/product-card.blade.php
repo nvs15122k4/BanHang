@@ -3,9 +3,11 @@
 <div class="col-md-6 col-lg-3 mb-4">
     <div class="card product-card h-100">
         <div class="image-container">
-            <img src="{{ $product->image_path }}" 
-                 alt="{{ $product->ten_sp }}" 
-                 class="product-card-image">
+            <img src="{{ $product->image_thumb }}"
+                 alt="{{ $product->ten_sp }}"
+                 class="product-card-image"
+                 loading="lazy"
+                 decoding="async">
         </div>
         <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ $product->ten_sp }}</h5>

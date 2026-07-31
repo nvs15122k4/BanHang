@@ -17,7 +17,9 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
-        value: error
+        value: debug
+      - key: APP_DEBUG
+        value: "false"
       - key: SESSION_DRIVER
         value: database
       - key: CACHE_DRIVER

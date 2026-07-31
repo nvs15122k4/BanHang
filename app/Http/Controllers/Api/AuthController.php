@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -19,20 +18,26 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-            $token = $user->createToken('mobile-app')->plainTextToken;
+        $user = User::where('email', $request->email)->first();
 
-            return response()->json([
-                'token' => $token,
-                'user' => $user->load('addresses'),
-                'message' => 'Đăng nhập thành công!',
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Thông tin đăng nhập không chính xác.'],
             ]);
         }
 
-        throw ValidationException::withMessages([
-            'email' => ['Thông tin đăng nhập không chính xác.'],
+        if (! $user->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['Tài khoản của bạn đã bị vô hiệu hóa.'],
+            ]);
+        }
+
+        $token = $user->createToken('mobile-app')->plainTextToken;
+
+        return response()->json([
+            'token' => $token,
+            'user' => $user->load('addresses'),
+            'message' => 'Đăng nhập thành công!',
         ]);
     }
 
@@ -52,8 +57,6 @@ class AuthController extends Controller
             'phone' => $validated['phone'] ?? null,
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
         $token = $user->createToken('mobile-app')->plainTextToken;
 
         return response()->json([
@@ -66,9 +69,6 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Đăng xuất thành công!']);
     }

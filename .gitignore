@@ -67,3 +67,24 @@ replace_light.js
 test_results/
 /storage/framework/cache/data/*
 .vercel
+
+# ===== Sanitization =====
+# Sensitive environment files (may contain real secrets - NEVER commit)
+BanHang.env
+*.env.production
+.env.backup
+
+# One-time setup / deploy artifacts (moved to /archive)
+/archive/
+/setup_env.sh
+/composer.phar
+/vercel.json
+/api/
+/scripts/
+/playwright-report/
+/test-results/
+/docs/
+/boost.json
+/.vercelignore
+/test_api.sh
+/sanitize-repo.sh

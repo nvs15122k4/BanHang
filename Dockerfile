@@ -7,8 +7,6 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-COPY scripts ./scripts
-
 FROM node-deps AS assets
 
 COPY resources ./resources

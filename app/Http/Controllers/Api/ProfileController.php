@@ -42,7 +42,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required_without:avatar|string|max:255',
             'phone' => 'nullable|string|max:20',
             'gender' => 'nullable|in:male,female,other',
             'birthday' => 'nullable|date',

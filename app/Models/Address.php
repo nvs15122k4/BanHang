@@ -24,6 +24,8 @@ class Address extends Model
         'is_default' => 'boolean',
     ];
 
+    protected $appends = ['full_address'];
+
     /**
      * Get the user that owns the address
      */

@@ -92,6 +92,7 @@ class OrderController extends Controller
             'status_color' => $o->status_color,
             'payment_method_label' => $o->payment_method_label,
             'payment_status_label' => $o->payment_status_label,
+            'vietqr_url' => $o->phuong_thuc_thanh_toan === 'vietqr' ? $o->vietqr_url : null,
             'timeline_index' => $o->timeline_index,
             'reason_cancel' => $o->reason_cancel,
             'order_items' => $o->orderItems->map(fn($i) => [

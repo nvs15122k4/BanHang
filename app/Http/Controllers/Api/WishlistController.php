@@ -13,15 +13,10 @@ class WishlistController extends Controller
 {
     public function index(): JsonResponse
     {
-        $items = Auth::user()->wishlists()->with('product')->get();
+        $items = Auth::user()->wishlists()->with('product')->latest()->get();
 
         return response()->json([
-            'data' => $items->map(fn($w) => [
-                'id' => $w->id,
-                'product_id' => $w->product_id,
-                'product' => $w->product,
-                'created_at' => $w->created_at,
-            ]),
+            'data' => $items->pluck('product')->filter()->values(),
         ]);
     }
 

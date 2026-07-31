@@ -19,7 +19,7 @@ class CheckoutController extends Controller
             'ten_nguoi_nhan' => 'required|string|max:255',
             'sdt_nguoi_nhan' => 'required|string|max:20',
             'dia_chi_giao_hang' => 'required|string',
-            'phuong_thuc_thanh_toan' => 'required|in:cod,bank_transfer,vietqr,vnpay',
+            'phuong_thuc_thanh_toan' => 'required|in:cod,bank_transfer,vietqr',
             'ghi_chu' => 'nullable|string|max:1000',
         ]);
 

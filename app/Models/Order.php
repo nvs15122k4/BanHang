@@ -176,9 +176,8 @@ class Order extends Model
     {
         $labels = [
             'cod' => 'Thanh toán khi nhận hàng',
-            'vietqr' => 'Chuyển khoản VietQR',
             'bank_transfer' => 'Thanh toán khi nhận hàng',
-            'vnpay' => 'VNPay',
+            'vietqr' => 'Chuyển khoản VietQR',
         ];
 
         return $labels[$this->phuong_thuc_thanh_toan] ?? $this->phuong_thuc_thanh_toan;

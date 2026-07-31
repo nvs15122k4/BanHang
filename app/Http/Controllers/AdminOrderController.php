@@ -139,7 +139,7 @@ class AdminOrderController extends Controller
             'ten_nguoi_nhan' => 'required|string|max:255',
             'sdt_nguoi_nhan' => 'required|string|max:20',
             'dia_chi_giao_hang' => 'required|string',
-            'phuong_thuc_thanh_toan' => 'required|in:vietqr,cod,vnpay',
+            'phuong_thuc_thanh_toan' => 'required|in:vietqr,cod',
             'ghi_chu' => 'nullable|string',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',

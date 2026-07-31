@@ -60,7 +60,6 @@
                             <select name="phuong_thuc_thanh_toan" class="form-select" required>
                                 <option value="vietqr" {{ old('phuong_thuc_thanh_toan') === 'vietqr' ? 'selected' : '' }}>Chuyển khoản VietQR</option>
                                 <option value="cod" {{ old('phuong_thuc_thanh_toan') === 'cod' ? 'selected' : '' }}>Thanh toán COD</option>
-                                <option value="vnpay" {{ old('phuong_thuc_thanh_toan') === 'vnpay' ? 'selected' : '' }}>VNPay</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">

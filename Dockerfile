@@ -48,6 +48,7 @@ RUN apt-get update \
         pdo_mysql \
         pdo_pgsql \
         zip \
+    && docker-php-ext-enable opcache \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -59,7 +60,11 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-s
 COPY . .
 COPY --from=assets /app/public/build ./public/build
 
-RUN composer dump-autoload --optimize \
+RUN composer dump-autoload --optimize --classmap-authoritative \
+    && php artisan package:discover --ansi \
+    && php artisan config:cache \
+    && php artisan route:cache -o \
+    && php artisan view:cache \
     && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache

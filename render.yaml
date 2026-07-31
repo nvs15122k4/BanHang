@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: san-tim-vien-app
+    runtime: docker
+    plan: free
+    buildCommand: docker build -t stv-app .
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://san-tim-vien.onrender.com
+      - key: APP_KEY
+        generateValue: true
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DATABASE_URL
+        fromDatabase: san-tim-vien-db
+      - key: CLOUDINARY_URL
+        sync: false
+
+databases:
+  - name: san-tim-vien-db
+    databaseName: banhang
+    user: banhang
+    plan: free

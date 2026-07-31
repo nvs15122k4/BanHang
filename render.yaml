@@ -3,23 +3,23 @@ services:
     name: san-tim-vien-app
     runtime: docker
     plan: free
+    # Free tier: build via Dockerfile, no manual shell needed
     buildCommand: docker build -t stv-app .
+    # Health check (Laravel /up trả về 200)
     healthCheckPath: /up
     envVars:
       - key: APP_ENV
-        value: production
+        value: local
       - key: APP_DEBUG
-        value: "false"
+        value: "true"
       - key: APP_URL
-        value: https://san-tim-vien.onrender.com
+        value: https://banhang.vnsang.io.vn
       - key: APP_KEY
         generateValue: true
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
         value: debug
-      - key: APP_DEBUG
-        value: "false"
       - key: SESSION_DRIVER
         value: database
       - key: CACHE_DRIVER

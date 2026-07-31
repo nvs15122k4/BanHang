@@ -61,7 +61,7 @@ COPY --from=assets /app/public/build ./public/build
 RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan package:discover --ansi \
     && php artisan config:cache \
-    && php artisan route:cache -o \
+    && php artisan route:cache \
     && php artisan view:cache \
     && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \

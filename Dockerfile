@@ -60,11 +60,17 @@ COPY --from=assets /app/public/build ./public/build
 
 RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan package:discover --ansi \
-    && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache \
     && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Clear config cache on startup so the environment APP_KEY
+# (set by Render at runtime) is read correctly.
+COPY docker/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 80
+CMD ["apache2-foreground"]

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use App\Services\HomeCacheService;
 
 class AdminController extends Controller
 {
@@ -218,6 +219,7 @@ class AdminController extends Controller
 
         $oldStatus = $product->trang_thai;
         $product->update(['trang_thai' => $request->trang_thai]);
+        app(HomeCacheService::class)->flush();
         AuditLog::record('product_status_updated', $product, "Updated status for {$product->ten_sp}", [
             'trang_thai' => $oldStatus,
         ], [
@@ -246,6 +248,7 @@ class AdminController extends Controller
 
         $oldQuantity = $product->so_luong;
         $product->update(['so_luong' => $request->so_luong]);
+        app(HomeCacheService::class)->flush();
         AuditLog::record('product_stock_updated', $product, "Updated stock for {$product->ten_sp}", [
             'so_luong' => $oldQuantity,
         ], [
@@ -270,6 +273,7 @@ class AdminController extends Controller
     {
         $product = Product::onlyTrashed()->findOrFail($productId);
         $product->restore();
+        app(HomeCacheService::class)->flush();
         AuditLog::record('product_restored', $product, "Restored product {$product->ten_sp}");
 
         return back()->with('success', "Đã khôi phục sản phẩm \"{$product->ten_sp}\".");

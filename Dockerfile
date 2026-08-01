@@ -50,6 +50,9 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# OPcache tuned for Render free tier (cold-start friendly, prod validate off)
+COPY docker/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY composer.json composer.lock* ./
@@ -62,7 +65,7 @@ RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan package:discover --ansi \
     && php artisan route:cache \
     && php artisan view:cache \
-    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+    && mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 

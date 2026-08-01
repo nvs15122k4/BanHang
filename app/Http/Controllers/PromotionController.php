@@ -9,6 +9,7 @@ use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use App\Services\HomeCacheService;
 
 class PromotionController extends Controller
 {
@@ -130,6 +131,7 @@ class PromotionController extends Controller
             }
 
             DB::commit();
+            app(HomeCacheService::class)->flush();
 
             return redirect()->route('admin.promotions.index')->with('success', 'Tạo khuyến mãi thành công!');
         } catch (\Exception $e) {
@@ -216,6 +218,7 @@ class PromotionController extends Controller
             }
 
             DB::commit();
+            app(HomeCacheService::class)->flush();
 
             return redirect()->route('admin.promotions.index')->with('success', 'Cập nhật khuyến mãi thành công!');
         } catch (\Exception $e) {
@@ -232,6 +235,7 @@ class PromotionController extends Controller
     {
         $name = $promotion->ten;
         $promotion->delete(); // cascade xóa items
+        app(HomeCacheService::class)->flush();
 
         return redirect()->route('admin.promotions.index')
             ->with('success', "Đã xóa khuyến mãi \"{$name}\"!");
@@ -244,6 +248,7 @@ class PromotionController extends Controller
     {
         $newStatus = $promotion->trang_thai === 'active' ? 'inactive' : 'active';
         $promotion->update(['trang_thai' => $newStatus]);
+        app(HomeCacheService::class)->flush();
 
         $msg = $newStatus === 'active'
             ? "Đã bật khuyến mãi \"{$promotion->ten}\"!"

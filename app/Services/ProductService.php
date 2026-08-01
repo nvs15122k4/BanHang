@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 
 class ProductService
 {
@@ -78,6 +79,7 @@ class ProductService
         $this->syncVariants($product, $variants);
         $this->syncLegacyPrimaryImage($product);
         $this->addGalleryImages($product, $galleryFiles, $galleryUrls);
+        $this->flushHomeCache();
 
         return $product->fresh(['variants', 'productImages', 'brand']);
     }
@@ -120,13 +122,24 @@ class ProductService
         $this->syncVariants($product, $variants);
         $this->syncLegacyPrimaryImage($product, $image !== null || $imageUrl !== null);
         $this->addGalleryImages($product, $galleryFiles, $galleryUrls);
+        $this->flushHomeCache();
 
         return $product->fresh(['variants', 'productImages', 'brand']);
     }
 
     public function deleteProduct(Product $product): bool
     {
-        return (bool) $product->delete();
+        $deleted = (bool) $product->delete();
+        if ($deleted) {
+            $this->flushHomeCache();
+        }
+
+        return $deleted;
+    }
+
+    private function flushHomeCache(): void
+    {
+        app(\App\Services\HomeCacheService::class)->flush();
     }
 
     private function syncVariants(Product $product, array $variants): void

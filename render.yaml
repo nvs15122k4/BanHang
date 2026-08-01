@@ -3,15 +3,14 @@ services:
     name: san-tim-vien-app
     runtime: docker
     plan: free
-    # Free tier: build via Dockerfile, no manual shell needed
+    # Build via Dockerfile - includes PHP, Apache, OPcache tuned
     buildCommand: docker build -t stv-app .
-    # Health check (Laravel /up trả về 200)
     healthCheckPath: /up
     envVars:
       - key: APP_ENV
-        value: local
+        value: production
       - key: APP_DEBUG
-        value: "true"
+        value: "false"
       - key: APP_URL
         value: https://banhang.vnsang.io.vn
       - key: APP_KEY
@@ -19,22 +18,47 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
-        value: debug
+        value: error
       - key: SESSION_DRIVER
-        value: database
+        value: cookie
+      - key: CACHE_STORE
+        value: file
       - key: CACHE_DRIVER
-        value: database
+        value: file
       - key: QUEUE_CONNECTION
         value: sync
       - key: DB_CONNECTION
-        value: mysql
-      - key: DATABASE_URL
-        fromDatabase: san-tim-vien-db
+        value: pgsql
+      - key: DB_HOST
+        value: aws-1-ap-northeast-2.pooler.supabase.com
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        value: postgres.zegdcaqmhvydyxgxrjvt
+      - key: DB_PASSWORD
+        sync: false
       - key: CLOUDINARY_URL
         sync: false
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: VIETQR_ACCOUNT_NAME
+        sync: false
+      - key: VIETQR_ACCOUNT_NO
+        sync: false
+      - key: VIETQR_BIN
+        sync: false
+      - key: VIETQR_TEMPLATE
+        sync: false
 
-databases:
-  - name: san-tim-vien-db
-    databaseName: banhang
-    user: banhang
-    plan: free
+databases: []
+
+# Cron job heartbeat — ping /up mỗi 14 phút để ngăn spin-down Render free (idle 15p)
+# Lưu ý: cron chạy trên web service instance, miễn phí, không tốn resource thêm.
+crons:
+  - name: keep-alive
+    schedule: "*/14 * * * *"
+    command: "curl -fsS https://banhang.vnsang.io.vn/up > /dev/null"

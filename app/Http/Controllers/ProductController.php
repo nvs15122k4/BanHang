@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Review;
 use App\Models\Wishlist;
+use App\Services\HomeCacheService;
 use App\Services\ProductService;
 use App\Services\SizeRecommendationService;
 use Illuminate\Http\Request;
@@ -32,71 +33,19 @@ class ProductController extends Controller
      */
     public function home(Request $request)
     {
-        $totalProducts = Product::count();
-        $inStockProducts = Product::where('trang_thai', 'con')->count();
-        $outOfStockProducts = Product::where('trang_thai', 'het')->count();
+        // Cache toàn bộ dữ liệu public trang chủ (5 phút) để cắt query đi xa (Supabase AP-Northeast-2)
+        $homeCache = app(HomeCacheService::class);
 
-        // Sử dụng raw SQL để tránh cast issue
-        $totalValue = \DB::table('products')->sum('gia');
-
-        // Lấy danh mục để hiển thị
-        $categories = Category::with('children')->whereNull('parent_id')->get();
         $selectedCategoryId = $request->input('category_id');
-        $selectedCategory = $selectedCategoryId ? Category::with('children')->find($selectedCategoryId) : null;
+        $selectedCategory = $selectedCategoryId ? $homeCache->categories()->firstWhere('id', (int) $selectedCategoryId) : null;
+        $categorySlug = $selectedCategory?->slug;
 
-        $categorySlugs = [];
-        if ($selectedCategory) {
-            $categorySlugs[] = $selectedCategory->slug;
-            foreach ($selectedCategory->children as $child) {
-                $categorySlugs[] = $child->slug;
-            }
-        }
+        $data = $homeCache->getAll($categorySlug);
 
-        // Lấy 8 sản phẩm mới nhất
-        $latestProductsQuery = Product::where('trang_thai', 'con');
-        if (!empty($categorySlugs)) {
-            $latestProductsQuery->whereIn('loai', $categorySlugs);
-        }
-        $latestProducts = $latestProductsQuery->orderBy('created_at', 'desc')->take(8)->get();
-
-        // Lấy danh sách sản phẩm có khuyến mãi
-        $activePromotions = Promotion::currentlyActive()->with('items')->get();
-
-        // Duyệt 1000 sản phẩm nhưng chỉ cần cột tính giảm giá — không kéo ảnh/variants/wishlists
-        $allProductsQuery = Product::where('trang_thai', 'con')
-            ->select(['id', 'ten_sp', 'slug', 'loai', 'gia', 'so_luong', 'trang_thai', 'anh', 'created_at'])
-            ->limit(1000);
-        if (!empty($categorySlugs)) {
-            $allProductsQuery->whereIn('loai', $categorySlugs);
-        }
-        $allProducts = $allProductsQuery->get();
-
-        $promoProducts = collect();
-        foreach ($allProducts as $product) {
-            $bestPromo = null;
-            $bestDiscount = 0;
-            foreach ($activePromotions as $promo) {
-                $discountedPrice = $promo->getDiscountedPrice($product);
-                if ($discountedPrice !== null) {
-                    $discount = $product->gia - $discountedPrice;
-                    if ($discount > $bestDiscount) {
-                        $bestDiscount = $discount;
-                        $bestPromo = $promo;
-                        $product->promo_price = $discountedPrice;
-                        $product->promo = $promo;
-                    }
-                }
-            }
-            if ($bestPromo) {
-                $promoProducts->push($product);
-            }
-        }
-
-        // Sắp xếp giảm nhiều nhất và lấy 8 sản phẩm
-        $promoProducts = $promoProducts
-            ->filter(fn ($p) => $p->promo_price !== null)
-            ->sortByDesc(fn ($p) => (float) $p->gia - (float) $p->promo_price)
-            ->take(8);
+        $latestProducts = $data['latest'];
+        $promoProducts = $data['promo'];
+        $stats = $data['stats'];
+        $categories = $data['categories'];
 
         // Chỉ load ảnh + variants cho đúng sản phẩm hiển thị
         $displayProductIds = $latestProducts->pluck('id')
@@ -137,14 +86,15 @@ class ProductController extends Controller
         return view('home.index', compact(
             'latestProducts',
             'promoProducts',
-            'totalProducts',
-            'inStockProducts',
-            'outOfStockProducts',
-            'totalValue',
             'categories',
             'selectedCategory',
             'userWishlistIds'
-        ));
+        ) + [
+            'totalProducts' => $stats['totalProducts'],
+            'inStockProducts' => $stats['inStock'],
+            'outOfStockProducts' => $stats['outOfStock'],
+            'totalValue' => $stats['totalValue'],
+        ]);
     }
 
     public function index(Request $request)

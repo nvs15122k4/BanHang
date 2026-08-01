@@ -125,6 +125,22 @@ return [
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => [
+        // Cache file lưu Eloquent models của trang chủ — cần liệt kê class
+        // để unserialize được (false mặc định sẽ chặn mọi object → 500)
+        App\Models\Product::class,
+        App\Models\Category::class,
+        App\Models\Promotion::class,
+        App\Models\PromotionItem::class,
+        App\Models\ProductImage::class,
+        App\Models\ProductVariant::class,
+        App\Models\Brand::class,
+        App\Models\User::class,
+        Illuminate\Database\Eloquent\Collection::class,
+        Illuminate\Database\Eloquent\Model::class,
+        Illuminate\Support\Collection::class,
+        Illuminate\Support\Carbon::class,
+        Carbon\Carbon::class,
+    ],
 
 ];

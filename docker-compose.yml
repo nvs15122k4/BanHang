@@ -8,11 +8,9 @@ x-app-environment: &app-environment
   DB_CONNECTION: ${DB_CONNECTION}
   DB_HOST: ${DB_HOST}
   DB_PORT: ${DB_PORT}
-  DB_FORWARD_PORT: ${DB_FORWARD_PORT}
   DB_DATABASE: ${DB_DATABASE}
   DB_USERNAME: ${DB_USERNAME}
   DB_PASSWORD: ${DB_PASSWORD}
-  DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
   CACHE_STORE: ${CACHE_STORE}
   SESSION_DRIVER: ${SESSION_DRIVER}
   QUEUE_CONNECTION: ${QUEUE_CONNECTION}
@@ -52,30 +50,6 @@ services:
     depends_on:
       env-check:
         condition: service_completed_successfully
-      mysql:
-        condition: service_healthy
-
-  mysql:
-    image: mysql:8.4
-    container_name: banhang_mysql
-    restart: unless-stopped
-    ports:
-      - "${DB_FORWARD_PORT}:3306"
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    depends_on:
-      env-check:
-        condition: service_completed_successfully
 
   vite:
     image: node:22.12.0-bookworm
@@ -98,5 +72,4 @@ services:
         condition: service_started
 
 volumes:
-  mysql_data:
   node_modules_data:

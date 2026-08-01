@@ -14,7 +14,7 @@ services:
       - key: APP_URL
         value: https://banhang.vnsang.io.vn
       - key: APP_KEY
-        generateValue: true
+        value: "base64:rC2RMoIEmkZ3Gz6lMAxA6f5iJFGK23l7rYeom+8nF88="
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL

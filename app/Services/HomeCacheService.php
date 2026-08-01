@@ -31,9 +31,62 @@ class HomeCacheService
     {
         $key = 'home.page.' . ($categorySlug ?: 'all');
 
-        return Cache::remember($key, self::TTL, function () use ($categorySlug) {
-            return $this->buildHomeData($categorySlug);
-        });
+        return $this->remember($key, fn () => $this->buildHomeData($categorySlug));
+    }
+
+    /**
+     * Cache::remember có try/catch — nếu unserialize file cache lỗi
+     * (serializable_classes thiếu class), flush + tính lại thay vì ném 500.
+     */
+    private function remember(string $key, callable $callback): mixed
+    {
+        try {
+            $value = Cache::remember($key, self::TTL, $callback);
+            // __PHP_Incomplete_Class = serialization thiếu class → coi như miss
+            if ($this->containsIncompleteClass($value)) {
+                throw new \RuntimeException('Cache unserialize produced incomplete class');
+            }
+
+            return $value;
+        } catch (\Throwable $e) {
+            $this->flush();
+            $value = $callback();
+
+            // Cache lại để request sau không phải tính lại
+            try {
+                Cache::put($key, $value, self::TTL);
+            } catch (\Throwable) {
+                // bỏ qua — request hiện tại vẫn trả về đúng
+            }
+
+            return $value;
+        }
+    }
+
+    /**
+     * Đệ quy check object hoặc Collection có phần tử __PHP_Incomplete_Class không.
+     * File cache với allowed_classes thiếu class sẽ sinh incomplete class ẩn
+     * bên trong Collection — check nông (instanceof) sẽ bỏ lọt.
+     */
+    private function containsIncompleteClass(mixed $value): bool
+    {
+        if ($value instanceof \__PHP_Incomplete_Class) {
+            return true;
+        }
+
+        if ($value instanceof \Illuminate\Support\Collection || $value instanceof \Illuminate\Database\Eloquent\Collection) {
+            return $value->contains(fn ($item) => $this->containsIncompleteClass($item));
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->containsIncompleteClass($item)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function flush(): void
@@ -50,7 +103,7 @@ class HomeCacheService
 
     public function categories(): Collection
     {
-        return Cache::remember(self::CATEGORIES_KEY, self::TTL, function () {
+        return $this->remember(self::CATEGORIES_KEY, function () {
             return Category::with('children')->whereNull('parent_id')->get();
         });
     }
@@ -61,7 +114,7 @@ class HomeCacheService
      */
     public function statistics(): array
     {
-        return Cache::remember(self::STATS_KEY, self::TTL, function () {
+        return $this->remember(self::STATS_KEY, function () {
             return [
                 'totalProducts' => Product::count(),
                 'inStock' => Product::where('trang_thai', 'con')->count(),
@@ -77,14 +130,14 @@ class HomeCacheService
      */
     public function promoProducts(?string $categorySlug = null): Collection
     {
-        return Cache::remember(self::PROMO_PRODUCTS_KEY . '.' . ($categorySlug ?: 'all'), self::TTL, function () use ($categorySlug) {
+        return $this->remember(self::PROMO_PRODUCTS_KEY . '.' . ($categorySlug ?: 'all'), function () use ($categorySlug) {
             return $this->computePromoProducts($categorySlug);
         });
     }
 
     public function latestProducts(?string $categorySlug = null): Collection
     {
-        return Cache::remember(self::LATEST_PRODUCTS_KEY . '.' . ($categorySlug ?: 'all'), self::TTL, function () use ($categorySlug) {
+        return $this->remember(self::LATEST_PRODUCTS_KEY . '.' . ($categorySlug ?: 'all'), function () use ($categorySlug) {
             $q = Product::where('trang_thai', 'con');
 
             if ($categorySlug) {

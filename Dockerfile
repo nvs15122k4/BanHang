@@ -56,7 +56,8 @@ COPY docker/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY composer.json composer.lock* ./
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+# --no-dev: không cài laravel/boost, pail, phpunit... vào prod (giảm kích thước + tránh lỗi middleware inject)
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts --no-dev
 
 COPY . .
 COPY --from=assets /app/public/build ./public/build

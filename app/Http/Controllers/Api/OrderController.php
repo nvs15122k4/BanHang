@@ -12,7 +12,9 @@ class OrderController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Auth::user()->orders()->with('orderItems.product')->orderBy('created_at', 'desc');
+        $query = Auth::user()->orders()
+    ->with(['orderItems.product' => fn($q) => $q->withTrashed()->with('productImages')])
+    ->orderBy('created_at', 'desc');
 
         if ($request->filled('trang_thai')) {
             $query->where('trang_thai', $request->trang_thai);
@@ -33,7 +35,8 @@ class OrderController extends Controller
             return response()->json(['message' => 'Không có quyền xem đơn hàng này'], 403);
         }
 
-        $order->load('orderItems.product');
+$order->load(['orderItems.product' => fn($q) => $q->withTrashed()->with('productImages')]);
+
         return response()->json(['data' => $this->transformOrder($order)]);
     }
 
